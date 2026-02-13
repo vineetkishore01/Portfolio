@@ -765,8 +765,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
+            z-index: 10000;
             transition: all 0.4s var(--ease-out-expo);
+            pointer-events: auto;
+            /* Ensure nav itself receives events */
         }
 
         .nav.scrolled {
@@ -884,89 +886,276 @@
             transform: translateY(2px);
         }
 
-        /* Mobile Menu Toggle */
-        .menu-toggle {
+        /* Mobile Bottom Dock ("Dynamic Island" Style) */
+        /* Mobile Bottom Dock ("Dynamic Island" Style) */
+        /* Ultra Modern "App Shelf" Scrollable Dock */
+        /* Mobile Bottom Dock Wrapper (Positioning & Hint) */
+        .mobile-dock-wrapper {
             display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1001;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20000;
+            width: auto;
+            max-width: 90vw;
         }
 
-        .menu-toggle span {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background: var(--text-primary);
-            transition: all 0.3s ease;
+        /* Scroll Hint Overlay */
+        .mobile-dock-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: linear-gradient(to right, transparent, rgba(18, 18, 20, 0.8));
+            pointer-events: none;
+            border-radius: 0 20px 20px 0;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+            /* Content is z-1, so this is above */
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                max-width: 400px;
-                height: 100vh;
-                height: 100dvh;
-                background: var(--bg-secondary);
-                border-left: 1px solid var(--border-color);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 2rem;
-                transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-                z-index: 1000;
-                padding: 2rem;
-                box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
-            }
+        .mobile-dock-wrapper.scrolled::after {
+            opacity: 0;
+        }
 
-            .nav-links.active {
-                right: 0;
-            }
+        /* Inner Dock (Style & Scroll) */
+        .mobile-dock {
+            display: flex;
+            background: rgba(18, 18, 20, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 8px;
+            box-shadow:
+                0 20px 50px -10px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
-            .menu-toggle {
-                display: flex;
-                transition: transform 0.3s ease;
-            }
+            /* Horizontal Scroll Logic */
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 8px;
+        }
 
-            .menu-toggle.active span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
-            }
+        .mobile-dock::-webkit-scrollbar {
+            display: none;
+        }
 
-            .menu-toggle.active span:nth-child(2) {
+        @keyframes dockSlideUp {
+            0% {
+                transform: translateY(40px);
                 opacity: 0;
             }
 
-            .menu-toggle.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(7px, -6px);
-            }
-
-            .nav-cta {
-                display: none;
-            }
-
-            .nav-link {
-                font-size: 1.25rem;
-                padding: 1rem;
-            }
-
-            /* Backdrop overlay */
-            .nav-links.active::before {
-                content: '';
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.5);
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                z-index: -1;
+            100% {
+                transform: translateY(0);
                 opacity: 1;
-                transition: opacity 0.3s ease;
-                pointer-events: auto;
-                backdrop-filter: blur(4px);
+            }
+        }
+
+        @keyframes dockShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-10px);
+            }
+
+            40% {
+                transform: translateX(5px);
+            }
+
+            60% {
+                transform: translateX(-5px);
+            }
+
+            80% {
+                transform: translateX(2px);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-dock-wrapper {
+                display: block !important;
+            }
+        }
+
+        /* App Icon Style Items */
+        .mobile-dock-item {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            width: 64px;
+            /* Fixed App Icon Size */
+            height: 64px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            flex-shrink: 0;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .mobile-dock-item svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5;
+            transition: all 0.3s ease;
+            stroke: currentColor;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .dock-label {
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            opacity: 0.8;
+        }
+
+        /* Active State (Glowing App Icon) */
+        .mobile-dock-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-dock-item.active svg {
+            stroke: var(--accent-blue);
+            stroke-width: 2;
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(0, 122, 255, 0.6));
+            opacity: 1;
+        }
+
+        .mobile-dock-item.active .dock-label {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* Scroll Hint Overlay */
+        .mobile-dock::after {
+            content: '';
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: linear-gradient(to right, transparent, rgba(18, 18, 20, 0.8));
+            pointer-events: none;
+            border-radius: 0 20px 20px 0;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-dock.scrolled::after {
+            opacity: 0;
+        }
+
+        /* Initial Shake Animation to Hint Scroll */
+        @keyframes scrollHintShake {
+
+            0%,
+            100% {
+                transform: translateX(-50%);
+            }
+
+            20% {
+                transform: translateX(calc(-50% - 10px));
+            }
+
+            40% {
+                transform: translateX(calc(-50% + 5px));
+            }
+
+            60% {
+                transform: translateX(calc(-50% - 5px));
+            }
+
+            80% {
+                transform: translateX(calc(-50% + 2px));
+            }
+        }
+
+        .mobile-dock {
+            /* ... previous styles ... */
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+                scrollHintShake 1.2s ease 1s 1;
+            /* Trigger shake after 1s delay */
+        }
+
+
+
+        /* Active Indicator Dot */
+        .mobile-dock-indicator {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 4px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 8px var(--accent-blue);
+        }
+
+        .mobile-dock-item.active .mobile-dock-indicator {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        /* Touch Feedback */
+        .mobile-dock-item:active svg {
+            transform: scale(0.9);
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none !important;
+                /* Force hide old menu */
+            }
+
+            .menu-toggle {
+                display: none !important;
+                /* Force hide hamburger */
+            }
+
+            .mobile-dock {
+                display: flex !important;
+                /* Show new dock */
+                animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+
+            /* Adjust body padding to not cover content with dock */
+            body {
+                padding-bottom: 6rem;
+            }
+        }
+
+        @keyframes slideUpFade {
+            0% {
+                transform: translate(-50%, 20px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, 0);
+                opacity: 1;
             }
         }
 
@@ -1947,148 +2136,187 @@
                 height: 120px;
             }
 
-            /* About Section Mobile */
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 1.25rem;
+
+
+            /* Hide scrollbar */
+            .about-grid::-webkit-scrollbar,
+            .timeline-container::-webkit-scrollbar,
+            .projects-cinema::-webkit-scrollbar,
+            .insights-grid::-webkit-scrollbar,
+            .contact-grid::-webkit-scrollbar {
+                display: none;
             }
 
-            .about-card {
-                padding: 1.5rem;
-            }
-
-            .about-card-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 1.25rem;
-            }
-
-            .about-card-title {
-                font-size: 1.1rem;
-            }
-
-            /* Timeline Mobile */
-            .timeline-card {
-                max-width: 100%;
-                padding: 1.25rem;
-            }
-
-            .timeline-title {
-                font-size: 1.1rem;
-            }
-
-            .timeline-company {
-                font-size: 0.9rem;
-            }
-
-            /* Project Filters Mobile */
-            .project-filters {
-                gap: 0.5rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .filter-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            /* Insights Mobile */
+            /* Common container styles for swipeable areas on mobile */
+            .about-grid,
+            .timeline-container,
+            .projects-cinema,
             .insights-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory;
+                padding: 1rem 5% 3rem 5% !important;
+                /* Added bottom padding for dots */
+                margin: 0 -5% !important;
+                gap: 1rem !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                position: relative;
             }
 
+            /* Hide scrollbar */
+            .about-grid::-webkit-scrollbar,
+            .timeline-container::-webkit-scrollbar,
+            .projects-cinema::-webkit-scrollbar,
+            .insights-grid::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Common card styles for snap alignment */
+            .about-card,
+            .timeline-item,
+            .project-cinema-card,
             .insight-card {
-                padding: 1.25rem;
+                flex: 0 0 85% !important;
+                width: 85% !important;
+                max-width: 320px !important;
+                scroll-snap-align: center;
+                margin: 0 !important;
+                opacity: 0.5;
+                /* Fade out non-active cards */
+                transform: scale(0.92);
+                transition: opacity 0.3s ease, transform 0.3s ease;
             }
 
-            .insight-title {
-                font-size: 1.1rem;
+            /* Active state (handled by JS IntersectionObserver) */
+            .mobile-card-active {
+                opacity: 1 !important;
+                transform: scale(1) !important;
             }
 
-            /* Contact Mobile */
+            /* Timeline specific fixes */
+            .timeline-container {
+                /* Reset timeline structure for carousels */
+            }
+
+            .timeline-line,
+            .timeline-progress,
+            .timeline-dot {
+                display: none !important;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                padding: 0 !important;
+            }
+
+            .timeline-item:nth-child(even) {
+                padding: 0 !important;
+            }
+
+            .timeline-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100%;
+            }
+
+            /* Adjust visual hierarchy for swiped projects */
+            .project-cinema-card {
+                min-height: 450px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Pagination Dots Container */
+            .carousel-indicators {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                margin-top: -1.5rem;
+                margin-bottom: 2rem;
+                position: relative;
+                z-index: 10;
+            }
+
+            .carousel-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            .carousel-dot.active {
+                width: 24px;
+                background: var(--accent-blue);
+                border-radius: 12px;
+            }
+
+            /* ==========================================
+               MOBILE CONTACT ICONS OVERHAUL
+               ========================================== */
             .contact-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 1.5rem !important;
+                padding: 1rem !important;
             }
 
             .contact-card {
-                padding: 1rem 0.75rem;
+                background: transparent !important;
+                border: none !important;
+                padding: 0 !important;
+                flex: 0 0 auto !important;
+                width: auto !important;
+                min-height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
             }
 
             .contact-icon {
-                width: 40px;
-                height: 40px;
-                margin: 0 auto 0.75rem;
+                width: 56px !important;
+                height: 56px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 50% !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                margin-bottom: 0 !important;
+                transition: all 0.3s ease !important;
             }
 
-            .contact-icon svg {
-                width: 18px;
-                height: 18px;
+            .contact-card:active .contact-icon {
+                transform: scale(0.9);
+                background: var(--accent-blue) !important;
+                border-color: var(--accent-blue) !important;
             }
 
             .contact-title {
-                font-size: 0.85rem;
-                margin-bottom: 0.2rem;
+                display: none !important;
+                /* Hide text label, keep icon only */
             }
 
             .contact-value {
-                font-size: 0.7rem;
+                display: none !important;
             }
 
-            /* Navigation Mobile */
-            .nav {
-                padding: 1rem 5%;
-            }
-
-            .nav-logo {
-                font-size: 1.1rem;
-            }
-
-            .nav-link {
-                font-size: 1.1rem;
-                padding: 0.75rem;
-            }
-
-            /* Nexus Modal Mobile */
-            .project-nexus {
-                padding: 0;
-            }
-
-            .nexus-container {
-                height: 100vh;
-                height: 100dvh;
-                border-radius: 0;
-                max-width: 100%;
-            }
-
-            .nexus-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .nexus-sidebar {
-                border-right: none;
-                border-bottom: 1px solid var(--border-color);
-                padding-right: 0;
-                padding-bottom: 1.5rem;
-            }
-
-            .nexus-header {
-                padding: 1rem 1.5rem;
-            }
-
-            .nexus-content {
-                padding: 1.5rem;
-            }
-
-            .nexus-title {
-                font-size: 1.1rem;
-            }
-
+            /* Nexus Gallery - Horizontal Scroll */
             .nexus-gallery {
-                grid-template-columns: 1fr;
+                display: flex !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory;
+                padding-bottom: 1rem;
                 gap: 1rem;
+            }
+
+            .nexus-image-placeholder {
+                flex: 0 0 80%;
+                scroll-snap-align: center;
             }
 
             /* CTA Buttons Mobile */
@@ -3300,13 +3528,12 @@
         }
 
         /* Mobile Tinder-like Swipe Cards */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
 
             .about-grid,
             .projects-cinema,
             .skills-grid,
-            .education-grid,
-            .contact-grid {
+            .education-grid {
                 display: flex !important;
                 flex-direction: row !important;
                 flex-wrap: nowrap !important;
@@ -3326,8 +3553,7 @@
             .about-grid>*,
             .project-cinema-card,
             .skill-category,
-            .education-card,
-            .contact-card {
+            .education-card {
                 min-width: 85vw !important;
                 scroll-snap-align: center;
                 flex: 0 0 auto !important;
@@ -3338,8 +3564,7 @@
             .about-grid::-webkit-scrollbar,
             .projects-cinema::-webkit-scrollbar,
             .skills-grid::-webkit-scrollbar,
-            .education-grid::-webkit-scrollbar,
-            .contact-grid::-webkit-scrollbar {
+            .education-grid::-webkit-scrollbar {
                 display: none;
             }
         }
@@ -3431,15 +3656,18 @@
 
     <!-- Navigation -->
     <nav class="nav" id="nav">
-        <a href="#" class="nav-logo">VK.</a>
+        <a href="#" class="nav-logo" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); return false;">VK.</a>
         <ul class="nav-links" id="nav-links">
             <li><a href="#about" class="nav-link">About</a></li>
             <li><a href="#experience" class="nav-link">Experience</a></li>
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
             <li><a href="#education" class="nav-link">Education</a></li>
+            <li><a href="javascript:void(0)" class="nav-link" style="opacity: 0.6; cursor: default;"
+                    title="Coming Soon">Blogs</a></li>
             <li><a href="#terminal" class="nav-link">Terminal</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li class="mobile-only"><a href="Vineet Kishore Resume.pdf" download class="nav-link">Resume</a></li>
         </ul>
         <a href="Vineet Kishore Resume.pdf" download class="nav-cta">
             <svg viewBox="0 0 24 24">
@@ -3490,100 +3718,114 @@
                 </div>
             </div>
             <div class="hero-image-wrapper">
-                <div class="hero-particles" id="hero-particles"></div>
-                <div class="hero-image-container" id="hero-image-container">
-                    <!-- Black & white version - always visible -->
-                    <img src="Subject.png" alt="Vineet Kishore" class="hero-image-bw" draggable="false"
-                        oncontextmenu="return false;">
-
-                    <!-- 3D/Holographic Layers -->
-                    <img src="generated_assets/subject_edges.png" class="hero-image-edges" alt="" aria-hidden="true">
-                    <img src="generated_assets/subject_glitch.png" class="hero-image-glitch" alt="" aria-hidden="true">
-
-                    <!-- Color version - revealed by bubble -->
-                    <img src="Subject.png" alt="" class="hero-image-color" id="hero-color-image" aria-hidden="true"
-                        draggable="false" oncontextmenu="return false;">
-
-                    <!-- Watery bubble overlay -->
-                    <div class="hero-bubble" id="hero-bubble"></div>
-
-                    <!-- Micro-bubbles container (populated by JS) -->
-
-                    <div class="hero-image-glow"></div>
+                <div class="hero-profile-card">
+                    <div class="hero-profile-inner">
+                        <img src="Subject.png" alt="Vineet Kishore" class="hero-profile-img main-img" draggable="false">
+                        <div class="hero-profile-overlay"></div>
+                    </div>
+                    <div class="hero-profile-glow"></div>
                 </div>
             </div>
         </div>
     </section>
 
     <style>
-        /* 3D/Holographic Effect Styles */
-        .hero-image-edges {
-            position: absolute;
-            inset: 0;
+        /* ==========================================
+           MODERN PROFILE CARD DESIGN
+           ========================================== */
+        .hero-image-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .hero-profile-card {
+            position: relative;
+            width: 440px;
+            height: 580px;
+            background: rgba(10, 10, 10, 0.8);
+            border-radius: 20px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-profile-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 122, 255, 0.4);
+            box-shadow: 0 40px 80px -12px rgba(0, 122, 255, 0.25);
+        }
+
+        .hero-profile-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-profile-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center top;
-            opacity: 0.15;
-            mix-blend-mode: screen;
-            z-index: 2;
-            pointer-events: none;
+            filter: grayscale(100%) contrast(1.1) brightness(0.9);
+            transition: filter 0.5s ease, transform 0.7s ease;
+            will-change: filter, transform;
+        }
+
+        .hero-profile-card:hover .hero-profile-img {
+            filter: grayscale(0%) contrast(1.05) brightness(1.05);
+            transform: scale(1.05);
+        }
+
+        /* Glow Backdrop */
+        .hero-profile-glow {
+            position: absolute;
+            inset: 20px;
+            background: var(--accent-blue);
+            filter: blur(60px);
+            opacity: 0;
+            z-index: -1;
             transition: opacity 0.5s ease;
         }
 
-        .hero-image-container:hover .hero-image-edges {
+        .hero-profile-card:hover .hero-profile-glow {
             opacity: 0.4;
-            filter: drop-shadow(0 0 5px var(--accent-blue));
         }
 
-        .hero-image-glitch {
+        /* Glitch overlay on hover (optional subtle noise for texture) */
+        .hero-profile-overlay {
             position: absolute;
             inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-            opacity: 0;
-            z-index: 2;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+            mix-blend-mode: overlay;
+            opacity: 0.5;
             pointer-events: none;
-            mix-blend-mode: hard-light;
         }
 
-        .hero-image-container:hover .hero-image-glitch {
-            animation: glitch-flicker 2s infinite;
+        @media (max-width: 900px) {
+            .hero-profile-card {
+                width: 340px;
+                height: 460px;
+            }
         }
 
-        @keyframes glitch-flicker {
-            0% {
-                opacity: 0;
-                transform: translateX(0);
+        @media (max-width: 768px) {
+            .hero-profile-card {
+                width: 280px;
+                height: 380px;
+                margin-top: 2rem;
             }
 
-            2% {
-                opacity: 0.4;
-                transform: translateX(-2px);
-            }
-
-            4% {
-                opacity: 0;
-                transform: translateX(0);
-            }
-
-            6% {
-                opacity: 0;
-            }
-
-            8% {
-                opacity: 0.3;
-                transform: translateX(2px);
-            }
-
-            10% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 0;
+            /* Always show color on mobile */
+            .hero-profile-img {
+                filter: grayscale(0%) contrast(1.05);
             }
         }
     </style>
@@ -3972,9 +4214,12 @@
                         <span class="terminal-prompt">➜</span>
                         <span style="color: #4ade80;">~</span>
                         <div class="terminal-input-wrapper">
-                            <input type="text" class="terminal-input" id="terminal-input"
-                                placeholder="Type ? to see everything, or just start exploring..." autocomplete="off"
-                                spellcheck="false" autocapitalize="off">
+                            <form id="terminal-form" onsubmit="event.preventDefault(); return false;"
+                                style="width:100%; display:flex;">
+                                <input type="text" class="terminal-input" id="terminal-input"
+                                    placeholder="Type ? to see everything..." autocomplete="off" spellcheck="false"
+                                    autocapitalize="off" inputmode="search" enterkeyhint="go">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -4048,12 +4293,7 @@
     <footer class="footer">
         <div class="footer-logo">VK.</div>
         <p class="footer-text">Crafted with precision & passion</p>
-        <div class="footer-links">
-            <a href="#about" class="footer-link">About</a>
-            <a href="#experience" class="footer-link">Experience</a>
-            <a href="#projects" class="footer-link">Projects</a>
-            <a href="#contact" class="footer-link">Contact</a>
-        </div>
+
         <p class="footer-copy">©
             <script>document.write(new Date().getFullYear())</script> Vineet Kishore. All rights reserved.
         </p>
@@ -4309,18 +4549,35 @@
         // ==========================================
         // MOBILE MENU - ENTERPRISE GRADE
         // ==========================================
+        // ==========================================
+        // MOBILE MENU - ENTERPRISE GRADE
+        // ==========================================
         const MobileMenu = {
-            init() {
+            init(retries = 3) {
                 this.toggle = document.getElementById('menu-toggle');
                 this.navLinks = document.getElementById('nav-links');
                 this.body = document.body;
 
                 if (!this.toggle || !this.navLinks) {
-                    console.warn('MobileMenu: Required elements not found');
+                    if (retries > 0) {
+                        console.warn(`MobileMenu: Elements unseen, retrying... (${retries})`);
+                        setTimeout(() => this.init(retries - 1), 100);
+                    } else {
+                        console.error('MobileMenu: Failed to find required elements');
+                    }
                     return;
                 }
 
                 this.isOpen = false;
+
+                // Force touch action
+                this.toggle.style.touchAction = 'manipulation';
+
+                // Remove old listeners to prevent duplicates
+                const newToggle = this.toggle.cloneNode(true);
+                this.toggle.parentNode.replaceChild(newToggle, this.toggle);
+                this.toggle = newToggle;
+
                 this.setupEventListeners();
 
                 // Add accessibility attributes
@@ -4329,12 +4586,23 @@
                 this.toggle.setAttribute('aria-controls', 'nav-links');
                 this.navLinks.setAttribute('role', 'navigation');
 
-                console.log('MobileMenu: Initialized successfully');
+                console.log('MobileMenu: Initialized successfully 🚀');
             },
 
             setupEventListeners() {
-                // Toggle click
-                this.toggle.addEventListener('click', (e) => this.toggleMenu(e));
+                // Primary interaction handler
+                const handleInteraction = (e) => {
+                    // Prevent default only for touch to avoid ghost clicks, allow standard click prop
+                    if (e.type === 'click') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    this.toggleMenu();
+                };
+
+                // Use both click and touchend for maximum compatibility
+                // (Using 'click' alone is usually fine, but 'touchend' can feel snappier on some older WebViews)
+                this.toggle.addEventListener('click', handleInteraction);
 
                 // Close on link click
                 this.navLinks.querySelectorAll('.nav-link').forEach(link => {
@@ -4350,23 +4618,23 @@
 
                 // Close on outside click
                 document.addEventListener('click', (e) => {
-                    if (this.isOpen && !this.navLinks.contains(e.target) && !this.toggle.contains(e.target)) {
+                    // Check if click is outside both toggle and menu
+                    if (this.isOpen &&
+                        !this.navLinks.contains(e.target) &&
+                        !this.toggle.contains(e.target)) {
                         this.closeMenu();
                     }
                 });
 
                 // Handle resize
                 window.addEventListener('resize', () => {
-                    if (window.innerWidth > 768 && this.isOpen) {
+                    if (window.innerWidth > 1024 && this.isOpen) {
                         this.closeMenu();
                     }
                 }, { passive: true });
             },
 
-            toggleMenu(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
+            toggleMenu() {
                 if (this.isOpen) {
                     this.closeMenu();
                 } else {
@@ -4434,7 +4702,7 @@
         });
 
         // Hero image animation
-        gsap.from('.hero-image-container', {
+        gsap.from('.hero-profile-card', {
             opacity: 0,
             scale: 0.9,
             duration: 1.2,
@@ -4964,9 +5232,9 @@
 
         // Initialize hero water bubble
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => HeroWaterBubble.init());
+            // document.addEventListener('DOMContentLoaded', () => HeroWaterBubble.init());
         } else {
-            HeroWaterBubble.init();
+            // HeroWaterBubble.init();
         }
 
         // ==========================================
@@ -5912,7 +6180,6 @@
             },
 
             setupListeners() {
-                // Enable audio on first user interaction
                 const enableAudio = () => {
                     this.muted = false;
                     document.removeEventListener('click', enableAudio);
@@ -5945,6 +6212,97 @@
                 }
             }
         };
+
+        // ==========================================
+        // MOBILE CAROUSEL LOGIC
+        // ==========================================
+        const MobileCarousel = {
+            init() {
+                // Only run on mobile/tablet viewports
+                if (window.innerWidth > 900) return;
+
+                // Identify all horizontally scrollable containers
+                const containers = [
+                    document.querySelector('.about-grid'),
+                    document.querySelector('.timeline-container'),
+                    document.querySelector('.projects-cinema'),
+                    document.querySelector('.insights-grid')
+                ].filter(el => el); // Filter out nulls
+
+                containers.forEach(container => {
+                    if (container.parentElement.querySelector('.carousel-indicators')) return; // Prevent double init
+                    this.setupCarousel(container);
+                });
+
+                console.log('MobileCarousel: Initialized 📱');
+            },
+
+            setupCarousel(container) {
+                // Get direct children that act as cards
+                let cards = Array.from(container.children).filter(el =>
+                    el.classList.contains('about-card') ||
+                    el.classList.contains('timeline-item') ||
+                    el.classList.contains('project-cinema-card') ||
+                    el.classList.contains('insight-card')
+                );
+
+                if (cards.length <= 1) return; // No need for dots if 1 or 0 items
+
+                // Create dots container
+                const dotsContainer = document.createElement('div');
+                dotsContainer.className = 'carousel-indicators';
+
+                // Create dots
+                cards.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = index === 0 ? 'carousel-dot active' : 'carousel-dot';
+                    dotsContainer.appendChild(dot);
+                });
+
+                // Insert dots after the scroll container
+                container.parentNode.insertBefore(dotsContainer, container.nextSibling);
+
+                // Observation Logic
+                const dots = dotsContainer.querySelectorAll('.carousel-dot');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Remove active class from all
+                            cards.forEach(c => c.classList.remove('mobile-card-active'));
+                            dots.forEach(d => d.classList.remove('active'));
+
+                            // Add active to current
+                            entry.target.classList.add('mobile-card-active');
+
+                            // Find index
+                            const index = cards.indexOf(entry.target);
+                            if (index !== -1 && dots[index]) {
+                                dots[index].classList.add('active');
+                            }
+                        }
+                    });
+                }, {
+                    root: container,
+                    threshold: 0.6 // Card must be 60% visible to count as active
+                });
+
+                cards.forEach(card => observer.observe(card));
+            }
+        };
+
+        // Init on load and resize
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => MobileCarousel.init());
+        } else {
+            MobileCarousel.init();
+        }
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => MobileCarousel.init(), 250);
+        });
 
         // ==========================================
         // PERFORMANCE MANAGER (PHASE 3)
@@ -6011,6 +6369,149 @@
         } else {
             SoundManager.init();
             PerformanceManager.init();
+        }
+    </script>
+
+    <style>
+        @media (max-width: 1024px) {
+            .terminal-section {
+                display: none !important;
+            }
+
+            .mobile-dock-wrapper {
+                display: block !important;
+            }
+        }
+    </style>
+    <!-- Mobile Bottom Dock Wrapper (Handles Positioning & Hint) -->
+    <div class="mobile-dock-wrapper">
+        <nav class="mobile-dock">
+            <a href="#home" class="mobile-dock-item active" onclick="navigator.vibrate(10)">
+                <div class="mobile-dock-indicator"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span class="dock-label">Home</span>
+            </a>
+            <a href="#about" class="mobile-dock-item" onclick="navigator.vibrate(10)">
+                <div class="mobile-dock-indicator"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="dock-label">About</span>
+            </a>
+            <a href="#experience" class="mobile-dock-item" onclick="navigator.vibrate(10)">
+                <div class="mobile-dock-indicator"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                <span class="dock-label">Work</span>
+            </a>
+            <a href="#blogs" class="mobile-dock-item" onclick="navigator.vibrate(10)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span class="dock-label">Blogs</span>
+            </a>
+            <a href="#projects" class="mobile-dock-item" onclick="navigator.vibrate(10)">
+                <div class="mobile-dock-indicator"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                <span class="dock-label">Code</span>
+            </a>
+            <a href="#skills" class="mobile-dock-item" onclick="navigator.vibrate(10)">
+                <div class="mobile-dock-indicator"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span class="dock-label">Skills</span>
+            </a>
+            <a href="#contact" class="mobile-dock-item" onclick="navigator.vibrate(10)">
+                <div class="mobile-dock-indicator"></div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span class="dock-label">Contact</span>
+            </a>
+        </nav>
+    </div>
+    <script>
+        // Enhanced Dock Active State Logic
+        const dockItems = document.querySelectorAll('.mobile-dock-item');
+        const sections = document.querySelectorAll('section');
+        let dockInitialized = false;
+
+        // Prevent auto-scroll jumps on load
+        setTimeout(() => {
+            dockInitialized = true;
+        }, 2500);
+
+        // Config for observer
+        const observerConfig = {
+            root: null,
+            rootMargin: '-45% 0px -45% 0px', // Active when element is in the middle 10% of screen
+            threshold: 0
+        };
+
+        const dockObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+
+                    // Only update if we found a matching dock item
+                    dockItems.forEach(item => {
+                        if (item.getAttribute('href') === `#${id}`) {
+                            // Remove active class from all
+                            dockItems.forEach(i => i.classList.remove('active'));
+                            // Add to current
+                            item.classList.add('active');
+
+                            // Only auto-scroll after initialization to prevent jump on load
+                            if (dockInitialized) {
+                                item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                            }
+                        }
+                    });
+                }
+            });
+        }, observerConfig);
+
+        sections.forEach(section => dockObserver.observe(section));
+
+        // Scroll Hint Logic
+        const dock = document.querySelector('.mobile-dock');
+        const wrapper = document.querySelector('.mobile-dock-wrapper');
+
+        // Initial shake (using class instead of inline style for cleaner separation)
+        setTimeout(() => {
+            if (dock) dock.style.animation = 'dockShake 1.2s ease forwards';
+        }, 1500);
+
+        if (dock && wrapper) {
+            dock.addEventListener('scroll', () => {
+                if (dock.scrollLeft > 10) {
+                    wrapper.classList.add('scrolled');
+                } else {
+                    wrapper.classList.remove('scrolled');
+                }
+            }, { passive: true });
         }
     </script>
 </body>
