@@ -3,11 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="description"
         content="Vineet Kishore - Infrastructure Engineer, Strategic Technologist & Competitive Intelligence Expert. Building resilient systems with 99.9% uptime.">
     <meta name="theme-color" content="#000000">
     <meta name="author" content="Vineet Kishore">
+
+    <!-- Mobile App Capable -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Vineet Kishore">
+
+    <!-- Format Detection -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="address=no">
+    <meta name="format-detection" content="email=no">
 
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy"
@@ -440,7 +451,7 @@
            ========================================== */
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
             max-width: 1000px;
             margin: 0 auto;
@@ -966,7 +977,7 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 120px 5% 60px;
+            padding: 120px 5% 0;
             position: relative;
             overflow: hidden;
         }
@@ -1051,35 +1062,6 @@
             overflow: hidden;
         }
 
-        .terminal-input {
-            background: transparent;
-            border: none;
-            color: #4ade80;
-            font-family: var(--font-mono);
-            font-size: 0.9375rem;
-            width: 100%;
-            outline: none;
-            caret-color: #4ade80;
-            /* Restore native cursor */
-            cursor: text;
-            padding: 0;
-            margin: 0;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .terminal-input::placeholder {
-            color: var(--text-tertiary);
-            opacity: 0.5;
-        }
-
-        .terminal-cursor {
-            display: none;
-            /* Hide broken custom cursor */
-            width: 8px;
-            height: 18px;
-        }
-
         .hero-cta-primary::before {
             content: '';
             position: absolute;
@@ -1121,6 +1103,7 @@
 
         .hero-stats {
             display: flex;
+            flex-wrap: wrap;
             gap: 3rem;
             margin-top: 4rem;
             padding-top: 2rem;
@@ -1375,7 +1358,7 @@
         }
 
         .hero-image-container:hover .hero-image-glow {
-            opacity: 0.3;
+            opacity: 0.8;
         }
 
         /* Mobile optimization */
@@ -1468,12 +1451,17 @@
            SECTION BASE STYLES
            ========================================== */
         section {
-            padding: 8rem 5%;
+            padding: 4rem 5% 8rem 5%;
             position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .section-header {
             margin-bottom: 4rem;
+            text-align: center;
         }
 
         .section-label {
@@ -1497,6 +1485,8 @@
             font-size: 1.125rem;
             color: var(--text-secondary);
             max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* ==========================================
@@ -1555,6 +1545,8 @@
             gap: 3rem;
             position: relative;
             z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .about-card {
@@ -1646,8 +1638,9 @@
 
         .timeline-container {
             position: relative;
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .timeline-line {
@@ -1754,14 +1747,15 @@
         }
 
         .timeline-tag {
-            padding: 0.25rem 0.75rem;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            font-size: 11px;
             font-family: var(--font-mono);
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.8);
             transition: all 0.3s ease;
+            line-height: normal;
         }
 
         .timeline-tag:hover {
@@ -1788,16 +1782,623 @@
         }
 
         /* ==========================================
+           IPHONE SAFE AREA & MOBILE LAYOUT FIXES
+           ========================================== */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .nav {
+                padding-top: calc(1rem + env(safe-area-inset-top));
+                padding-left: calc(5% + env(safe-area-inset-left));
+                padding-right: calc(5% + env(safe-area-inset-right));
+            }
+
+            .nav.scrolled {
+                padding-top: calc(0.75rem + env(safe-area-inset-top));
+            }
+
+            .hero {
+                padding-top: calc(100px + env(safe-area-inset-top));
+                padding-left: calc(1.5rem + env(safe-area-inset-left));
+                padding-right: calc(1.5rem + env(safe-area-inset-right));
+            }
+
+            section {
+                padding-left: calc(1.5rem + env(safe-area-inset-left));
+                padding-right: calc(1.5rem + env(safe-area-inset-right));
+            }
+
+            .footer {
+                padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+                padding-left: calc(1.5rem + env(safe-area-inset-left));
+                padding-right: calc(1.5rem + env(safe-area-inset-right));
+            }
+        }
+
+        /* Mobile-specific layout improvements */
+        @media (max-width: 768px) {
+
+            /* Prevent horizontal scroll on mobile */
+            body {
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Ensure images don't overflow */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Touch-friendly tap targets */
+            a,
+            button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Smooth scrolling */
+            html {
+                scroll-behavior: smooth;
+            }
+
+            /* Disable text selection on interactive elements */
+            .filter-btn,
+            .nav-link,
+            .project-cinema-card {
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            /* Prevent callout on long press (iOS) */
+            .hero-image-container,
+            .project-cinema-visual {
+                -webkit-touch-callout: none;
+            }
+
+            /* Optimize animations for mobile */
+            @media (prefers-reduced-motion: reduce) {
+
+                *,
+                *::before,
+                *::after {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        }
+
+        /* ==========================================
+           MOBILE RESPONSIVE OPTIMIZATIONS
+           ========================================== */
+        @media (max-width: 1024px) {
+            section {
+                padding: 4rem 5%;
+            }
+
+            .section-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .kinetic-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+
+            section {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-title {
+                font-size: clamp(1.75rem, 8vw, 2.5rem);
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+            }
+
+            /* Hero Section Mobile */
+            .hero {
+                min-height: auto;
+                padding: 100px 1.5rem 3rem;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-title {
+                font-size: clamp(2rem, 10vw, 3rem);
+                line-height: 1.15;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-stats {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                gap: 0.5rem;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                text-align: center;
+            }
+
+            .hero-stat-value {
+                font-size: 1.5rem;
+            }
+
+            .hero-image-container {
+                width: 100%;
+                max-width: 300px;
+                height: 380px;
+                border-width: 2px;
+            }
+
+            .hero-bubble {
+                width: 120px;
+                height: 120px;
+            }
+
+            /* About Section Mobile */
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .about-card {
+                padding: 1.5rem;
+            }
+
+            .about-card-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.25rem;
+            }
+
+            .about-card-title {
+                font-size: 1.1rem;
+            }
+
+            /* Timeline Mobile */
+            .timeline-card {
+                max-width: 100%;
+                padding: 1.25rem;
+            }
+
+            .timeline-title {
+                font-size: 1.1rem;
+            }
+
+            .timeline-company {
+                font-size: 0.9rem;
+            }
+
+            /* Project Filters Mobile */
+            .project-filters {
+                gap: 0.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            /* Insights Mobile */
+            .insights-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .insight-card {
+                padding: 1.25rem;
+            }
+
+            .insight-title {
+                font-size: 1.1rem;
+            }
+
+            /* Contact Mobile */
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .contact-card {
+                padding: 1rem 0.75rem;
+            }
+
+            .contact-icon {
+                width: 40px;
+                height: 40px;
+                margin: 0 auto 0.75rem;
+            }
+
+            .contact-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .contact-title {
+                font-size: 0.85rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .contact-value {
+                font-size: 0.7rem;
+            }
+
+            /* Navigation Mobile */
+            .nav {
+                padding: 1rem 5%;
+            }
+
+            .nav-logo {
+                font-size: 1.1rem;
+            }
+
+            .nav-link {
+                font-size: 1.1rem;
+                padding: 0.75rem;
+            }
+
+            /* Nexus Modal Mobile */
+            .project-nexus {
+                padding: 0;
+            }
+
+            .nexus-container {
+                height: 100vh;
+                height: 100dvh;
+                border-radius: 0;
+                max-width: 100%;
+            }
+
+            .nexus-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .nexus-sidebar {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding-right: 0;
+                padding-bottom: 1.5rem;
+            }
+
+            .nexus-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .nexus-content {
+                padding: 1.5rem;
+            }
+
+            .nexus-title {
+                font-size: 1.1rem;
+            }
+
+            .nexus-gallery {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            /* CTA Buttons Mobile */
+            .hero-cta-primary,
+            .hero-cta-secondary {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .hero-cta-group {
+                gap: 0.75rem;
+            }
+
+            /* Footer Mobile */
+            .footer {
+                padding: 2rem 1.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            /* Touch Optimization */
+            .filter-btn,
+            .nexus-close-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .nav-link {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        /* ==========================================
+           MOBILE PROJECTS CINEMA - ENHANCED
+           ========================================== */
+        @media (max-width: 768px) {
+            .projects-cinema {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem;
+                padding: 1rem 0;
+            }
+
+            .project-cinema-card {
+                min-height: auto;
+            }
+
+            .project-cinema-inner {
+                border-radius: 16px;
+            }
+
+            .project-cinema-visual {
+                height: 180px;
+            }
+
+            .project-cinema-icon {
+                font-size: 3.5rem;
+            }
+
+            .project-cinema-content {
+                padding: 1.25rem;
+            }
+
+            .project-cinema-title {
+                font-size: 1.15rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .project-cinema-desc {
+                font-size: 0.85rem;
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+
+            .project-cinema-stats {
+                gap: 1rem;
+                padding-top: 1rem;
+            }
+
+            .project-cinema-stat-value {
+                font-size: 1.1rem;
+            }
+
+            .project-cinema-stat-label {
+                font-size: 0.65rem;
+            }
+
+            /* Show scroll indicator dots */
+            .projects-cinema::after {
+                content: '';
+                flex: 0 0 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 13px;
+            }
+
+            .hero-image-container {
+                max-width: 260px;
+                height: 320px;
+            }
+
+            .hero-title {
+                font-size: clamp(1.75rem, 12vw, 2.5rem);
+            }
+
+            .hero-stats {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 4px !important;
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+            }
+
+            .hero-stat {
+                text-align: center;
+                min-width: 0;
+            }
+
+            .hero-stat-value {
+                font-size: 1.25rem;
+            }
+
+            .hero-stat-label {
+                font-size: 0.65rem;
+            }
+
+            .about-card {
+                padding: 1.25rem;
+            }
+
+            .timeline-card {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: clamp(1.5rem, 8vw, 2rem);
+            }
+
+            /* Projects on very small screens */
+            .projects-cinema {
+                grid-template-columns: 1fr !important;
+                gap: 1rem;
+            }
+
+            .project-cinema-card {
+                min-height: auto;
+            }
+
+            .project-cinema-visual {
+                height: 150px;
+            }
+
+            .project-cinema-icon {
+                font-size: 3rem;
+            }
+
+            .project-cinema-content {
+                padding: 1rem;
+            }
+
+            .project-cinema-title {
+                font-size: 1.1rem;
+            }
+
+            .project-cinema-desc {
+                font-size: 0.8rem;
+            }
+
+            .project-cinema-stats {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .project-cinema-stat {
+                flex: 1;
+                min-width: 60px;
+            }
+
+            .project-cinema-stat-value {
+                font-size: 1rem;
+            }
+
+            .project-cinema-stat-label {
+                font-size: 0.6rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .contact-card {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .contact-icon {
+                width: 32px;
+                height: 32px;
+                margin: 0 auto 0.5rem;
+            }
+
+            .contact-icon svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .contact-title {
+                font-size: 0.75rem;
+            }
+
+            .contact-value {
+                font-size: 0.65rem;
+            }
+        }
+
+        /* Touch-friendly scrollbar for mobile */
+        @media (max-width: 768px) {
+            .projects-cinema::-webkit-scrollbar {
+                height: 4px;
+            }
+
+            .projects-cinema::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+                margin: 0 1rem;
+            }
+
+            .projects-cinema::-webkit-scrollbar-thumb {
+                background: var(--accent-blue);
+                border-radius: 2px;
+            }
+
+            /* Scroll indicator dots */
+            .projects-section .section-subtitle::after {
+                content: '';
+                display: block;
+                width: 40px;
+                height: 4px;
+                background: linear-gradient(90deg, var(--accent-blue), transparent);
+                margin-top: 1rem;
+                border-radius: 2px;
+            }
+
+            /* Mobile touch feedback */
+            .project-cinema-card:active .project-cinema-inner {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
+            .filter-btn:active {
+                transform: scale(0.95);
+                background: var(--accent-blue);
+            }
+
+            /* Timeline mobile improvements */
+            .timeline-card {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .timeline-tag {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+            }
+        }
+
+        /* Landscape mode on mobile */
+        @media (max-width: 896px) and (orientation: landscape) {
+            .hero {
+                min-height: auto;
+                padding-top: 80px;
+            }
+
+            .hero-image-container {
+                max-width: 200px;
+                height: 260px;
+            }
+
+            .hero-title {
+                font-size: clamp(1.5rem, 8vw, 2rem);
+            }
+
+            .hero-stats {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+            }
+        }
+
+        /* ==========================================
            PROJECTS SECTION - CINEMA STYLE
            ========================================== */
         .projects-cinema {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            overflow-x: auto;
             padding: 2rem 0;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-blue) var(--bg-tertiary);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .projects-cinema::-webkit-scrollbar {
@@ -1815,10 +2416,8 @@
         }
 
         .project-cinema-card {
-            flex: 0 0 450px;
-            scroll-snap-align: center;
             perspective: 1000px;
-            height: 520px;
+            min-height: 520px;
         }
 
         .project-cinema-inner {
@@ -2097,7 +2696,8 @@
         }
 
         .terminal-wrapper {
-            max-width: 900px;
+            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
         }
 
@@ -2201,8 +2801,8 @@
             font-family: var(--font-mono);
             font-size: 0.9375rem;
             line-height: 1.8;
-            min-height: 350px;
-            max-height: 450px;
+            min-height: 65vh;
+            max-height: 80vh;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -2252,12 +2852,16 @@
             font-size: 0.9375rem;
             width: 100%;
             outline: none;
-            caret-color: transparent;
+            caret-color: #4ade80;
+            /* Restore native cursor */
             cursor: text;
             padding: 0;
             margin: 0;
             -webkit-appearance: none;
             appearance: none;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
         }
 
         .terminal-input::placeholder {
@@ -2266,25 +2870,7 @@
         }
 
         .terminal-cursor {
-            display: inline-block;
-            width: 8px;
-            height: 18px;
-            background: #4ade80;
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-            margin-left: 2px;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
+            display: none;
         }
 
         .terminal-output {
@@ -2326,6 +2912,11 @@
             transition: all 0.4s var(--ease-out-expo);
             position: relative;
             overflow: hidden;
+        }
+
+        .contact {
+            /* Inherits centering from section */
+            width: 100%;
         }
 
         .contact-card::before {
@@ -2614,6 +3205,9 @@
             animation: pulse-status 2s ease-in-out infinite;
             box-shadow: 0 0 10px #27c93f;
             margin-right: 6px;
+            vertical-align: middle;
+            position: relative;
+            top: -2px;
         }
 
         @keyframes pulse-status {
@@ -2705,76 +3299,48 @@
             opacity: 1;
         }
 
-        /* ==========================================
-           VOICE NAVIGATION
-           ========================================== */
-        .voice-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 9996;
-            transition: all 0.3s ease;
-        }
+        /* Mobile Tinder-like Swipe Cards */
+        @media (max-width: 768px) {
 
-        .voice-btn:hover {
-            border-color: var(--accent-blue);
-            transform: scale(1.1);
-        }
+            .about-grid,
+            .projects-cinema,
+            .skills-grid,
+            .education-grid,
+            .contact-grid {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                scroll-snap-type: x mandatory;
+                padding-bottom: 2rem !important;
+                gap: 1.5rem !important;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+                width: 100vw !important;
+                margin-left: -1.5rem !important;
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+                justify-content: flex-start !important;
+            }
 
-        .voice-btn.active {
-            background: var(--accent-blue);
-            border-color: var(--accent-blue);
-        }
+            .about-grid>*,
+            .project-cinema-card,
+            .skill-category,
+            .education-card,
+            .contact-card {
+                min-width: 85vw !important;
+                scroll-snap-align: center;
+                flex: 0 0 auto !important;
+                margin: 0 !important;
+            }
 
-        .voice-btn svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--text-primary);
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .voice-btn.active svg {
-            stroke: white;
-        }
-
-        .voice-waveform {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            background: var(--bg-glass);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem;
-            display: none;
-            flex-direction: column;
-            gap: 0.5rem;
-            min-width: 200px;
-        }
-
-        .voice-waveform.active {
-            display: flex;
-        }
-
-        .voice-bar {
-            height: 4px;
-            background: var(--accent-blue);
-            border-radius: 2px;
-            animation: voiceWave 0.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes voiceWave {
-            to {
-                opacity: 0.3;
+            /* Hide scrollbars */
+            .about-grid::-webkit-scrollbar,
+            .projects-cinema::-webkit-scrollbar,
+            .skills-grid::-webkit-scrollbar,
+            .education-grid::-webkit-scrollbar,
+            .contact-grid::-webkit-scrollbar {
+                display: none;
             }
         }
     </style>
@@ -2861,23 +3427,7 @@
     <!-- Flashlight Overlay -->
     <div class="flashlight-overlay" id="flashlight-overlay"></div>
 
-    <!-- Voice Button -->
-    <div class="voice-btn" id="voice-btn">
-        <svg viewBox="0 0 24 24">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-            <line x1="12" y1="19" x2="12" y2="23" />
-            <line x1="8" y1="23" x2="16" y2="23" />
-        </svg>
-    </div>
 
-    <!-- Voice Waveform -->
-    <div class="voice-waveform" id="voice-waveform">
-        <div style="display: flex; gap: 3px; height: 20px; align-items: center;">
-            <div class="voice-bar" style="width: 100%; animation-delay: 0s;"></div>
-        </div>
-        <p style="color: var(--text-secondary); font-size: 0.75rem; text-align: center;">Say "Go to Projects"</p>
-    </div>
 
     <!-- Navigation -->
     <nav class="nav" id="nav">
@@ -2946,6 +3496,10 @@
                     <img src="Subject.png" alt="Vineet Kishore" class="hero-image-bw" draggable="false"
                         oncontextmenu="return false;">
 
+                    <!-- 3D/Holographic Layers -->
+                    <img src="generated_assets/subject_edges.png" class="hero-image-edges" alt="" aria-hidden="true">
+                    <img src="generated_assets/subject_glitch.png" class="hero-image-glitch" alt="" aria-hidden="true">
+
                     <!-- Color version - revealed by bubble -->
                     <img src="Subject.png" alt="" class="hero-image-color" id="hero-color-image" aria-hidden="true"
                         draggable="false" oncontextmenu="return false;">
@@ -2960,6 +3514,79 @@
             </div>
         </div>
     </section>
+
+    <style>
+        /* 3D/Holographic Effect Styles */
+        .hero-image-edges {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            opacity: 0.15;
+            mix-blend-mode: screen;
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .hero-image-container:hover .hero-image-edges {
+            opacity: 0.4;
+            filter: drop-shadow(0 0 5px var(--accent-blue));
+        }
+
+        .hero-image-glitch {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            mix-blend-mode: hard-light;
+        }
+
+        .hero-image-container:hover .hero-image-glitch {
+            animation: glitch-flicker 2s infinite;
+        }
+
+        @keyframes glitch-flicker {
+            0% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+
+            2% {
+                opacity: 0.4;
+                transform: translateX(-2px);
+            }
+
+            4% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+
+            6% {
+                opacity: 0;
+            }
+
+            8% {
+                opacity: 0.3;
+                transform: translateX(2px);
+            }
+
+            10% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
 
     <!-- About Section -->
     <section class="about" id="about">
@@ -3345,9 +3972,9 @@
                         <span class="terminal-prompt">➜</span>
                         <span style="color: #4ade80;">~</span>
                         <div class="terminal-input-wrapper">
-                            <input type="text" class="terminal-input" id="terminal-input" placeholder="Enter command..."
-                                autocomplete="off" spellcheck="false" autocapitalize="off">
-                            <span class="terminal-cursor" id="terminal-cursor"></span>
+                            <input type="text" class="terminal-input" id="terminal-input"
+                                placeholder="Type ? to see everything, or just start exploring..." autocomplete="off"
+                                spellcheck="false" autocapitalize="off">
                         </div>
                     </div>
                 </div>
@@ -3355,6 +3982,9 @@
             </div>
         </div>
     </section>
+
+    <!-- Terminal Script — ISOLATED from main script so it never breaks -->
+    <script src="terminal-enhanced.js"></script>
 
     <!-- Contact Section -->
     <section class="contact" id="contact">
@@ -3957,238 +4587,8 @@
             }
         });
 
-        // ==========================================
-        // TERMINAL FUNCTIONALITY - FIXED
-        // ==========================================
-
-        (function initTerminal() {
-            const terminalInput = document.getElementById('terminal-input');
-            const terminalBody = document.getElementById('terminal-body');
-            const inputLine = document.getElementById('terminal-input-line');
-            const terminalCursor = document.getElementById('terminal-cursor');
-
-            if (!terminalInput || !terminalBody || !inputLine) {
-                console.error('Terminal elements not found');
-                return;
-            }
-
-            // Focus the input immediately and on any click
-            function focusInput() {
-                terminalInput.focus();
-                terminalCursor.style.opacity = '1';
-            }
-
-            // Auto-focus on load
-            setTimeout(focusInput, 1000);
-
-            // Click handlers for terminal
-            document.getElementById('terminal-container').addEventListener('click', function (e) {
-                e.stopPropagation();
-                focusInput();
-            });
-
-            terminalBody.addEventListener('click', function (e) {
-                e.stopPropagation();
-                focusInput();
-            });
-
-            // Blink cursor when input is focused
-            terminalInput.addEventListener('focus', function () {
-                terminalCursor.style.animation = 'blink 1s step-end infinite';
-            });
-
-            terminalInput.addEventListener('blur', function () {
-                terminalCursor.style.animation = 'none';
-                terminalCursor.style.opacity = '0';
-            });
-
-            const commands = {
-                help: () => [
-                    'Available commands:',
-                    '  • about     - Display information about me',
-                    '  • skills    - List technical skills',
-                    '  • experience - Show work experience',
-                    '  • education - Show education',
-                    '  • projects  - Display project portfolio',
-                    '  • contact   - Show contact information',
-                    '  • clear     - Clear terminal',
-                    '  • resume    - Download resume',
-                    '  • eastereggs - Find hidden secrets'
-                ],
-                about: () => [
-                    '┌─────────────────────────────────────┐',
-                    '│ VINEET KISHORE                      │',
-                    '│ Infrastructure Engineer             │',
-                    '│ Strategic Technologist              │',
-                    '└─────────────────────────────────────┘',
-                    '',
-                    'I build resilient systems with 99.9% uptime.',
-                    'Passionate about automation, scalability, and',
-                    'competitive excellence.'
-                ],
-                skills: () => [
-                    'Technical Skills:',
-                    '  • Infrastructure: Docker, Kubernetes, Linux',
-                    '  • Cloud: AWS, Azure, GCP',
-                    '  • Automation: Ansible, Terraform, Python',
-                    '  • Monitoring: Prometheus, Grafana, ELK',
-                    '  • Databases: Hadoop, MongoDB, PostgreSQL'
-                ],
-                experience: () => [
-                    'Experience:',
-                    '  • HSBC Software Development (2020-2021)',
-                    '    Software Engineer - Hadoop, Ansible',
-                    '  • HCL Technologies (2019)',
-                    '    Summer Intern - Flutter, MongoDB',
-                    '  • Toise Tech Products (2019)',
-                    '    Software Intern - Flutter, Firebase'
-                ],
-                education: () => [
-                    'Education:',
-                    '  • VIT University, Chennai (2017-2021)',
-                    '    B.Tech Computer Science',
-                    '    Distributed Systems & Data Engineering',
-                    '  • Summer Fields School, New Delhi',
-                    '    CBSE — Class XII & X',
-                    '',
-                    'Distinctions:',
-                    '  🏆 E-Sports Champion — VIT Cultural Fest',
-                    '  🥋 2x Gold — Taekwondo (Zonal & Delhi State)',
-                    '  💯 Perfect Score — Information Technology'
-                ],
-                projects: () => [
-                    'Projects:',
-                    '  • Droppy - macOS utility with 5K+ users',
-                    '  • Home Lab - Enterprise infrastructure',
-                    '  • N8N LLM - GenAI automation pipeline',
-                    '',
-                    'Type "goto projects" to view detailed project info.'
-                ],
-                contact: () => [
-                    'Contact Information:',
-                    '  • Email: vineetkishore01@gmail.com',
-                    '  • LinkedIn: linkedin.com/in/vineetkishore',
-                    '  • GitHub: github.com/vineetkishore',
-                    '  • YouTube: youtube.com/@vineetkishore'
-                ],
-                clear: () => {
-                    const lines = terminalBody.querySelectorAll('.terminal-line');
-                    lines.forEach(l => l.remove());
-                    return [];
-                },
-                resume: () => {
-                    window.open('Vineet Kishore Resume.pdf', '_blank');
-                    return ['Opening resume...'];
-                },
-                eastereggs: () => [
-                    '🎉 Easter Eggs:',
-                    '',
-                    'Secret commands:',
-                    '  • matrix - Activate matrix mode',
-                    '  • sudo  - Try your luck',
-                    '  • hack  - Become a hacker',
-                    '',
-                    'Keyboard shortcuts:',
-                    '  • Press F - Flashlight mode',
-                    '  • Click mic - Voice navigation'
-                ],
-                matrix: () => {
-                    document.body.style.background = '#000';
-                    const matrix = document.createElement('div');
-                    matrix.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;font-family:monospace;font-size:14px;color:#0f0;opacity:0.1;';
-                    document.body.appendChild(matrix);
-
-                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                    const drops = [];
-                    const columns = Math.floor(window.innerWidth / 14);
-
-                    for (let i = 0; i < columns; i++) { drops[i] = 1; }
-
-                    function draw() {
-                        matrix.innerHTML = '';
-                        for (let i = 0; i < drops.length; i++) {
-                            const char = chars[Math.floor(Math.random() * chars.length)];
-                            const span = document.createElement('span');
-                            span.textContent = char;
-                            span.style.position = 'absolute';
-                            span.style.left = i * 14 + 'px';
-                            span.style.top = drops[i] * 14 + 'px';
-                            matrix.appendChild(span);
-                            if (drops[i] * 14 > window.innerHeight && Math.random() > 0.975) { drops[i] = 0; }
-                            drops[i]++;
-                        }
-                    }
-
-                    const interval = setInterval(draw, 50);
-                    setTimeout(() => { clearInterval(interval); matrix.remove(); document.body.style.background = ''; }, 5000);
-                    return ['Matrix mode activated for 5 seconds...'];
-                },
-                sudo: () => [
-                    'Nice try! 😏',
-                    'But this terminal runs on client-side JavaScript.',
-                    'No root access here!'
-                ],
-                hack: () => [
-                    'Initiating hack sequence...',
-                    '[████░░░░░░░░░░░░░░] 20%',
-                    '[████████░░░░░░░░░░] 40%',
-                    '[████████████░░░░░░] 60%',
-                    '[████████████████░░] 80%',
-                    '[██████████████████] 100%',
-                    '',
-                    'Just kidding! I\'m an ethical engineer. 😉'
-                ]
-            };
-
-            function addTerminalLine(text, isPrompt = false) {
-                const line = document.createElement('div');
-                line.className = 'terminal-line';
-                line.style.cssText = 'margin-bottom: 0.4rem; animation: fadeIn 0.3s forwards;';
-                if (isPrompt) {
-                    line.innerHTML = '<span class="terminal-prompt">➜</span> <span style="color: #4ade80;">~</span> ';
-                    const cmdSpan = document.createElement('span');
-                    cmdSpan.style.color = '#4ade80';
-                    cmdSpan.textContent = text;
-                    line.appendChild(cmdSpan);
-                } else {
-                    line.textContent = text;
-                }
-                terminalBody.insertBefore(line, inputLine);
-                terminalBody.scrollTop = terminalBody.scrollHeight;
-            }
-
-            terminalInput.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    const command = terminalInput.value.trim().toLowerCase();
-                    terminalInput.value = '';
-
-                    if (command === '') return;
-
-                    addTerminalLine(command, true);
-
-                    if (commands[command]) {
-                        const output = commands[command]();
-                        output.forEach((line, i) => {
-                            setTimeout(() => addTerminalLine(line), i * 40);
-                        });
-                    } else if (command.startsWith('goto ')) {
-                        const section = command.replace('goto ', '');
-                        const target = document.getElementById(section);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                            addTerminalLine(`Navigating to ${section}...`);
-                        } else {
-                            addTerminalLine(`Section "${section}" not found.`);
-                        }
-                    } else {
-                        addTerminalLine(`Command not found: ${command}. Type "help" for available commands.`);
-                    }
-
-                    // Re-focus after command
-                    setTimeout(focusInput, 50);
-                }
-            });
-        })();
+        // Terminal is now in its own standalone <script> tag above
+        // (isolated from this script block for reliability)
 
         // ==========================================
         // NAVIGATION ORB - ENHANCED
@@ -4329,60 +4729,16 @@
             });
 
             document.addEventListener('keydown', (e) => {
+                // Don't trigger flashlight when user is typing in an input/textarea
+                const tag = e.target.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
                 if (e.key === 'f' || e.key === 'F') {
                     flashlightOverlay.classList.toggle('active');
                 }
             });
         }
 
-        // ==========================================
-        // VOICE NAVIGATION
-        // ==========================================
 
-        const voiceBtn = document.getElementById('voice-btn');
-        const voiceWaveform = document.getElementById('voice-waveform');
-
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            recognition.onresult = (event) => {
-                const command = event.results[0][0].transcript.toLowerCase();
-                addTerminalLine(`Voice command: "${command}"`, 'info');
-
-                // Navigate based on voice
-                const sections = ['about', 'experience', 'projects', 'terminal', 'contact'];
-                sections.forEach(section => {
-                    if (command.includes(section)) {
-                        document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
-                        addTerminalLine(`Navigating to ${section}...`, 'success');
-                    }
-                });
-
-                if (command.includes('home') || command.includes('top')) {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            };
-
-            recognition.onend = () => {
-                voiceBtn.classList.remove('active');
-                voiceWaveform.classList.remove('active');
-            };
-
-            voiceBtn.addEventListener('click', () => {
-                if (voiceBtn.classList.contains('active')) {
-                    recognition.stop();
-                } else {
-                    recognition.start();
-                    voiceBtn.classList.add('active');
-                    voiceWaveform.classList.add('active');
-                }
-            });
-        } else {
-            voiceBtn.style.display = 'none';
-        }
 
         // ==========================================
         // HERO COLOR REVEAL BLOB - ENTERPRISE GRADE
@@ -4393,14 +4749,34 @@
         const HeroWaterBubble = {
             init() {
                 this.container = document.getElementById('hero-image-container');
+                if (!this.container) {
+                    console.warn('HeroWaterBubble: Container not found');
+                    return;
+                }
+
                 this.colorImage = document.getElementById('hero-color-image');
                 this.bubble = document.getElementById('hero-bubble');
                 this.particlesContainer = document.getElementById('hero-particles');
 
-                // Create micro-bubbles container
-                this.createMicroBubbles();
+                this.edgesImage = this.container.querySelector('.hero-image-edges');
+                this.glitchImage = this.container.querySelector('.hero-image-glitch');
 
-                if (!this.container || !this.colorImage || !this.bubble) {
+                // Create micro-bubbles container
+                try {
+                    this.createMicroBubbles();
+                } catch (e) {
+                    console.error('HeroWaterBubble: Error creating micro-bubbles', e);
+                }
+
+                console.log('HeroWaterBubble: Elements ->', {
+                    c: !!this.container,
+                    img: !!this.colorImage,
+                    bub: !!this.bubble,
+                    e: !!this.edgesImage,
+                    g: !!this.glitchImage
+                });
+
+                if (!this.colorImage || !this.bubble) {
                     console.warn('HeroWaterBubble: Elements not found');
                     return;
                 }
@@ -4560,7 +4936,21 @@
                 this.bubble.style.height = `${this.bubbleSize}px`;
 
                 // Update color reveal clip path
-                this.colorImage.style.clipPath = `circle(${this.bubbleSize / 2.2}px at ${this.currentX}px ${this.currentY}px)`;
+                const radius = this.bubbleSize / 2.2;
+                this.colorImage.style.clipPath = `circle(${radius}px at ${this.currentX}px ${this.currentY}px)`;
+
+                // Update 3D edges clip path (slightly larger for 'scanning' effect)
+                if (this.edgesImage) {
+                    this.edgesImage.style.clipPath = `circle(${radius + 20}px at ${this.currentX}px ${this.currentY}px)`;
+                    this.edgesImage.style.transform = `translate(${(this.currentX - this.targetX) * 0.05}px, ${(this.currentY - this.targetY) * 0.05}px)`; // Parallax
+                }
+
+                // Glitch effect occasional sync
+                if (this.glitchImage && Math.random() > 0.95) {
+                    this.glitchImage.style.clipPath = `circle(${radius}px at ${this.currentX}px ${this.currentY}px)`;
+                    this.glitchImage.style.opacity = '0.5';
+                    setTimeout(() => { if (this.glitchImage) this.glitchImage.style.opacity = '0'; }, 100);
+                }
 
                 this.rafId = requestAnimationFrame(() => this.animate());
             },
@@ -4621,6 +5011,115 @@
         }
 
         // ==========================================
+        // MOBILE OPTIMIZATIONS
+        // ==========================================
+        const MobileOptimizer = {
+            init() {
+                this.isTouchDevice = this.detectTouchDevice();
+
+                if (this.isTouchDevice) {
+                    this.optimizeForTouch();
+                    console.log('MobileOptimizer: Touch device optimizations applied');
+                }
+
+                // Always optimize scroll performance
+                this.optimizeScroll();
+            },
+
+            detectTouchDevice() {
+                return (
+                    'ontouchstart' in window ||
+                    navigator.maxTouchPoints > 0 ||
+                    window.matchMedia('(pointer: coarse)').matches ||
+                    window.matchMedia('(hover: none)').matches
+                );
+            },
+
+            optimizeForTouch() {
+                // Disable hover-dependent effects on touch devices
+                document.body.classList.add('touch-device');
+
+                // Optimize project cards for touch
+                const projectCards = document.querySelectorAll('.project-cinema-card');
+                projectCards.forEach(card => {
+                    // Add tap highlight
+                    card.addEventListener('touchstart', () => {
+                        card.style.transform = 'scale(0.98)';
+                    }, { passive: true });
+
+                    card.addEventListener('touchend', () => {
+                        card.style.transform = '';
+                    }, { passive: true });
+                });
+
+                // Optimize terminal for mobile
+                const terminalInput = document.getElementById('terminal-input');
+                if (terminalInput && this.isTouchDevice) {
+                    // Ensure input is accessible on mobile
+                    terminalInput.setAttribute('autocorrect', 'off');
+                    terminalInput.setAttribute('autocomplete', 'off');
+
+                    // Scroll terminal into view when focused
+                    terminalInput.addEventListener('focus', () => {
+                        setTimeout(() => {
+                            terminalInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 300);
+                    });
+                }
+
+                // Optimize smooth scroll for mobile
+                if (typeof lenis !== 'undefined') {
+                    lenis.options.smoothTouch = false;
+                }
+            },
+
+            optimizeScroll() {
+                // Use passive event listeners for scroll
+                let ticking = false;
+
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                }, { passive: true });
+
+                // Optimize intersection observer for mobile
+                if ('IntersectionObserver' in window) {
+                    const imageObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const img = entry.target;
+                                if (img.dataset.src) {
+                                    img.src = img.dataset.src;
+                                    img.removeAttribute('data-src');
+                                }
+                                imageObserver.unobserve(img);
+                            }
+                        });
+                    }, {
+                        rootMargin: '50px',
+                        threshold: 0.01
+                    });
+
+                    // Observe images for lazy loading
+                    document.querySelectorAll('img[data-src]').forEach(img => {
+                        imageObserver.observe(img);
+                    });
+                }
+            }
+        };
+
+        // Initialize mobile optimizer
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => MobileOptimizer.init());
+        } else {
+            MobileOptimizer.init();
+        }
+
+        // ==========================================
         // SYSTEM INITIALIZATION CHECK
         // ==========================================
         const SystemCheck = {
@@ -4634,7 +5133,8 @@
                     { name: 'Project Filter System', check: () => typeof ProjectFilterSystem !== 'undefined' },
                     { name: 'Hero Color Reveal', check: () => typeof HeroColorReveal !== 'undefined' },
                     { name: 'Navigation Orb', check: () => typeof NavigationOrb !== 'undefined' },
-                    { name: 'Mobile Menu', check: () => typeof MobileMenu !== 'undefined' }
+                    { name: 'Mobile Menu', check: () => typeof MobileMenu !== 'undefined' },
+                    { name: 'Mobile Optimizer', check: () => typeof MobileOptimizer !== 'undefined' }
                 ];
 
                 console.group('🚀 Portfolio System Check');
@@ -4666,7 +5166,7 @@
         console.log('%c\n🎮 Secret commands:', 'color: #007AFF; font-size: 12px; font-weight: bold;');
         console.log('%c• Type "matrix" in the terminal', 'color: #86868B; font-size: 12px;');
         console.log('%c• Press F for flashlight mode', 'color: #86868B; font-size: 12px;');
-        console.log('%c• Click the mic icon for voice nav', 'color: #86868B; font-size: 12px;');
+        console.log('%c• Explore the terminal for more secrets', 'color: #86868B; font-size: 12px;');
         console.log('%c\n✨ Happy exploring! 🚀', 'color: #007AFF; font-size: 12px;');
 
         // ==========================================
@@ -4799,6 +5299,8 @@
         // Initialize filter system when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => ProjectFilterSystem.init());
+        } else {
+            ProjectFilterSystem.init();
         }
 
         // ==========================================
@@ -4852,65 +5354,7 @@
             Toast.init();
         }
 
-        // ==========================================
-        // 3D TILT CARD EFFECT - Steal from Wall of Portfolios
-        // ==========================================
-        const TiltEffect = {
-            init() {
-                this.cards = document.querySelectorAll('.about-card, .project-cinema-card, .contact-card');
-                this.maxTilt = 8; // degrees (Reduced for subtlety)
 
-                if (window.matchMedia('(pointer: coarse)').matches) {
-                    return; // Disable on touch
-                }
-
-                this.cards.forEach(card => {
-                    // Start 3D perspective
-                    card.style.perspective = '1000px';
-                    card.style.transformStyle = 'preserve-3d';
-
-                    card.addEventListener('mousemove', (e) => this.onMove(e, card));
-                    card.addEventListener('mouseleave', (e) => this.onLeave(e, card));
-                });
-
-                console.log('TiltEffect: Initialized');
-            },
-
-            onMove(e, card) {
-                const rect = card.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-
-                const rx = (e.clientY - cy) / (rect.height / 2);
-                const ry = (e.clientX - cx) / (rect.width / 2);
-
-                const clamp = v => Math.max(-1, Math.min(1, v));
-                const tiltX = -clamp(rx) * this.maxTilt;
-                const tiltY = clamp(ry) * this.maxTilt;
-
-                card.style.transition = 'none';
-                card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
-
-                // Add glare effect if desired (optional, keeping clean for now)
-            },
-
-            onLeave(e, card) {
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-                // Ensure smooth transition back
-                card.style.transition = 'transform 0.5s ease-out';
-                // Remove transition after it's done so mousemove is instant
-                setTimeout(() => {
-                    card.style.transition = '';
-                }, 500);
-            }
-        };
-
-        // Initialize Tilt
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => TiltEffect.init());
-        } else {
-            TiltEffect.init();
-        }
 
 
         // ==========================================
@@ -5456,11 +5900,11 @@
         // ==========================================
         // SOUND MANAGER (PHASE 3)
         // ==========================================
-        const SoundManager = {
+        var SoundManager = {
             init() {
-                // Using short base64 placeholders for subtle UI sounds
-                this.clickSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
-                this.hoverSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+                // Sound effects disabled — invalid audio data removed to prevent console errors
+                this.clickSound = null;
+                this.hoverSound = null;
 
                 this.muted = true;
                 this.setupListeners();
@@ -5492,6 +5936,7 @@
 
                 try {
                     const sound = type === 'click' ? this.clickSound : this.hoverSound;
+                    if (!sound) return;
                     const clone = sound.cloneNode();
                     clone.volume = 0.05; // Very subtle
                     clone.play().catch(() => { });
@@ -5504,7 +5949,7 @@
         // ==========================================
         // PERFORMANCE MANAGER (PHASE 3)
         // ==========================================
-        const PerformanceManager = {
+        var PerformanceManager = {
             init() {
                 this.isLowPower = false;
                 this.checkPerformance();
