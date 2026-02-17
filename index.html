@@ -54,6 +54,118 @@
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
     <link rel="stylesheet" href="core/css/style.css">
     <link rel="stylesheet" href="core/css/mobile.css">
+    <style id="mobile-force-overdrive">
+        /* Hide dock on desktop by default */
+        .mobile-dock-wrapper {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+
+            html body #menu-toggle,
+            html body .menu-toggle {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                z-index: 99999 !important;
+                width: 30px !important;
+                height: 22px !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+
+            html body #menu-toggle span,
+            html body .menu-toggle span {
+                display: block !important;
+                width: 100% !important;
+                height: 3px !important;
+                background-color: #ffffff !important;
+                border-radius: 4px !important;
+            }
+
+            html body .mobile-dock-wrapper {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: fixed !important;
+                bottom: 24px !important;
+                left: 16px !important;
+                right: 16px !important;
+                width: calc(100% - 32px) !important;
+                height: 64px !important;
+                z-index: 99999 !important;
+                transform: none !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+            html body .mobile-dock {
+                display: flex !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: rgba(18, 18, 20, 0.9) !important;
+                backdrop-filter: blur(25px) !important;
+                -webkit-backdrop-filter: blur(25px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 32px !important;
+                justify-content: space-around !important;
+                padding: 0 10px !important;
+                margin: 0 !important;
+            }
+
+            html body .mobile-dock-item {
+                flex: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                color: rgba(255, 255, 255, 0.4) !important;
+                text-decoration: none !important;
+            }
+
+            html body .mobile-dock-item.active {
+                color: #007AFF !important;
+            }
+
+            html body .hero-cta-group {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                gap: 12px !important;
+                width: 100% !important;
+                align-items: stretch !important;
+            }
+
+            html body .hero-cta-group a,
+            html body .hero-cta-group button {
+                flex: 1 !important;
+                width: 48% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                text-align: center !important;
+                padding: 16px 10px !important;
+            }
+
+            html body .hero {
+                padding: 100px 20px 40px 20px !important;
+            }
+
+            html body .project-filters {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+            }
+
+            html body .timeline-container {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+            }
+        }
+    </style>
+
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
