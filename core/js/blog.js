@@ -106,8 +106,9 @@ const BlogEngine = {
                 !l.match(/^Category:/i) &&
                 !l.match(/^---/)
             );
-            const excerpt = lines[0] ? (lines[0].length > 180 ? lines[0].substring(0, 177) + '...' : lines[0])
-                : "A deep dive into technical implementation and discovery.";
+            // Excerpt: strip markdown and extract first clean line
+            const rawExcerpt = lines[0] || "A deep dive into technical implementation and discovery.";
+            const excerpt = this.stripMarkdown(rawExcerpt).substring(0, 180).trim() + (rawExcerpt.length > 180 ? '...' : '');
 
             return {
                 slug: encodeURIComponent(file.name), // Use filename as slug
@@ -129,6 +130,16 @@ const BlogEngine = {
                 file: file.name
             };
         }
+    },
+
+    stripMarkdown(text) {
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '$1') // Bold
+            .replace(/\*(.*?)\*/g, '$1')     // Italics
+            .replace(/`(.*?)`/g, '$1')       // Code
+            .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Links
+            .replace(/#+\s+/g, '')           // Headers
+            .trim();
     },
 
     estimateReadTime(text) {
@@ -212,14 +223,19 @@ const BlogEngine = {
         this.grid.innerHTML = paginatedPosts.map(post => this.createCard(post)).join('');
         this.renderPagination();
 
-        // Entry animation
-        gsap.from('.blog-card', {
-            opacity: 0,
-            y: 30,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power3.out'
-        });
+        // Entry animation - clear previous and animate in cleanly
+        gsap.killTweensOf('.blog-card');
+        gsap.fromTo('.blog-card',
+            { opacity: 0, y: 30 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power4.out',
+                clearProps: "all" // Ensures the inline opacities don't get stuck
+            }
+        );
     },
 
     createCard(post) {

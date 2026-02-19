@@ -97,7 +97,8 @@
 }
 
 .blog-card {
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.03);
+    /* Slightly brighter base */
     border: 1px solid var(--border-color);
     border-radius: 24px;
     padding: 2.5rem;
@@ -108,7 +109,8 @@
     color: inherit;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
+    /* Deeper blur for premium feel */
 }
 
 .blog-card:hover {
@@ -149,6 +151,8 @@
     line-height: 1.6;
     margin-bottom: 2rem;
     flex-grow: 1;
+    opacity: 0.85;
+    /* Better visibility than the default faint state */
 }
 
 .blog-card-footer {
