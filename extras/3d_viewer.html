@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Portrait Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        .loading.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .instruction {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .error {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 100, 100, 0.8);
+            font-size: 14px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>Loading 3D Scene...</div>
+    </div>
+
+    <div class="error" id="error">
+        Error loading assets.<br>
+        Please run: python3 generate_assets.py
+    </div>
+
+    <div id="canvas-container"></div>
+    
+    <div class="instruction">Move cursor to rotate • Scroll to zoom</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Configuration
+        const CONFIG = {
+            depthScale: 50,        // How much depth to apply
+            mouseSensitivity: 0.5, // Camera rotation sensitivity
+            smoothness: 0.05       // Camera smoothing
+        };
+
+        // Global variables
+        let scene, camera, renderer;
+        let portraitMesh;
+        let mouseX = 0, mouseY = 0;
+        let targetRotationX = 0, targetRotationY = 0;
+        let currentRotationX = 0, currentRotationY = 0;
+
+        // Check if assets exist
+        function checkAssets() {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => reject(false);
+                img.src = 'generated_assets/depth_map.png';
+            });
+        }
+
+        // Initialize Three.js scene
+        function init() {
+            const container = document.getElementById('canvas-container');
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(
+                45,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+            camera.position.z = 300;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                alpha: true 
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Load textures and create mesh
+            loadTextures();
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(100, 100, 200);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            const rimLight = new THREE.PointLight(0x4488ff, 0.5, 500);
+            rimLight.position.set(-200, 100, -100);
+            scene.add(rimLight);
+
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('wheel', onWheel);
+
+            // Start animation
+            animate();
+        }
+
+        // Load textures
+        function loadTextures() {
+            const textureLoader = new THREE.TextureLoader();
+
+            // Load color map (original image)
+            textureLoader.load(
+                'Subject.png',
+                function(colorMap) {
+                    colorMap.encoding = THREE.sRGBEncoding;
+                    
+                    // Load depth map
+                    textureLoader.load(
+                        'generated_assets/depth_map.png',
+                        function(depthMap) {
+                            create3DPortrait(colorMap, depthMap);
+                            document.getElementById('loading').classList.add('hidden');
+                        },
+                        undefined,
+                        function(err) {
+                            showError();
+                        }
+                    );
+                },
+                undefined,
+                function(err) {
+                    showError();
+                }
+            );
+        }
+
+        // Create the 3D portrait mesh
+        function create3DPortrait(colorMap, depthMap) {
+            // Get image dimensions
+            const width = colorMap.image.width;
+            const height = colorMap.image.height;
+            
+            // Calculate aspect ratio
+            const aspect = width / height;
+            const planeWidth = 200;
+            const planeHeight = planeWidth / aspect;
+
+            // Create geometry with many segments for displacement
+            const geometry = new THREE.PlaneGeometry(
+                planeWidth, 
+                planeHeight, 
+                128,  // Width segments
+                128   // Height segments
+            );
+
+            // Custom shader material for depth-based displacement
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    colorMap: { value: colorMap },
+                    depthMap: { value: depthMap },
+                    depthScale: { value: CONFIG.depthScale },
+                    mousePos: { value: new THREE.Vector2(0, 0) }
+                },
+                vertexShader: `
+                    uniform sampler2D depthMap;
+                    uniform float depthScale;
+                    uniform vec2 mousePos;
+                    varying vec2 vUv;
+                    varying float vDepth;
+                    
+                    void main() {
+                        vUv = uv;
+                        
+                        // Sample depth
+                        vec4 depthColor = texture2D(depthMap, uv);
+                        float depth = depthColor.r;
+                        vDepth = depth;
+                        
+                        // Add wave effect based on mouse
+                        float dist = distance(uv, mousePos);
+                        float wave = sin(dist * 20.0 - time * 2.0) * 0.02 * (1.0 - dist);
+                        
+                        // Displace vertices
+                        vec3 pos = position;
+                        pos.z += depth * depthScale + wave;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform sampler2D colorMap;
+                    varying vec2 vUv;
+                    varying float vDepth;
+                    
+                    void main() {
+                        vec4 color = texture2D(colorMap, vUv);
+                        
+                        // Add subtle shading based on depth
+                        float shadow = 1.0 - vDepth * 0.2;
+                        color.rgb *= shadow;
+                        
+                        // Add rim light effect
+                        if (vDepth > 0.8) {
+                            color.rgb += vec3(0.1, 0.2, 0.4) * (vDepth - 0.8);
+                        }
+                        
+                        gl_FragColor = color;
+                    }
+                `,
+                side: THREE.DoubleSide
+            });
+
+            // Alternative: Use standard material with displacement map
+            const standardMaterial = new THREE.MeshStandardMaterial({
+                map: colorMap,
+                displacementMap: depthMap,
+                displacementScale: CONFIG.depthScale,
+                displacementBias: -CONFIG.depthScale / 2,
+                roughness: 0.4,
+                metalness: 0.1,
+            });
+
+            // Create mesh
+            portraitMesh = new THREE.Mesh(geometry, standardMaterial);
+            portraitMesh.castShadow = true;
+            portraitMesh.receiveShadow = true;
+            scene.add(portraitMesh);
+
+            // Add wireframe overlay (optional, subtle)
+            const wireframeGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight, 32, 32);
+            const wireframeMaterial = new THREE.MeshBasicMaterial({
+                color: 0x007aff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.05
+            });
+            const wireframe = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
+            wireframe.position.z = 1;
+            portraitMesh.add(wireframe);
+        }
+
+        // Mouse move handler
+        function onMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Update target rotation
+            targetRotationY = mouseX * CONFIG.mouseSensitivity;
+            targetRotationX = mouseY * CONFIG.mouseSensitivity;
+        }
+
+        // Wheel handler for zoom
+        function onWheel(event) {
+            camera.position.z += event.deltaY * 0.1;
+            camera.position.z = Math.max(100, Math.min(500, camera.position.z));
+        }
+
+        // Window resize handler
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Show error
+        function showError() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').style.display = 'block';
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (portraitMesh) {
+                // Smooth camera rotation
+                currentRotationX += (targetRotationX - currentRotationX) * CONFIG.smoothness;
+                currentRotationY += (targetRotationY - currentRotationY) * CONFIG.smoothness;
+                
+                portraitMesh.rotation.x = currentRotationX;
+                portraitMesh.rotation.y = currentRotationY;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Initialize
+        checkAssets()
+            .then(() => init())
+            .catch(() => showError());
+    </script>
+</body>
+</html>

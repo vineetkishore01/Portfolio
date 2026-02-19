@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Section FX Lab</title>
+    <style>
+        :root {
+            --primary: #007aff;
+            --bg: #050505;
+            --panel-bg: rgba(20, 20, 20, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: white;
+            font-family: 'SF Mono', 'Courier New', monospace;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Control Panel */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            z-index: 100;
+            width: 250px;
+        }
+
+        .controls h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .mode-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 122, 255, 0.4);
+        }
+
+        .instruction {
+            margin-top: 15px;
+            font-size: 10px;
+            color: #888;
+            line-height: 1.4;
+        }
+
+        /* Main Stage */
+        .stage {
+            position: relative;
+            width: 450px;
+            height: 600px;
+            perspective: 1000px;
+        }
+
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            background: #111;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        .layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+            will-change: transform, opacity;
+            transition: opacity 0.4s ease;
+        }
+
+        /* Assets */
+        .layer.bw {
+            z-index: 1;
+            filter: grayscale(100%) contrast(1.1);
+        }
+
+        .layer.color {
+            z-index: 2;
+            opacity: 0;
+        }
+
+        .layer.edges {
+            z-index: 3;
+            opacity: 0;
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 4px var(--primary));
+        }
+
+        .layer.glitch {
+            z-index: 4;
+            opacity: 0;
+            mix-blend-mode: color-dodge;
+        }
+
+        .layer.pixel {
+            z-index: 5;
+            opacity: 0;
+            image-rendering: pixelated;
+        }
+
+        /* EFFECT 1: CYBER HOLOGRAPHIC */
+        .mode-holo .layer.bw {
+            opacity: 0.4;
+            filter: brightness(0.5) contrast(1.2) grayscale(100%);
+        }
+
+        .mode-holo .layer.edges {
+            opacity: 0.6;
+            animation: holoPulse 4s infinite ease-in-out;
+        }
+
+        .mode-holo:hover .layer.edges {
+            opacity: 0.9;
+        }
+
+        .mode-holo:hover .layer.glitch {
+            animation: glitchFlicker 2s infinite;
+        }
+
+        /* EFFECT 2: 3D DEPTH PARALLAX */
+        .mode-parallax .layer.bw {
+            opacity: 1;
+        }
+
+        .mode-parallax .layer.color {
+            opacity: 1;
+            mix-blend-mode: overlay;
+        }
+
+        /* Subtle tint */
+        .mode-parallax .layer.edges {
+            opacity: 0.3;
+            mix-blend-mode: overlay;
+        }
+
+        /* EFFECT 3: SECURITY SCAN */
+        .scan-line {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .mode-scan .scan-line {
+            opacity: 1;
+            animation: scanMove 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mode-scan .layer.bw {
+            filter: grayscale(100%) brightness(0.8);
+        }
+
+        .mode-scan .layer.edges {
+            opacity: 0;
+            /* We will control this opacity via JS based on scan line position ideally, 
+               but strictly CSS version can use clip-path animation */
+            clip-path: inset(0 0 100% 0);
+            animation: scanReveal 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+        }
+
+        /* EFFECT 4: NOISE / PIXEL SORT */
+        .mode-noise .layer.bw {
+            opacity: 0;
+        }
+
+        .mode-noise .layer.pixel {
+            opacity: 1;
+            filter: grayscale(100%);
+            transition: 0.3s;
+        }
+
+        .mode-noise:hover .layer.pixel {
+            opacity: 0;
+        }
+
+        .mode-noise .layer.color {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        /* Reveal clean image behind */
+
+        /* Animations */
+        @keyframes holoPulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                filter: drop-shadow(0 0 2px var(--primary));
+            }
+
+            50% {
+                opacity: 0.8;
+                filter: drop-shadow(0 0 8px var(--primary));
+            }
+        }
+
+        @keyframes glitchFlicker {
+
+            0%,
+            90% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+
+            91% {
+                opacity: 0.8;
+                transform: translateX(-5px);
+                clip-path: inset(20% 0 50% 0);
+            }
+
+            92% {
+                opacity: 0.8;
+                transform: translateX(5px);
+                clip-path: inset(10% 0 10% 0);
+            }
+
+            93% {
+                opacity: 0;
+            }
+
+            96% {
+                opacity: 1;
+                transform: translateX(-2px);
+                clip-path: inset(80% 0 5% 0);
+                filter: hue-rotate(90deg);
+            }
+
+            97% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes scanMove {
+            0% {
+                top: -10%;
+            }
+
+            100% {
+                top: 110%;
+            }
+        }
+
+        @keyframes scanReveal {
+            0% {
+                clip-path: inset(0 0 100% 0);
+            }
+
+            50% {
+                clip-path: inset(0 0 0 0);
+            }
+
+            /* Fully revealed mid-scan? No. */
+            /* Let's try a band reveal */
+            0% {
+                clip-path: inset(0 0 100% 0);
+            }
+
+            100% {
+                clip-path: inset(100% 0 0 0);
+            }
+
+            /* Reveals as it goes down? No, that hides it. */
+        }
+
+        /* Better Scan Animation: revealing a band */
+        @keyframes scanBand {
+            0% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+            }
+
+            100% {
+                clip-path: polygon(0% 100%, 100% 100%, 100% 120%, 0% 120%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls">
+        <h2>FX Lab</h2>
+        <button class="mode-btn active" onclick="setMode('holo')">1. Cyber Holograph</button>
+        <button class="mode-btn" onclick="setMode('parallax')">2. 3D Depth Parallax</button>
+        <button class="mode-btn" onclick="setMode('scan')">3. Security Scan</button>
+        <button class="mode-btn" onclick="setMode('noise')">4. Pixel Focus</button>
+
+        <div class="instruction" id="desc">
+            Hover to activate holographic interference.
+        </div>
+    </div>
+
+    <div class="stage" id="stage">
+        <div class="hero-container mode-holo" id="container">
+            <div class="scan-line"></div>
+
+            <!-- Layers -->
+            <img src="Subject.png" class="layer bw">
+            <img src="Subject.png" class="layer color">
+            <img src="generated_assets/subject_edges.png" class="layer edges">
+            <img src="generated_assets/subject_glitch.png" class="layer glitch">
+            <img src="generated_assets/subject_pixel.png" class="layer pixel">
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const desc = document.getElementById('desc');
+        const stage = document.getElementById('stage');
+        let currentMode = 'holo';
+        let mouseX = 0, mouseY = 0;
+
+        const descriptions = {
+            'holo': 'CYBER HOLOGRAPH: <br>Edges pulse. Hover creates digital glitch interference. Best for dark themes.',
+            'parallax': '3D DEPTH: <br>Classic parallax. Layers move at different speeds based on mouse position.',
+            'scan': 'SECURITY SCAN: <br>Automated vertical scan. Reveals wireframe structure. No interaction needed.',
+            'noise': 'PIXEL FOCUS: <br>Image is encrypted (pixelated). Hover to decrypt and focus.'
+        };
+
+        function setMode(mode) {
+            // Remove previous mode class
+            container.classList.remove(`mode-${currentMode}`);
+
+            // Add new mode class
+            currentMode = mode;
+            container.classList.add(`mode-${mode}`);
+
+            // Update UI
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            desc.innerHTML = descriptions[mode];
+
+            // Reset transforms
+            resetTransforms();
+        }
+
+        function resetTransforms() {
+            container.style.transform = 'none';
+            document.querySelectorAll('.layer').forEach(l => l.style.transform = 'none');
+        }
+
+        // Interaction Logic
+        document.addEventListener('mousemove', (e) => {
+            const rect = stage.getBoundingClientRect();
+            const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+            const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+
+            mouseX = x;
+            mouseY = y;
+
+            if (currentMode === 'parallax') {
+                updateParallax(x, y);
+            } else if (currentMode === 'holo') {
+                updateHolo(x, y);
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            if (currentMode === 'parallax') {
+                container.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                document.querySelectorAll('.layer').forEach(l => l.style.transform = 'none');
+            }
+        });
+
+        function updateParallax(x, y) {
+            // Tilt container
+            container.style.transform = `rotateY(${x * 5}deg) rotateX(${-y * 5}deg)`;
+
+            // Move layers
+            const layers = {
+                'edges': 20,
+                'color': 10,
+                'glitch': 30,
+                'bw': 0
+            };
+
+            for (const [cls, factor] of Object.entries(layers)) {
+                const el = container.querySelector(`.layer.${cls}`);
+                if (el) el.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            }
+        }
+
+        function updateHolo(x, y) {
+            // Subtle movement for holo
+            const edges = container.querySelector('.layer.edges');
+            if (edges) edges.style.transform = `translate(${x * 5}px, ${y * 5}px)`;
+        }
+
+        // Animation Loop for complex logic if needed
+        function animate() {
+            if (currentMode === 'scan') {
+                // We could do custom JS animation for scan here if CSS isn't enough
+                // CSS is handling it for now
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+    </script>
+</body>
+
+</html>
