@@ -4137,3 +4137,15 @@
             color: var(--text-primary) !important;
             text-shadow: 0 0 30px var(--accent-glow) !important;
         }
+/* Loading State for Insights */
+.insight-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px dashed var(--border-color);
+    margin-top: 1rem;
+}

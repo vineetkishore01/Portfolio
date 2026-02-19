@@ -37,7 +37,7 @@
 .blog-subtitle {
     color: var(--text-secondary);
     font-size: 1.2rem;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -501,6 +501,21 @@
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
+}
+
+
+/* Blog Prose Links */
+.blog-prose a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.blog-prose a:hover {
+    color: var(--accent-blue-light);
+    border-bottom-color: var(--accent-blue-light);
 }
 
 /* Mobile Adjustments */

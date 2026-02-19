@@ -56,13 +56,12 @@ const PostReader = {
         const dateMatch = text.match(/Date:\s*(\d{4}-\d{2}-\d{2})/i) || text.match(/20\d{2}-\d{2}-\d{2}/);
         const date = dateMatch ? dateMatch[1] : new Date().toISOString().split('T')[0];
 
-        const catMatch = text.match(/Category:\s*(.*)/i);
-        const category = catMatch ? catMatch[1].trim() : "Technical";
+
 
         return {
             title,
             date,
-            category,
+
             readTime: this.estimateReadTime(text),
             slug: encodeURIComponent(filename)
         };
@@ -110,7 +109,7 @@ const PostReader = {
     updateMetadata(post) {
         document.title = `${post.title} | Vineet Kishore`;
         document.getElementById('post-title').textContent = post.title;
-        document.getElementById('post-category').textContent = post.category;
+
         document.getElementById('post-date').textContent = this.formatDate(post.date);
         document.getElementById('post-read-time').textContent = post.readTime;
     },

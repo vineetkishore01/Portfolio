@@ -7,7 +7,6 @@ const BlogEngine = {
     async init() {
         console.log('BlogEngine: Initializing Auto-Discovery...');
         this.grid = document.getElementById('blog-grid');
-        this.filtersContainer = document.getElementById('blog-filters');
         this.sortSelect = document.getElementById('blog-sort-select');
         this.paginationContainer = document.getElementById('blog-pagination');
 
@@ -22,7 +21,6 @@ const BlogEngine = {
 
         try {
             await this.loadArticles();
-            this.setupFilters();
             this.setupEventListeners();
             this.render();
         } catch (error) {
@@ -94,10 +92,6 @@ const BlogEngine = {
             const fileDateMatch = file.name.match(/(\d{4}-\d{2}-\d{2})/);
             const date = dateMatch ? dateMatch[1] : (fileDateMatch ? fileDateMatch[1] : new Date().toLocaleDateString('en-CA'));
 
-            // Try to find category or set default
-            const catMatch = text.match(/Category:\s*(.*)/i);
-            const category = catMatch ? catMatch[1].trim().replace(/[\\\[\]]/g, '') : "Technical";
-
             // Excerpt: first non-empty line after title
             const lines = text.split('\n').filter(l =>
                 l.trim() !== '' &&
@@ -114,7 +108,6 @@ const BlogEngine = {
                 slug: encodeURIComponent(file.name), // Use filename as slug
                 title,
                 date,
-                category,
                 readTime: this.estimateReadTime(text),
                 excerpt,
                 file: file.name
@@ -124,7 +117,6 @@ const BlogEngine = {
                 slug: encodeURIComponent(file.name),
                 title: file.name,
                 date: new Date().toISOString().split('T')[0],
-                category: "Technical",
                 readTime: "5 min",
                 excerpt: "Failed to parse article metadata.",
                 file: file.name
@@ -148,47 +140,11 @@ const BlogEngine = {
         return `${minutes} min`;
     },
 
-    setupFilters() {
-        const categories = ['all', ...new Set(this.posts.map(p => p.category))];
-
-        if (this.filtersContainer) {
-            this.filtersContainer.innerHTML = categories.map(cat => `
-                <button class="filter-pill ${cat === 'all' ? 'active' : ''}" data-category="${cat}">
-                    ${cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </button>
-            `).join('');
-        }
-    },
-
     setupEventListeners() {
-        // Category filtering
-        this.filtersContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-pill')) {
-                const category = e.target.dataset.category;
-
-                // Update UI
-                this.filtersContainer.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
-                e.target.classList.add('active');
-
-                // Filter
-                this.filterByCategory(category);
-            }
-        });
-
         // Sorting
         this.sortSelect.addEventListener('change', () => {
             this.sortPosts(this.sortSelect.value);
         });
-    },
-
-    filterByCategory(category) {
-        if (category === 'all') {
-            this.filteredPosts = [...this.posts];
-        } else {
-            this.filteredPosts = this.posts.filter(p => p.category === category);
-        }
-        this.currentPage = 1;
-        this.render();
     },
 
     sortPosts(method) {
@@ -215,7 +171,7 @@ const BlogEngine = {
         const paginatedPosts = this.filteredPosts.slice(startIndex, endIndex);
 
         if (paginatedPosts.length === 0) {
-            this.grid.innerHTML = '<div class="blog-empty">No articles found in this category.</div>';
+            this.grid.innerHTML = '<div class="blog-empty">No articles found.</div>';
             this.paginationContainer.innerHTML = '';
             return;
         }
@@ -242,7 +198,6 @@ const BlogEngine = {
         return `
             <a href="blog-post.html?slug=${post.slug}" class="blog-card">
                 <div class="blog-card-meta">
-                    <span>${post.category}</span>
                     <span class="blog-card-date">${this.formatDate(post.date)}</span>
                 </div>
                 <h2 class="blog-card-title">${post.title}</h2>
