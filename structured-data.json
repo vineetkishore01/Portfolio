@@ -1,0 +1,145 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://vineetkishore.dev/#person",
+      "name": "Vineet Kishore",
+      "givenName": "Vineet",
+      "familyName": "Kishore",
+      "jobTitle": "Infrastructure Engineer & Strategic Technologist",
+      "description": "Infrastructure Engineer specializing in resilient systems, automation, and competitive intelligence. Expert in Docker, Kubernetes, AWS, and building 99.9% uptime systems.",
+      "url": "https://vineetkishore.dev",
+      "image": "https://vineetkishore.dev/core/assets/profile-photo.jpg",
+      "email": "mailto:vineetkishore01@gmail.com",
+      "sameAs": [
+        "https://linkedin.com/in/vineetkishore",
+        "https://github.com/vineetkishore",
+        "https://youtube.com/@vineetkishore"
+      ],
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "VIT University, Chennai",
+        "sameAs": "https://www.vit.ac.in/"
+      },
+      "knowsAbout": [
+        "Infrastructure Engineering",
+        "DevOps",
+        "Cloud Computing",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "Automation",
+        "Competitive Intelligence",
+        "Data Engineering",
+        "Machine Learning"
+      ],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Independent Consultant"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://vineetkishore.dev/#website",
+      "url": "https://vineetkishore.dev",
+      "name": "Vineet Kishore - Infrastructure Engineer & Strategic Technologist",
+      "description": "Portfolio of Vineet Kishore, Infrastructure Engineer specializing in resilient systems, automation, and competitive intelligence.",
+      "publisher": {
+        "@id": "https://vineetkishore.dev/#person"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://vineetkishore.dev/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://vineetkishore.dev/#webpage",
+      "url": "https://vineetkishore.dev",
+      "name": "Vineet Kishore - Infrastructure Engineer & Strategic Technologist",
+      "isPartOf": {
+        "@id": "https://vineetkishore.dev/#website"
+      },
+      "about": {
+        "@id": "https://vineetkishore.dev/#person"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://vineetkishore.dev/core/assets/og-image.jpg"
+      },
+      "datePublished": "2024-01-01",
+      "dateModified": "2024-12-01",
+      "breadcrumb": {
+        "@id": "https://vineetkishore.dev/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://vineetkishore.dev/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://vineetkishore.dev"
+        }
+      ]
+    },
+    {
+      "@type": "JobPosting",
+      "title": "Infrastructure Engineer",
+      "description": "Seeking opportunities in Infrastructure Engineering, DevOps, and Competitive Intelligence",
+      "datePosted": "2024-01-01",
+      "validThrough": "2025-12-31",
+      "employmentType": "FULL_TIME",
+      "hiringOrganization": {
+        "@type": "Person",
+        "name": "Vineet Kishore",
+        "sameAs": "https://vineetkishore.dev"
+      },
+      "jobLocation": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Singapore",
+          "addressCountry": "SG"
+        }
+      },
+      "skills": "Docker, Kubernetes, AWS, Automation, Python, Infrastructure"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Droppy",
+      "creator": {
+        "@id": "https://vineetkishore.dev/#person"
+      },
+      "description": "macOS Dynamic Island utility with 5,000+ users. Provides drag-and-drop shelf for temporary file storage.",
+      "url": "https://github.com/vineetkishore/Droppy",
+      "programmingLanguage": ["Swift", "SwiftUI", "AppKit"],
+      "applicationCategory": "Productivity",
+      "operatingSystem": "macOS"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Home Lab Infrastructure",
+      "creator": {
+        "@id": "https://vineetkishore.dev/#person"
+      },
+      "description": "Enterprise-grade home data center with 99.9% uptime hosting 20+ services",
+      "keywords": "Docker, Kubernetes, Linux, Traefik, Ansible, Prometheus"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "N8N LLM Pipeline",
+      "creator": {
+        "@id": "https://vineetkishore.dev/#person"
+      },
+      "description": "Generative AI automation pipeline for competitive intelligence with 90% time savings",
+      "keywords": "n8n, LLM, AI, Automation, Python"
+    }
+  ]
+}

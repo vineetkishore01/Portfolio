@@ -32,7 +32,7 @@
 
     var allCmdNames = ['help', 'about', 'whoami', 'skills', 'experience', 'education', 'projects', 'contact',
         'resume', 'certifications', 'neofetch', 'uptime', 'date', 'ls', 'cat', 'ping', 'whois', 'weather',
-        'theme', 'clear', 'history', 'eastereggs', 'matrix', 'sudo', 'hack', 'rickroll', 'cowsay', '?'];
+        'theme', 'clear', 'history', 'eastereggs', 'matrix', 'sudo', 'hack', 'rickroll', 'cowsay', '?', 'copy', 'github', 'stats'];
 
     var commands = {
         help: function () {
@@ -379,37 +379,103 @@
         '?': function () {
             return [
                 '',
-                c('  \u2592\u2592\u2592  FULL SYSTEM MANIFEST  \u2592\u2592\u2592', '#60a5fa'),
-                c('  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', '#334155'),
+                c('  ▒▒▒  FULL SYSTEM MANIFEST  ▒▒▒', '#60a5fa'),
+                c('  ────────────────────────────', '#334155'),
                 '',
-                c('  \u250c\u2500 KNOW ME', '#4ade80'),
-                '  \u2502  ' + c('about', '#e2e8f0') + '  \u2022  ' + c('whoami', '#e2e8f0') + '  \u2022  ' + c('skills', '#e2e8f0'),
-                '  \u2502  ' + c('experience', '#e2e8f0') + '  \u2022  ' + c('education', '#e2e8f0'),
-                '  \u2502  ' + c('projects', '#e2e8f0') + '  \u2022  ' + c('certifications', '#e2e8f0'),
-                '  \u2514  ' + c('contact', '#e2e8f0') + '  \u2022  ' + c('resume', '#e2e8f0'),
+                c('  ┌─ KNOW ME', '#4ade80'),
+                '  │  ' + c('about', '#e2e8f0') + '  •  ' + c('whoami', '#e2e8f0') + '  •  ' + c('skills', '#e2e8f0'),
+                '  │  ' + c('experience', '#e2e8f0') + '  •  ' + c('education', '#e2e8f0'),
+                '  │  ' + c('projects', '#e2e8f0') + '  •  ' + c('certifications', '#e2e8f0'),
+                '  └  ' + c('contact', '#e2e8f0') + '  •  ' + c('resume', '#e2e8f0'),
                 '',
-                c('  \u250c\u2500 HACK AROUND', '#f59e0b'),
-                '  \u2502  ' + c('neofetch', '#e2e8f0') + '  \u2022  ' + c('uptime', '#e2e8f0') + '  \u2022  ' + c('date', '#e2e8f0'),
-                '  \u2502  ' + c('ls', '#e2e8f0') + '  \u2022  ' + c('cat readme.md', '#e2e8f0') + '  \u2022  ' + c('ping', '#e2e8f0'),
-                '  \u2502  ' + c('whois', '#e2e8f0') + '  \u2022  ' + c('weather', '#e2e8f0') + '  \u2022  ' + c('theme', '#e2e8f0'),
-                '  \u2514  ' + c('history', '#e2e8f0') + '  \u2022  ' + c('clear', '#e2e8f0'),
+                c('  ┌─ QUICK ACTIONS', '#a78bfa'),
+                '  │  ' + c('copy email', '#e2e8f0') + '  •  ' + c('github', '#e2e8f0') + '  •  ' + c('stats', '#e2e8f0'),
                 '',
-                c('  \u250c\u2500 NAVIGATE', '#a78bfa'),
-                '  \u2502  ' + c('goto home', '#e2e8f0') + '  \u2022  ' + c('goto about', '#e2e8f0') + '  \u2022  ' + c('goto projects', '#e2e8f0'),
-                '  \u2514  ' + c('goto skills', '#e2e8f0') + '  \u2022  ' + c('goto contact', '#e2e8f0') + '  \u2022  ' + c('goto education', '#e2e8f0'),
+                c('  ┌─ HACK AROUND', '#f59e0b'),
+                '  │  ' + c('neofetch', '#e2e8f0') + '  •  ' + c('uptime', '#e2e8f0') + '  •  ' + c('date', '#e2e8f0'),
+                '  │  ' + c('ls', '#e2e8f0') + '  •  ' + c('cat readme.md', '#e2e8f0') + '  •  ' + c('ping', '#e2e8f0'),
+                '  │  ' + c('whois', '#e2e8f0') + '  •  ' + c('weather', '#e2e8f0') + '  •  ' + c('theme', '#e2e8f0'),
+                '  └  ' + c('history', '#e2e8f0') + '  •  ' + c('clear', '#e2e8f0'),
                 '',
-                c('  \u250c\u2500 \ud83c\udf1f SECRETS \u2014 just try them.', '#ec4899'),
-                '  \u2502  ' + c('matrix', '#e2e8f0') + '  \u2022  ' + c('sudo', '#e2e8f0') + '  \u2022  ' + c('hack', '#e2e8f0'),
-                '  \u2514  ' + c('rickroll', '#e2e8f0') + '  \u2022  ' + c('cowsay', '#e2e8f0'),
+                c('  ┌─ NAVIGATE', '#a78bfa'),
+                '  │  ' + c('goto home', '#e2e8f0') + '  •  ' + c('goto about', '#e2e8f0') + '  •  ' + c('goto projects', '#e2e8f0'),
+                '  └  ' + c('goto skills', '#e2e8f0') + '  •  ' + c('goto contact', '#e2e8f0') + '  •  ' + c('goto education', '#e2e8f0'),
                 '',
-                c('  \u250c\u2500 \u2328 KEYBOARD TRICKS', '#06b6d4'),
-                '  \u2502  ' + c('\u2191 / \u2193', '#e2e8f0') + '       Browse command history',
-                '  \u2502  ' + c('Tab', '#e2e8f0') + '         Autocomplete a command',
-                '  \u2502  ' + c('Ctrl+L', '#e2e8f0') + '      Clear the screen',
-                '  \u2514  ' + c('F', '#e2e8f0') + '           Toggle flashlight (outside terminal)',
+                c('  ┌─ 🌟 SECRETS — just try them.', '#ec4899'),
+                '  │  ' + c('matrix', '#e2e8f0') + '  •  ' + c('sudo', '#e2e8f0') + '  •  ' + c('hack', '#e2e8f0'),
+                '  └  ' + c('rickroll', '#e2e8f0') + '  •  ' + c('cowsay', '#e2e8f0'),
+                '',
+                c('  ┌─ ⌨ KEYBOARD TRICKS', '#06b6d4'),
+                '  │  ' + c('↑ / ↓', '#e2e8f0') + '       Browse command history',
+                '  │  ' + c('Tab', '#e2e8f0') + '         Autocomplete a command',
+                '  │  ' + c('Ctrl+L', '#e2e8f0') + '      Clear the screen',
+                '  └  ' + c('F', '#e2e8f0') + '           Toggle flashlight (outside terminal)',
                 '',
                 c('  Type any command above and hit Enter.', '#64748b'),
-                c('  No manual needed. Just explore. \u26a1', '#64748b'),
+                c('  No manual needed. Just explore. ⚡', '#64748b'),
+                ''
+            ];
+        },
+        copy: function(args) {
+            if (!args || args.trim() === '') {
+                return ['  Usage: ' + c('copy [email|text]', '#f59e0b'), '  Example: copy email'];
+            }
+            
+            if (args.trim() === 'email') {
+                const email = 'vineetkishore01@gmail.com';
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(email).then(() => {
+                        // Show toast if function exists
+                        if (window.showToast) {
+                            window.showToast('Email copied to clipboard!');
+                        }
+                    });
+                }
+                return [
+                    c('  ✅ Email copied to clipboard!', '#4ade80'),
+                    '  ' + c(email, '#60a5fa'),
+                    '',
+                    '  Use Ctrl+V to paste it anywhere.'
+                ];
+            }
+            
+            return ['  Unknown copy target. Try: ' + c('copy email', '#f59e0b')];
+        },
+        github: function() {
+            window.open('https://github.com/vineetkishore', '_blank');
+            return [
+                '',
+                c('  🐙 Opening GitHub profile...', '#4ade80'),
+                '',
+                '  github.com/vineetkishore',
+                '',
+                '  ' + c('Featured Repositories:', '#60a5fa'),
+                '  • Droppy — 5,000+ users, macOS utility',
+                '  • Home Lab — Infrastructure automation',
+                '  • N8N LLM Pipeline — AI automation',
+                ''
+            ];
+        },
+        stats: function() {
+            const commandsRun = history.length;
+            const sessionTime = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(sessionTime / 60);
+            const seconds = sessionTime % 60;
+            
+            return [
+                '',
+                c('  Portfolio Statistics', '#60a5fa'),
+                c('  ────────────────────', '#334155'),
+                '',
+                '  ' + c('⏱ Session Time:', '#94a3b8') + ' ' + c(minutes + 'm ' + seconds + 's', '#4ade80'),
+                '  ' + c('💻 Commands Run:', '#94a3b8') + ' ' + c(commandsRun, '#4ade80'),
+                '',
+                '  ' + c('🎯 Projects Showcased:', '#94a3b8') + ' 3',
+                '  ' + c('📊 Skills Listed:', '#94a3b8') + ' 20+',
+                '  ' + c('🎓 Education:', '#94a3b8') + ' B.Tech Computer Science',
+                '  ' + c('⚙ Experience:', '#94a3b8') + ' 3+ Years',
+                '',
+                '  ' + c('✨ Ready for new opportunities!', '#f59e0b'),
                 ''
             ];
         }
@@ -475,8 +541,19 @@
             setTimeout(focusInput, 100); return;
         }
 
-        if (commands[cmd]) {
-            var out = commands[cmd]();
+        // Handle commands with arguments (e.g., "copy email")
+        var cmdParts = cmd.split(' ');
+        var baseCmd = cmdParts[0];
+        var args = cmdParts.slice(1).join(' ');
+        
+        if (commands[baseCmd]) {
+            var out;
+            // Check if command accepts arguments
+            if (baseCmd === 'copy') {
+                out = commands[baseCmd](args);
+            } else {
+                out = commands[baseCmd]();
+            }
             if (out && out.length) {
                 for (var i = 0; i < out.length; i++) {
                     (function (l, d) { setTimeout(function () { addLine(l, false); }, d); })(out[i], i * 30);

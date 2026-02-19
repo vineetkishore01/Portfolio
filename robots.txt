@@ -1,0 +1,43 @@
+# robots.txt for vineetkishore.dev
+# Last updated: 2024-12-01
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://vineetkishore.dev/sitemap.xml
+
+# Block AI Scrapers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+# Allow legitimate crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Crawl rate for some bots
+Crawl-delay: 10

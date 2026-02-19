@@ -1492,6 +1492,296 @@
         }
 
         /* ==========================================
+           GLITCH NAME ANIMATION
+           ========================================== */
+        .hero-title-single {
+            display: block;
+            width: 100%;
+            min-height: 1.2em;
+            /* Ensure it doesn't collapse */
+            position: relative;
+            overflow: visible;
+            /* Prevent clipping of glitch artifacts and drop shadows */
+            margin-bottom: 0.5rem;
+        }
+
+        .glitch-name {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transform: translateY(15px);
+            transition:
+                opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.5s ease;
+            filter: blur(10px);
+            white-space: nowrap;
+            pointer-events: none;
+
+            /* Clean Premium White */
+            color: #ffffff;
+            -webkit-text-fill-color: #ffffff;
+
+            /* Subtle Neon White-Blue Bloom */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 122, 255, 0.1);
+            z-index: 2;
+        }
+
+        .glitch-name.active {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        /* Language-specific sizing */
+        .glitch-name[data-lang="Japanese"],
+        .glitch-name[data-lang="Korean"] {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            letter-spacing: -0.02em;
+        }
+
+        .glitch-name[data-lang="Hindi"] {
+            font-size: clamp(2.4rem, 5.5vw, 4rem);
+            line-height: 1.3;
+            padding-top: 0.1em;
+        }
+
+        .glitch-name[data-lang="Chinese"] {
+            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+            letter-spacing: 0.05em;
+        }
+
+        /* Premium Blue Glitch Transition */
+        .glitch-name::before,
+        .glitch-name::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: -1;
+            transition: none;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        /* Cyan RGB Split - The "Soul" */
+        .glitch-name.active::before {
+            opacity: 0.2;
+            -webkit-text-fill-color: #00ffff;
+            animation: soul-float-1 8s infinite ease-in-out;
+        }
+
+        /* Blue RGB Split - The "Soul" */
+        .glitch-name.active::after {
+            opacity: 0.15;
+            -webkit-text-fill-color: var(--accent-blue);
+            animation: soul-float-2 10s infinite ease-in-out;
+        }
+
+        /* Intense Glitch on Transition */
+        .glitch-name.transitioning::before {
+            opacity: 1;
+            animation: glitch-flash-1 0.4s steps(2) forwards !important;
+        }
+
+        .glitch-name.transitioning::after {
+            opacity: 1;
+            animation: glitch-flash-2 0.4s steps(2) forwards !important;
+        }
+
+        @keyframes soul-float-1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+                filter: blur(2px);
+            }
+
+            20% {
+                transform: translate(-2px, 1px);
+                filter: blur(4px);
+            }
+
+            40% {
+                transform: translate(1px, -1px);
+                opacity: 0.3;
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+                filter: blur(2px);
+            }
+
+            80% {
+                transform: translate(-1px, -2px);
+                opacity: 0.1;
+            }
+
+            95% {
+                transform: translate(-5px, 3px);
+                opacity: 0.6;
+                clip-path: inset(10% 0 80% 0);
+            }
+        }
+
+        @keyframes soul-float-2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+                filter: blur(3px);
+            }
+
+            25% {
+                transform: translate(2px, -2px);
+                filter: blur(5px);
+            }
+
+            50% {
+                transform: translate(-1px, 1px);
+                opacity: 0.25;
+            }
+
+            75% {
+                transform: translate(-2px, -1px);
+                filter: blur(3px);
+            }
+
+            92% {
+                transform: translate(5px, -3px);
+                opacity: 0.5;
+                clip-path: inset(70% 0 10% 0);
+            }
+        }
+
+        @keyframes glitch-flash-1 {
+            0% {
+                transform: translate(4px, -2px);
+                clip-path: inset(10% 0 80% 0);
+            }
+
+            25% {
+                transform: translate(-4px, 2px);
+                clip-path: inset(60% 0 20% 0);
+            }
+
+            50% {
+                transform: translate(2px, -1px);
+                clip-path: inset(30% 0 60% 0);
+            }
+
+            75% {
+                transform: translate(-2px, 1px);
+                clip-path: inset(80% 0 10% 0);
+            }
+
+            100% {
+                transform: none;
+                opacity: 0;
+            }
+        }
+
+        @keyframes glitch-flash-2 {
+            0% {
+                transform: translate(-4px, 2px);
+                clip-path: inset(80% 0 10% 0);
+            }
+
+            25% {
+                transform: translate(4px, -2px);
+                clip-path: inset(20% 0 70% 0);
+            }
+
+            50% {
+                transform: translate(-2px, 1px);
+                clip-path: inset(50% 0 40% 0);
+            }
+
+            75% {
+                transform: translate(2px, -1px);
+                clip-path: inset(10% 0 80% 0);
+            }
+
+            100% {
+                transform: none;
+                opacity: 0;
+            }
+        }
+
+        /* Digital "Scan-Pass" Effect */
+        .glitch-name.transitioning-scan::after {
+            content: '';
+            position: absolute;
+            inset: -20px 0;
+            background: linear-gradient(to bottom,
+                    transparent 0%,
+                    rgba(0, 122, 255, 0.4) 48%,
+                    rgba(255, 255, 255, 0.9) 50%,
+                    rgba(0, 122, 255, 0.4) 52%,
+                    transparent 100%);
+            z-index: 20;
+            pointer-events: none;
+            animation: scan-quick 0.4s ease-out forwards;
+            opacity: 0;
+            -webkit-text-fill-color: initial;
+            background-clip: initial;
+        }
+
+        @keyframes scan-quick {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile & Accessibility */
+        @media (max-width: 768px) {
+            .hero-title-single {
+                min-height: 1.2em;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .glitch-name {
+                justify-content: center;
+                width: 100%;
+                left: 0;
+                font-size: clamp(2.2rem, 10vw, 3.5rem);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .glitch-name {
+                transition: opacity 0.1s ease;
+                filter: none;
+            }
+
+            .glitch-name::after,
+            .glitch-name::before {
+                display: none !important;
+            }
+        }
+
+        /* ==========================================
            SECTION BASE STYLES
            ========================================== */
         section {
@@ -3640,277 +3930,6 @@
         }
 
         /* ==========================================
-                       FIX 1: STABLE MULTILINGUAL NAME CONTAINER
-                       Prevents layout shift with fixed height
-                       and smooth crossfade between languages
-                       ========================================== */
-        .hero-title-single {
-            display: block;
-            height: 1.4em;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-
-        .glitch-name {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            font-size: clamp(2.8rem, 6vw, 4.5rem);
-            font-weight: 800;
-            letter-spacing: -0.01em;
-            opacity: 0;
-            transform: translateY(15px);
-            transition:
-                opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.5s ease;
-            filter: blur(10px);
-            white-space: nowrap;
-            pointer-events: none;
-
-            /* Clean Premium White */
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
-
-            /* Subtle Neon White-Blue Bloom */
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 122, 255, 0.1);
-            z-index: 2;
-        }
-
-        .glitch-name.active {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
-
-        /* Language-specific sizing */
-        .glitch-name[data-lang="Japanese"],
-        .glitch-name[data-lang="Korean"] {
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
-            letter-spacing: -0.02em;
-        }
-
-        .glitch-name[data-lang="Hindi"] {
-            font-size: clamp(2.4rem, 5.5vw, 4rem);
-            line-height: 1.3;
-            padding-top: 0.1em;
-        }
-
-        .glitch-name[data-lang="Chinese"] {
-            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-            letter-spacing: 0.05em;
-        }
-
-        /* ==========================================
-                       PREMIUM BLUE GLITCH TRANSITION
-                       ========================================== */
-        .glitch-name::before,
-        .glitch-name::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            z-index: -1;
-            transition: none;
-            mix-blend-mode: screen;
-            pointer-events: none;
-        }
-
-        /* Cyan RGB Split - The "Soul" */
-        .glitch-name.active::before {
-            opacity: 0.2;
-            -webkit-text-fill-color: #00ffff;
-            animation: soul-float-1 8s infinite ease-in-out;
-        }
-
-        /* Blue RGB Split - The "Soul" */
-        .glitch-name.active::after {
-            opacity: 0.15;
-            -webkit-text-fill-color: var(--accent-blue);
-            animation: soul-float-2 10s infinite ease-in-out;
-        }
-
-        /* Intense Glitch on Transition */
-        .glitch-name.transitioning::before {
-            opacity: 1;
-            animation: glitch-flash-1 0.4s steps(2) forwards !important;
-        }
-
-        .glitch-name.transitioning::after {
-            opacity: 1;
-            animation: glitch-flash-2 0.4s steps(2) forwards !important;
-        }
-
-        @keyframes soul-float-1 {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-                filter: blur(2px);
-            }
-
-            20% {
-                transform: translate(-2px, 1px);
-                filter: blur(4px);
-            }
-
-            40% {
-                transform: translate(1px, -1px);
-                opacity: 0.3;
-            }
-
-            60% {
-                transform: translate(2px, 2px);
-                filter: blur(2px);
-            }
-
-            80% {
-                transform: translate(-1px, -2px);
-                opacity: 0.1;
-            }
-
-            /* Occasional soul jump */
-            95% {
-                transform: translate(-5px, 3px);
-                opacity: 0.6;
-                clip-path: inset(10% 0 80% 0);
-            }
-        }
-
-        @keyframes soul-float-2 {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-                filter: blur(3px);
-            }
-
-            25% {
-                transform: translate(2px, -2px);
-                filter: blur(5px);
-            }
-
-            50% {
-                transform: translate(-1px, 1px);
-                opacity: 0.25;
-            }
-
-            75% {
-                transform: translate(-2px, -1px);
-                filter: blur(3px);
-            }
-
-            /* Occasional soul jump */
-            92% {
-                transform: translate(5px, -3px);
-                opacity: 0.5;
-                clip-path: inset(70% 0 10% 0);
-            }
-        }
-
-        @keyframes glitch-flash-1 {
-            0% {
-                transform: translate(4px, -2px);
-                clip-path: inset(10% 0 80% 0);
-            }
-
-            25% {
-                transform: translate(-4px, 2px);
-                clip-path: inset(60% 0 20% 0);
-            }
-
-            50% {
-                transform: translate(2px, -1px);
-                clip-path: inset(30% 0 60% 0);
-            }
-
-            75% {
-                transform: translate(-2px, 1px);
-                clip-path: inset(80% 0 10% 0);
-            }
-
-            100% {
-                transform: none;
-                opacity: 0;
-            }
-        }
-
-        @keyframes glitch-flash-2 {
-            0% {
-                transform: translate(-4px, 2px);
-                clip-path: inset(80% 0 10% 0);
-            }
-
-            25% {
-                transform: translate(4px, -2px);
-                clip-path: inset(20% 0 70% 0);
-            }
-
-            50% {
-                transform: translate(-2px, 1px);
-                clip-path: inset(50% 0 40% 0);
-            }
-
-            75% {
-                transform: translate(2px, -1px);
-                clip-path: inset(10% 0 80% 0);
-            }
-
-            100% {
-                transform: none;
-                opacity: 0;
-            }
-        }
-
-        /* Digital "Scan-Pass" Effect */
-        .glitch-name.transitioning-scan::after {
-            content: '';
-            position: absolute;
-            inset: -20px 0;
-            background: linear-gradient(to bottom,
-                    transparent 0%,
-                    rgba(0, 122, 255, 0.4) 48%,
-                    rgba(255, 255, 255, 0.9) 50%,
-                    rgba(0, 122, 255, 0.4) 52%,
-                    transparent 100%);
-            z-index: 20;
-            pointer-events: none;
-            animation: scan-quick 0.4s ease-out forwards;
-            opacity: 0;
-            -webkit-text-fill-color: initial;
-            background-clip: initial;
-        }
-
-        @keyframes scan-quick {
-            0% {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-        }
-
-        /* Copied state for share button */
-        .share-btn.copied {
-            background: var(--accent-blue) !important;
-            color: #000 !important;
-            border-color: var(--accent-blue) !important;
-        }
-
-        /* ==========================================
            MODERN PROFILE CARD DESIGN
            ========================================== */
         .hero-image-wrapper {
@@ -4327,4 +4346,87 @@
             border-radius: 12px;
             border: 1px dashed var(--border-color);
             margin-top: 1rem;
+        }
+
+        /* ==========================================
+           SUBTLE ENHANCEMENTS - MINIMALIST APPROACH
+           ========================================== */
+
+        /* 1. Simple Card Hover Lift */
+        .about-card:hover,
+        .timeline-card:hover,
+        .education-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 122, 255, 0.3);
+        }
+
+        /* 2. Skill Tag Subtle Hover */
+        .skill-tag {
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            border-color: var(--accent-blue);
+            background: rgba(0, 122, 255, 0.1);
+        }
+
+        /* 3. Contact Card Subtle Lift */
+        .contact-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -15px rgba(0, 122, 255, 0.2);
+        }
+
+        /* 4. Timeline Tag Hover */
+        .timeline-tag {
+            transition: all 0.3s ease;
+        }
+
+        .timeline-tag:hover {
+            background: rgba(0, 122, 255, 0.15);
+            border-color: var(--accent-blue);
+        }
+
+        /* 5. Nav Link Underline Animation */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 6. CTA Button Shine Effect - Subtle */
+        .hero-cta-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cta-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    transparent 100%);
+            transform: rotate(30deg) translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .hero-cta-primary:hover::after {
+            transform: rotate(30deg) translateX(100%);
         }

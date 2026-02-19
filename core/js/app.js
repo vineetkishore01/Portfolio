@@ -8,62 +8,9 @@
 // ==========================================
 // SITE INITIALIZATION
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded. Initializing Systems...');
-
-    // Skip preloader and go straight to Hero
-    const preloader = document.getElementById('preloader');
-    if (preloader) preloader.style.display = 'none';
-    document.body.classList.remove('unselectable');
-
-    // Initialize core systems
-    initHeroEntrance();
-
-    // Initialize other controllers
-    ModernNavigation.init();
-    GlobalScrollEffects.init();
-    ProjectFilterSystem.init();
-    TerminalTeaser.init();
-    EducationController.init();
-    ContactSystem.init();
-
-    // Refresh ScrollTrigger
-    setTimeout(() => {
-        ScrollTrigger.refresh();
-    }, 100);
-});
-
-// Number count-up animation helper
-function animateNumber(element, target, suffix = '') {
-    let current = 0;
-    const duration = 1500; // 1.5s
-    const start = performance.now();
-
-    function step(timestamp) {
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const value = Math.floor(progress * target);
-
-        // Handle decimals if target is float
-        if (target % 1 !== 0) {
-            element.textContent = (progress * target).toFixed(1) + suffix;
-        } else {
-            element.textContent = value + suffix;
-        }
-
-        if (progress < 1) {
-            requestAnimationFrame(step);
-        } else {
-            // Ensure exact target value is set
-            element.textContent = target + suffix;
-        }
-    }
-    requestAnimationFrame(step);
-}
-
-// Phase 2A: Hero Entrance Sequence
+// Core Entrance Animation - defined globally for access
 function initHeroEntrance() {
     if (typeof gsap === 'undefined') return;
-
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     // Step 1: Background Orbs
@@ -111,7 +58,7 @@ function initHeroEntrance() {
                 const text = el.textContent.trim();
                 const value = parseFloat(text.replace(/[^\d.]/g, ''));
                 const suffix = text.replace(/[\d.]/g, '');
-                animateNumber(el, value, suffix);
+                if (!isNaN(value)) animateNumber(el, value, suffix);
             });
         }
     }, 1.1);
@@ -134,9 +81,41 @@ function initHeroEntrance() {
     }, 0.8);
 }
 
+// Number count-up animation helper
+function animateNumber(element, target, suffix = '') {
+    let current = 0;
+    const duration = 1500; // 1.5s
+    const start = performance.now();
 
-// Initialize Preloader immediately
-PreloaderController.init();
+    function step(timestamp) {
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const value = Math.floor(progress * target);
+
+        // Handle decimals if target is float
+        if (target % 1 !== 0) {
+            element.textContent = (progress * target).toFixed(1) + suffix;
+        } else {
+            element.textContent = value + suffix;
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            // Ensure exact target value is set
+            element.textContent = target + suffix;
+        }
+    }
+    requestAnimationFrame(step);
+}
+
+// Phase 2A: Hero Entrance Sequence - implementation is at the top of the file
+// function initHeroEntrance() { ... }
+
+
+// Preloader safety removal
+const preloader = document.getElementById('preloader');
+if (preloader) preloader.style.display = 'none';
+document.body.classList.remove('unselectable');
 
 // ==========================================
 // LENIS SMOOTH SCROLL - SAFE INIT
@@ -268,12 +247,7 @@ const NavigationScrollEffect = {
     }
 };
 
-// Initialize navigation scroll effect
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => NavigationScrollEffect.init());
-} else {
-    NavigationScrollEffect.init();
-}
+// Navigation scroll effect initialization moved to end of file
 
 // ==========================================
 // MOBILE MENU - ENTERPRISE GRADE
@@ -398,12 +372,7 @@ const MobileMenu = {
     }
 };
 
-// Initialize mobile menu
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => MobileMenu.init());
-} else {
-    MobileMenu.init();
-}
+// Mobile menu initialization moved to end of file
 
 // ==========================================
 // HERO ANIMATIONS - ENHANCED
@@ -481,18 +450,6 @@ const SectionChoreography = {
     },
 
     setupExperience() {
-        // Timeline line drawing - Enhanced highlight
-        gsap.to('.timeline-progress', {
-            height: '100%',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: '.timeline-container',
-                start: 'top 70%',
-                end: 'bottom 70%',
-                scrub: true // Immediate feedback
-            }
-        });
-
         // Staggered items
         document.querySelectorAll('.timeline-item').forEach((item, i) => {
             gsap.from(item, {
@@ -1333,12 +1290,7 @@ const SectionReveals = {
     }
 };
 
-// Initialize Section Reveals
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => SectionReveals.init());
-} else {
-    SectionReveals.init();
-}
+// Initialize Section Reveals// Smart animations initialization moved to end of file
 
 // ==========================================
 // TEXT SCRAMBLE EFFECT FOR LABELS
@@ -2035,26 +1987,120 @@ const NameMorphController = {
 // Expose to window for global access/debugging
 window.NameMorphController = NameMorphController;
 
-// Initialize Systems
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        SmartAnimations.init();
-        NameMorphController.init();
-        SoundManager.init();
-        PerformanceManager.init();
-    });
-} else {
-    SmartAnimations.init();
-    NameMorphController.init();
-    SoundManager.init();
-    PerformanceManager.init();
-}
-// Final safety refresh for ScrollTrigger after all assets and scripts are loaded
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        if (typeof ScrollTrigger !== 'undefined') {
-            ScrollTrigger.refresh();
-            console.log('✓ ScrollTrigger final refresh complete');
+// ==========================================
+// MOBILE RESPONSIVE ENHANCEMENTS
+// ==========================================
+const MobileResponsive = {
+    init() {
+        this.isMobile = window.matchMedia('(max-width: 1024px)').matches;
+        this.setupDynamicViewport();
+        this.optimizeForTouch();
+        console.log(`✓ Mobile Responsive initialized (${this.isMobile ? 'Mobile' : 'Desktop'})`);
+    },
+
+    setupDynamicViewport() {
+        // Update viewport height for mobile browsers
+        const setVH = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+        setVH();
+        window.addEventListener('resize', setVH, { passive: true });
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(setVH, 100);
+        });
+    },
+
+    optimizeForTouch() {
+        if (!this.isMobile) return;
+
+        // Add touch-friendly hover states
+        document.querySelectorAll('.about-card, .timeline-card, .project-cinema-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+            }, { passive: true });
+
+            card.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            }, { passive: true });
+        });
+
+        // Disable complex effects on low-end devices
+        const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+        if (isLowEnd) {
+            document.body.classList.add('low-power');
         }
-    }, 1000);
-});
+    }
+};
+
+// ==========================================
+// UNIFIED INITIALIZATION SYSTEM
+// ==========================================
+const InitializationManager = {
+    init() {
+        console.log('%c🚀 Initializing Portfolio Core...', 'color: #007AFF; font-weight: bold;');
+
+        // 1. Core Entrance
+        if (typeof initHeroEntrance === 'function') initHeroEntrance();
+
+        // 2. Ordered Module Initialization
+        const modules = [
+            { name: 'MobileResponsive', obj: typeof MobileResponsive !== 'undefined' ? MobileResponsive : null },
+            { name: 'NameMorphController', obj: typeof NameMorphController !== 'undefined' ? NameMorphController : null },
+            { name: 'SmartAnimations', obj: typeof SmartAnimations !== 'undefined' ? SmartAnimations : null },
+            { name: 'MobileMenu', obj: typeof MobileMenu !== 'undefined' ? MobileMenu : null },
+            { name: 'NavigationScrollEffect', obj: typeof NavigationScrollEffect !== 'undefined' ? NavigationScrollEffect : null },
+            { name: 'ModernNavigation', obj: typeof ModernNavigation !== 'undefined' ? ModernNavigation : null },
+            { name: 'GlobalScrollEffects', obj: typeof GlobalScrollEffects !== 'undefined' ? GlobalScrollEffects : null },
+            { name: 'ProjectFilterSystem', obj: typeof ProjectFilterSystem !== 'undefined' ? ProjectFilterSystem : null },
+            { name: 'TerminalTeaser', obj: typeof TerminalTeaser !== 'undefined' ? TerminalTeaser : null },
+            { name: 'EducationController', obj: typeof EducationController !== 'undefined' ? EducationController : null },
+            { name: 'ContactSystem', obj: typeof ContactSystem !== 'undefined' ? ContactSystem : null }
+        ];
+
+        modules.forEach(m => {
+            if (m.obj && typeof m.obj.init === 'function') {
+                try {
+                    m.obj.init();
+                } catch (err) {
+                    console.error(`❌ System: ${m.name} failed to initialize:`, err);
+                }
+            } else if (m.obj === null) {
+                // Silently skip optional missing modules, warn for critical ones
+                if (['NameMorphController', 'MobileMenu'].includes(m.name)) {
+                    console.warn(`⚠️ Critical System: ${m.name} is missing!`);
+                }
+            }
+        });
+
+        // 3. Final Polish
+        this.setupFinalPolish();
+    },
+
+    setupFinalPolish() {
+        // Refresh ScrollTrigger after a short delay to account for dynamic content
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (typeof ScrollTrigger !== 'undefined') {
+                    ScrollTrigger.refresh();
+                    console.log('✓ ScrollTrigger final sync complete');
+                }
+            }, 1000);
+        });
+
+        // Welcome Messages
+        console.log('%c👋 Welcome to Vineet Kishore\'s Portfolio!', 'color: #007AFF; font-size: 20px; font-weight: bold;');
+        console.log('%c✨ Built with passion and precision', 'color: #86868B; font-size: 12px;');
+    }
+};
+
+// Start the engine
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => InitializationManager.init());
+} else {
+    InitializationManager.init();
+}
