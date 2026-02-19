@@ -2,7 +2,7 @@
  * Mobile Portfolio - Clean Design
  */
 
-(function() {
+(function () {
     'use strict';
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -23,7 +23,7 @@
         if (window.nameCycleInterval) {
             clearInterval(window.nameCycleInterval);
         }
-        
+
         // Show only first name, hide others
         const glitchNames = document.querySelectorAll('.glitch-name');
         glitchNames.forEach((name, index) => {
@@ -50,10 +50,10 @@
                         top: target.offsetTop - 20,
                         behavior: 'smooth'
                     });
-                    
+
                     items.forEach(i => i.classList.remove('active'));
                     item.classList.add('active');
-                    
+
                     if (navigator.vibrate) navigator.vibrate(5);
                 }
             });
@@ -91,12 +91,10 @@
                     entry.target.style.transform = 'translateY(0)';
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
 
         document.querySelectorAll('.about-card, .timeline-card, .project-cinema-card, .skill-category, .education-card, .insight-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(15px)';
-            el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
             observer.observe(el);
         });
     }
@@ -128,7 +126,7 @@
     function initModal() {
         const nexus = document.getElementById('project-nexus');
         const closeBtn = document.getElementById('nexus-close');
-        
+
         if (!nexus) return;
 
         document.querySelectorAll('.project-cinema-card').forEach(card => {
@@ -144,7 +142,7 @@
         };
 
         if (closeBtn) closeBtn.addEventListener('click', close);
-        
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') close();
         });
@@ -156,10 +154,10 @@
             card.addEventListener('click', async (e) => {
                 const href = card.getAttribute('href');
                 if (href?.startsWith('http') || href?.startsWith('mailto:')) return;
-                
+
                 e.preventDefault();
                 const text = card.getAttribute('data-copy');
-                
+
                 try {
                     await navigator.clipboard.writeText(text);
                     if (navigator.vibrate) navigator.vibrate(10);

@@ -31,6 +31,26 @@
         display: none !important;
     }
 
+    html body .nav-links.active {
+        display: flex !important;
+        flex-direction: column !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(10, 10, 10, 0.98) !important;
+        justify-content: center !important;
+        align-items: center !important;
+        z-index: 99998 !important;
+        gap: 2rem !important;
+    }
+
+    html body .nav-links.active .nav-link {
+        font-size: 1.5rem !important;
+        color: #fff !important;
+    }
+
     /* 3. Hero Section - side-by-side buttons */
     html body .hero-cta-group {
         display: flex !important;

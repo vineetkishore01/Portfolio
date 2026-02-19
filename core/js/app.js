@@ -47,21 +47,24 @@ function initHeroEntrance() {
         ease: 'back.out(1.7)'
     }, 0.9);
 
-    // Step 6: Stats with Count-up
-    heroTl.from('.hero-stat', {
-        y: 20,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        onComplete: () => {
-            document.querySelectorAll('.hero-stat-value').forEach(el => {
-                const text = el.textContent.trim();
-                const value = parseFloat(text.replace(/[^\d.]/g, ''));
-                const suffix = text.replace(/[\d.]/g, '');
-                if (!isNaN(value)) animateNumber(el, value, suffix);
-            });
-        }
-    }, 1.1);
+    // Step 6: Stats with Count-up - ONLY if they exist
+    const stats = document.querySelectorAll('.hero-stat');
+    if (stats.length > 0) {
+        heroTl.from(stats, {
+            y: 20,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            onComplete: () => {
+                document.querySelectorAll('.hero-stat-value').forEach(el => {
+                    const text = el.textContent.trim();
+                    const value = parseFloat(text.replace(/[^\d.]/g, ''));
+                    const suffix = text.replace(/[\d.]/g, '');
+                    if (!isNaN(value)) animateNumber(el, value, suffix);
+                });
+            }
+        }, 1.1);
+    }
 
     // Step 7: Profile Card
     heroTl.from('.hero-profile-card', {
@@ -265,27 +268,26 @@ const SectionChoreography = {
     },
     setupAbout() {
         gsap.timeline({ scrollTrigger: { trigger: '.about', start: 'top 85%', toggleActions: 'play none none none' } })
-            .from('.about .section-header > *', { opacity: 0, y: 30, duration: 0.6, stagger: 0.1 })
-            .from('.about-card', { opacity: 0, y: 50, clipPath: 'inset(100% 0 0 0)', duration: 0.8, stagger: 0.15 }, '-=0.4');
+            .from('.about .section-header > *', { y: 30, duration: 0.6, stagger: 0.1, clearProps: 'all' })
+            .from('.about-card', { y: 50, duration: 0.8, stagger: 0.15, clearProps: 'all' }, '-=0.4');
     },
     setupExperience() {
         document.querySelectorAll('.timeline-item').forEach((item, i) => {
-            gsap.from(item, { opacity: 0, x: i % 2 === 0 ? -50 : 50, duration: 0.8, scrollTrigger: { trigger: item, start: 'top 85%' } });
+            gsap.from(item, { x: i % 2 === 0 ? -50 : 50, duration: 0.8, scrollTrigger: { trigger: item, start: 'top 95%' }, clearProps: 'all' });
         });
     },
     setupProjects() {
         gsap.timeline({ scrollTrigger: { trigger: '.projects', start: 'top 80%' } })
-            .from('.projects .section-header > *', { opacity: 0, y: 30, stagger: 0.1 })
-            .from('.project-cinema-card', { opacity: 0, y: 40, duration: 1, stagger: 0.15 });
+            .from('.projects .section-header > *', { y: 30, stagger: 0.1, clearProps: 'all' })
+            .from('.project-cinema-card', { y: 40, duration: 1, stagger: 0.15, clearProps: 'all' });
     },
     setupSkills() {
-        gsap.from('.skill-category', { opacity: 0, x: -40, duration: 0.8, stagger: 0.15, scrollTrigger: { trigger: '.skills-grid', start: 'top 90%' } });
+        gsap.from('.skill-category', { x: -40, duration: 0.8, stagger: 0.15, scrollTrigger: { trigger: '.skills-grid', start: 'top 95%' }, clearProps: 'all' });
     },
     setupEducation() {
-        gsap.from('.education-card', { opacity: 0, y: 40, duration: 0.8, stagger: 0.2, scrollTrigger: { trigger: '.education-grid', start: 'top 85%' } });
+        gsap.from('.education-card', { y: 40, duration: 0.8, stagger: 0.2, scrollTrigger: { trigger: '.education-grid', start: 'top 90%' }, clearProps: 'all' });
     }
 };
-SectionChoreography.init();
 
 // ==========================================
 // HERO WATER BUBBLE
@@ -348,6 +350,7 @@ const ProjectFilterSystem = {
 const SmartAnimations = {
     init() {
         this.initTextScramble();
+        this.initKineticText();
         console.log("✓ Smart Animations initialized");
     },
     initTextScramble() {
@@ -360,13 +363,34 @@ const SmartAnimations = {
                         let iteration = 0;
                         const interval = setInterval(() => {
                             el.textContent = originalText.split('').map((c, i) => i < iteration ? originalText[i] : chars[Math.floor(Math.random() * chars.length)]).join('');
-                            if (++iteration >= originalText.length) clearInterval(interval);
+                            if (iteration >= originalText.length) {
+                                clearInterval(interval);
+                                el.textContent = originalText;
+                            }
+                            iteration += 1 / 3; // Slower reveal looks cooler and fixes truncation
                         }, 20);
                         observer.unobserve(el);
                     }
                 });
             });
             observer.observe(el);
+        });
+    },
+    initKineticText() {
+        document.querySelectorAll('.kinetic-text').forEach(el => {
+            const span = el.querySelector('span');
+            if (span) {
+                gsap.to(span, {
+                    x: '-30vw',
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: 1
+                    }
+                });
+            }
         });
     }
 };
@@ -395,10 +419,28 @@ const NameMorphController = {
     morph() {
         if (this.names.length < 2) return;
         const current = this.names[this.currentIndex];
-        this.currentIndex = (this.currentIndex + 1) % this.names.length;
-        const next = this.names[this.currentIndex];
-        current.classList.remove('active');
-        next.classList.add('active');
+        const nextIndex = (this.currentIndex + 1) % this.names.length;
+        const next = this.names[nextIndex];
+
+        // Trigger digital glitch and scanline pass
+        current.classList.add('transitioning');
+        current.classList.add('transitioning-scan');
+        next.classList.add('transitioning');
+
+        // Crossfade: new name enters while old exits
+        requestAnimationFrame(() => {
+            current.classList.remove('active');
+            next.classList.add('active');
+
+            // Clean up after transition (400ms matching CSS animation duration)
+            setTimeout(() => {
+                current.classList.remove('transitioning');
+                current.classList.remove('transitioning-scan');
+                next.classList.remove('transitioning');
+            }, 400);
+        });
+
+        this.currentIndex = nextIndex;
     }
 };
 window.NameMorphController = NameMorphController;
@@ -416,7 +458,8 @@ const InitializationManager = {
             { name: 'MobileMenu', obj: MobileMenu },
             { name: 'NavigationScrollEffect', obj: NavigationScrollEffect },
             { name: 'ProjectFilterSystem', obj: ProjectFilterSystem },
-            { name: 'HeroWaterBubble', obj: HeroWaterBubble }
+            { name: 'HeroWaterBubble', obj: HeroWaterBubble },
+            { name: 'SectionChoreography', obj: SectionChoreography }
         ];
         modules.forEach(m => {
             if (m.obj && typeof m.obj.init === 'function') {
