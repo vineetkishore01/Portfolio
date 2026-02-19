@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Blog Post | Vineet Kishore</title>
+
+    <!-- UI & Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Libraries & Styles -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="core/css/style.css">
+    <link rel="stylesheet" href="core/css/blog.css">
+    <link rel="stylesheet" href="core/css/mobile-v2.css">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="blog-post-page">
+    <nav class="nav" id="nav">
+        <a href="index.html" class="nav-logo">VK.</a>
+        <div class="nav-links">
+            <a href="blog.html" class="nav-link">← Back to Articles</a>
+        </div>
+    </nav>
+
+    <div class="side-progress-container">
+        <div id="side-progress-bar" class="side-progress-bar"></div>
+    </div>
+
+    <article class="post-reader">
+        <header class="post-header">
+            <div class="post-top-meta">
+                <div class="post-meta-left">
+                    <span id="post-category" class="post-category">Category</span>
+                    <span id="post-date" class="post-date">Date</span>
+                    <span id="post-read-time" class="post-read-time">Read Time</span>
+                </div>
+                <div class="share-container-top">
+                    <button id="share-toggle" class="share-btn">Share Article</button>
+                </div>
+            </div>
+
+            <h1 id="post-title" class="post-title">Loading...</h1>
+
+            <div class="post-progress-container">
+                <div id="post-progress-bar" class="post-progress-bar"></div>
+            </div>
+        </header>
+
+        <div id="post-content" class="blog-prose">
+            <!-- Markdown content will be rendered here -->
+            <p>Scanning data streams...</p>
+        </div>
+
+        <footer class="post-navigation">
+            <a id="prev-post-btn" href="#" class="nav-link-btn" style="display: none;">← Previous Article</a>
+            <a id="next-post-btn" href="#" class="nav-link-btn" style="display: none;">Next Article →</a>
+        </footer>
+    </article>
+
+    <footer class="footer">
+        <div class="footer-logo">VK.</div>
+        <div class="footer-copy">&copy; 2026 Vineet Kishore.</div>
+    </footer>
+
+    <script src="core/js/blog-post.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,520 @@
+/* ============================================
+   BLOG STYLES - Phase 4
+   ============================================ */
+
+:root {
+    --blog-max-width: 1400px;
+    --prose-max-width: 1250px;
+    /* Further expanded to utilize space */
+}
+
+.blog-page,
+.blog-post-page {
+    background-color: var(--bg-primary);
+}
+
+.blog-container {
+    max-width: var(--blog-max-width);
+    margin: 0 auto;
+    padding: 120px 5% 80px;
+}
+
+.blog-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.blog-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.blog-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Controls */
+.blog-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.blog-filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-pill {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-smooth);
+}
+
+.filter-pill:hover,
+.filter-pill.active {
+    background: rgba(0, 122, 255, 0.1);
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.blog-sort select {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Grid */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
+    min-height: 400px;
+    justify-content: center;
+}
+
+.blog-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s var(--ease-out-expo);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.blog-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: var(--accent-blue);
+    background: var(--bg-glass-hover);
+    box-shadow: 0 30px 60px -15px rgba(0, 122, 255, 0.2);
+}
+
+.blog-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.blog-card-date {
+    color: var(--text-tertiary);
+    font-weight: 400;
+}
+
+.blog-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    color: var(--text-primary);
+}
+
+.blog-card-excerpt {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+}
+
+.blog-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-blue);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.blog-card-footer svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+}
+
+.blog-card:hover .blog-card-footer svg {
+    transform: translateX(5px);
+}
+
+/* Pagination */
+.blog-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 4rem;
+}
+
+.page-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-btn.active {
+    background: var(--accent-blue);
+    color: #fff;
+    border-color: var(--accent-blue);
+}
+
+/* --- POST READER STYLES --- */
+.post-reader {
+    max-width: var(--prose-max-width);
+    margin: 0 auto;
+    padding: 140px 5% 100px;
+    position: relative;
+    /* For absolute positioning of share button if needed */
+}
+
+.post-header {
+    margin-bottom: 5rem;
+    position: relative;
+}
+
+.post-top-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-meta-left {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.post-category {
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.post-title {
+    font-size: clamp(2.5rem, 8vw, 4.2rem);
+    /* Increased size */
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.02em;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.post-progress-container {
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    /* Simple line track */
+    margin-top: 3rem;
+}
+
+.post-progress-bar {
+    height: 4px;
+    /* Slightly thicker for character */
+    background: var(--accent-blue);
+    width: 80px;
+    /* Static short line as requested */
+    border-radius: 2px;
+    margin-top: 1rem;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Vertical Sidebar Progress */
+.side-progress-container {
+    position: fixed;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    /* More prominent */
+    height: 70vh;
+    /* Significantly longer as requested */
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 1000;
+    border-radius: 10px;
+}
+
+.side-progress-bar {
+    width: 100%;
+    height: 0%;
+    background: var(--accent-blue);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Blog Prose (Rendered Markdown) */
+.blog-prose {
+    color: var(--text-primary);
+    font-size: 1.125rem;
+    line-height: 1.8;
+}
+
+.blog-prose h2 {
+    font-size: 2rem;
+    margin: 3rem 0 1.5rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.blog-prose h3 {
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+    color: #fff;
+}
+
+.blog-prose p {
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    /* Better visibility/contrast */
+    opacity: 0.9;
+}
+
+.blog-prose strong {
+    color: var(--text-primary);
+}
+
+.blog-prose blockquote {
+    border-left: 4px solid var(--accent-blue);
+    background: var(--bg-tertiary);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+}
+
+.blog-prose code {
+    background: var(--bg-tertiary);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--accent-blue-light);
+}
+
+.blog-prose pre {
+    background: #0d1117;
+    padding: 1.5rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 2rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.blog-prose pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    font-size: 0.9rem;
+}
+
+.blog-prose ul,
+.blog-prose ol {
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+}
+
+.blog-prose li {
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.blog-prose img {
+    max-width: 100%;
+    border-radius: 16px;
+    margin: 2.5rem 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.post-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Share Button Positioned in Top Meta Bar */
+.share-container-top {
+    position: static;
+    /* No longer absolute */
+}
+
+.share-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--accent-blue);
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1.25rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-smooth);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.share-btn:hover {
+    border-color: var(--accent-blue);
+    background: rgba(0, 122, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 122, 255, 0.1);
+}
+
+.nav-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s var(--ease-smooth);
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+}
+
+.nav-link-btn:hover {
+    border-color: var(--accent-blue);
+    background: var(--bg-glass-hover);
+    color: var(--accent-blue);
+}
+
+.share-btn.copied {
+    background: var(--accent-blue) !important;
+    color: #fff !important;
+    border-color: var(--accent-blue) !important;
+}
+
+/* Modal for Share */
+.share-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.share-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.share-box {
+    background: var(--bg-secondary);
+    padding: 2.5rem;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s var(--spring);
+}
+
+.share-modal.active .share-box {
+    transform: scale(1);
+}
+
+.share-url-container {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--bg-tertiary);
+    padding: 0.5rem;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.share-url-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    outline: none;
+}
+
+.copy-btn {
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .blog-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .blog-sort {
+        width: 100%;
+    }
+
+    .blog-sort select {
+        width: 100%;
+    }
+
+    .blog-title {
+        font-size: 3rem;
+    }
+}

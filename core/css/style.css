@@ -48,6 +48,7 @@
             --accent-blue-dark: #0051d5;
             --accent-glow: rgba(0, 122, 255, 0.3);
             --accent-glow-strong: rgba(0, 122, 255, 0.5);
+            --accent-warm: #FF6B35;
 
             --border-color: rgba(255, 255, 255, 0.1);
             --border-color-hover: rgba(255, 255, 255, 0.2);
@@ -58,6 +59,13 @@
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
             --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
             --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+            /* Motion Tokens */
+            --spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --duration-fast: 0.2s;
+            --duration-normal: 0.4s;
+            --duration-slow: 0.8s;
         }
 
         html {
@@ -1694,12 +1702,13 @@
             position: absolute;
             left: 50%;
             top: 0;
-            width: 2px;
+            width: 4px;
             background: var(--accent-blue);
             transform: translateX(-50%);
             height: 0%;
             transition: height 0.1s linear;
-            box-shadow: 0 0 20px var(--accent-glow);
+            box-shadow: 0 0 30px var(--accent-glow);
+            z-index: 2;
         }
 
         .timeline-item {
@@ -2892,6 +2901,8 @@
             border-radius: 16px;
             padding: 2rem;
             transition: all 0.4s var(--ease-out-expo);
+            opacity: 1;
+            visibility: visible;
         }
 
         .skill-category:hover {
@@ -3325,7 +3336,11 @@
         .contact-value {
             color: var(--text-secondary);
             font-size: 0.9375rem;
-            word-break: break-word;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: block;
         }
 
         /* ==========================================
@@ -3647,61 +3662,15 @@
         }
 
         .glitch-name {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            font-size: clamp(2.8rem, 6vw, 4.5rem);
-            font-weight: 800;
-            letter-spacing: -0.01em;
-            opacity: 0;
-            transform: translateY(15px);
-            transition:
-                opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.5s ease;
-            filter: blur(10px);
-            white-space: nowrap;
-            pointer-events: none;
-
-            /* Clean Premium White */
-            color: #ffffff;
-            -webkit-text-fill-color: #ffffff;
-
-            /* Subtle Neon White-Blue Bloom */
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(0, 122, 255, 0.1);
-            z-index: 2;
-        }
-
-        .glitch-name.active {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
-
-        /* Language-specific sizing */
-        .glitch-name[data-lang="Japanese"],
-        .glitch-name[data-lang="Korean"] {
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            position: relative;
+            display: inline-block;
+            font-size: clamp(2.8rem, 8vw, 5rem);
+            font-weight: 900;
+            color: #fff;
             letter-spacing: -0.02em;
+            text-transform: uppercase;
         }
 
-        .glitch-name[data-lang="Hindi"] {
-            font-size: clamp(1.7rem, 6.5vw, 2.3rem);
-            line-height: 1.5 !important;
-            padding-top: 0.2em;
-            overflow: visible !important;
-        }
-
-        .glitch-name[data-lang="Chinese"] {
-            font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-            letter-spacing: 0.05em;
-        }
-
-        /* ==========================================
-                       PREMIUM BLUE GLITCH TRANSITION
-                       ========================================== */
         .glitch-name::before,
         .glitch-name::after {
             content: attr(data-text);
@@ -3710,212 +3679,57 @@
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0;
-            z-index: -1;
-            transition: none;
-            mix-blend-mode: screen;
-            pointer-events: none;
+            background: #000;
         }
 
-        /* Cyan RGB Split - The "Soul" */
-        .glitch-name.active::before {
-            opacity: 0.2;
-            -webkit-text-fill-color: #00ffff;
-            animation: soul-float-1 8s infinite ease-in-out;
+        .glitch-name::before {
+            left: 3px;
+            text-shadow: -3px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
         }
 
-        /* Blue RGB Split - The "Soul" */
-        .glitch-name.active::after {
-            opacity: 0.15;
-            -webkit-text-fill-color: var(--accent-blue);
-            animation: soul-float-2 10s infinite ease-in-out;
+        .glitch-name::after {
+            left: -3px;
+            text-shadow: -3px 0 #00fff9, 3px 2px #ff00c1;
+            animation: glitch-anim2 1s infinite linear alternate-reverse;
         }
 
-        /* Intense Glitch on Transition */
-        .glitch-name.transitioning::before {
-            opacity: 1;
-            animation: glitch-flash-1 0.4s steps(2) forwards !important;
-        }
-
-        .glitch-name.transitioning::after {
-            opacity: 1;
-            animation: glitch-flash-2 0.4s steps(2) forwards !important;
-        }
-
-        @keyframes soul-float-1 {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-                filter: blur(2px);
-            }
-
-            20% {
-                transform: translate(-2px, 1px);
-                filter: blur(4px);
-            }
-
-            40% {
-                transform: translate(1px, -1px);
-                opacity: 0.3;
-            }
-
-            60% {
-                transform: translate(2px, 2px);
-                filter: blur(2px);
-            }
-
-            80% {
-                transform: translate(-1px, -2px);
-                opacity: 0.1;
-            }
-
-            /* Occasional soul jump */
-            95% {
-                transform: translate(-5px, 3px);
-                opacity: 0.6;
-                clip-path: inset(10% 0 80% 0);
-            }
-        }
-
-        @keyframes soul-float-2 {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-                filter: blur(3px);
-            }
-
-            25% {
-                transform: translate(2px, -2px);
-                filter: blur(5px);
-            }
-
-            50% {
-                transform: translate(-1px, 1px);
-                opacity: 0.25;
-            }
-
-            75% {
-                transform: translate(-2px, -1px);
-                filter: blur(3px);
-            }
-
-            /* Occasional soul jump */
-            92% {
-                transform: translate(5px, -3px);
-                opacity: 0.5;
-                clip-path: inset(70% 0 10% 0);
-            }
-        }
-
-        @keyframes glitch-flash-1 {
+        @keyframes glitch-anim {
             0% {
-                transform: translate(4px, -2px);
-                clip-path: inset(10% 0 80% 0);
+                clip: rect(31px, 9999px, 94px, 0);
+                transform: skew(0.85deg);
             }
 
-            25% {
-                transform: translate(-4px, 2px);
-                clip-path: inset(60% 0 20% 0);
+            5% {
+                clip: rect(70px, 9999px, 71px, 0);
+                transform: skew(0.85deg);
             }
 
-            50% {
-                transform: translate(2px, -1px);
-                clip-path: inset(30% 0 60% 0);
-            }
-
-            75% {
-                transform: translate(-2px, 1px);
-                clip-path: inset(80% 0 10% 0);
-            }
-
+            /* ... more keyframes would go here, using a simpler classic version for now ... */
             100% {
-                transform: none;
-                opacity: 0;
+                clip: rect(67px, 9999px, 62px, 0);
+                transform: skew(0.1deg);
             }
         }
 
-        @keyframes glitch-flash-2 {
+        @keyframes glitch-anim2 {
             0% {
-                transform: translate(-4px, 2px);
-                clip-path: inset(80% 0 10% 0);
-            }
-
-            25% {
-                transform: translate(4px, -2px);
-                clip-path: inset(20% 0 70% 0);
-            }
-
-            50% {
-                transform: translate(-2px, 1px);
-                clip-path: inset(50% 0 40% 0);
-            }
-
-            75% {
-                transform: translate(2px, -1px);
-                clip-path: inset(10% 0 80% 0);
+                clip: rect(65px, 9999px, 100px, 0);
+                transform: skew(0.8deg);
             }
 
             100% {
-                transform: none;
-                opacity: 0;
+                clip: rect(0px, 9999px, 30px, 0);
+                transform: skew(0.8deg);
             }
         }
 
-        /* Digital "Scan-Pass" Effect */
-        .glitch-name.transitioning-scan::after {
-            content: '';
-            position: absolute;
-            inset: -20px 0;
-            background: linear-gradient(to bottom,
-                    transparent 0%,
-                    rgba(0, 122, 255, 0.4) 48%,
-                    rgba(255, 255, 255, 0.9) 50%,
-                    rgba(0, 122, 255, 0.4) 52%,
-                    transparent 100%);
-            z-index: 20;
-            pointer-events: none;
-            animation: scan-quick 0.4s ease-out forwards;
-            opacity: 0;
-            -webkit-text-fill-color: initial;
-            background-clip: initial;
-        }
-
-        @keyframes scan-quick {
-            0% {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-        }
-
-        /* Mobile & Accessibility */
-        @media (max-width: 768px) {
-            .glitch-name {
-                justify-content: center;
-                font-size: clamp(2.2rem, 10vw, 3.5rem);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .glitch-name {
-                transition: opacity 0.1s ease;
-                filter: none;
-            }
-
-            .glitch-name::after,
-            .glitch-name::before {
-                display: flex;
-            }
+        /* Copied state for share button */
+        .share-btn.copied {
+            background: var(--accent-blue) !important;
+            color: #000 !important;
+            border-color: var(--accent-blue) !important;
         }
 
         /* ==========================================
@@ -4312,4 +4126,14 @@
             pointer-events: none;
             z-index: 100;
             opacity: 0.3;
+        }
+
+        /* Section Title Highlights */
+        .section-title {
+            transition: color 0.6s ease, text-shadow 0.6s ease;
+        }
+
+        .section-title.highlight-active {
+            color: var(--text-primary) !important;
+            text-shadow: 0 0 30px var(--accent-glow) !important;
         }

@@ -1,0 +1,274 @@
+/**
+ * BLOG LISTING ENGINE
+ * Fetches blogs/index.json and renders post cards with filtering & sorting.
+ */
+
+const BlogEngine = {
+    async init() {
+        console.log('BlogEngine: Initializing Auto-Discovery...');
+        this.grid = document.getElementById('blog-grid');
+        this.filtersContainer = document.getElementById('blog-filters');
+        this.sortSelect = document.getElementById('blog-sort-select');
+        this.paginationContainer = document.getElementById('blog-pagination');
+
+        // GitHub API Config
+        this.repo = "vineetkishore01/Portfolio";
+        this.path = "blogs";
+
+        this.posts = [];
+        this.filteredPosts = [];
+        this.currentPage = 1;
+        this.postsPerPage = 12;
+
+        try {
+            await this.loadArticles();
+            this.setupFilters();
+            this.setupEventListeners();
+            this.render();
+        } catch (error) {
+            console.error('BlogEngine: Fatal error:', error);
+            if (this.grid) {
+                this.grid.innerHTML = '<div class="blog-error">System offline. Data streams interrupted.</div>';
+            }
+        }
+    },
+
+    async loadArticles() {
+        // Check cache first (sha-based)
+        const cache = JSON.parse(localStorage.getItem('blog_cache') || '{}');
+        const now = Date.now();
+
+        try {
+            const apiResp = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.path}`);
+            const files = await apiResp.json();
+
+            if (!Array.isArray(files)) throw new Error('Could not list folder');
+
+            const mdFiles = files.filter(f => f.name.endsWith('.md') && f.size > 0);
+
+            this.posts = await Promise.all(mdFiles.map(async file => {
+                // If we have valid cache for this SHA, use it
+                if (cache[file.sha] && cache[file.sha].expires > now) {
+                    return cache[file.sha].data;
+                }
+
+                // Otherwise, fetch and parse metadata
+                const post = await this.parseMetadata(file);
+
+                // Cache it
+                cache[file.sha] = {
+                    expires: now + (1000 * 60 * 60 * 24), // 24hr cache
+                    data: post
+                };
+                return post;
+            }));
+
+            localStorage.setItem('blog_cache', JSON.stringify(cache));
+
+            // Sort by date descending by default
+            this.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            this.filteredPosts = [...this.posts];
+
+        } catch (e) {
+            console.warn('BlogEngine: API error or local env, falling back to cache if available', e);
+            this.posts = Object.values(cache).map(c => c.data);
+            if (this.posts.length === 0) throw e;
+        }
+    },
+
+    async parseMetadata(file) {
+        try {
+            const resp = await fetch(file.download_url);
+            const text = await resp.text();
+
+            // Basic extraction
+            const titleMatch = text.match(/^#\s+(.*)/m);
+            const title = titleMatch ? titleMatch[1].trim() : file.name.replace('.md', '');
+
+            // Try to find a date in the text YYYY-MM-DD
+            const dateMatch = text.match(/Date:\s*(\w+\s+\d{1,2},?\s+\d{4})/i) ||
+                text.match(/Date:\s*(\d{4}-\d{2}-\d{2})/i) ||
+                text.match(/20\d{2}-\d{2}-\d{2}/);
+
+            // Fallback: extract date from filename if exists, else use current
+            const fileDateMatch = file.name.match(/(\d{4}-\d{2}-\d{2})/);
+            const date = dateMatch ? dateMatch[1] : (fileDateMatch ? fileDateMatch[1] : new Date().toLocaleDateString('en-CA'));
+
+            // Try to find category or set default
+            const catMatch = text.match(/Category:\s*(.*)/i);
+            const category = catMatch ? catMatch[1].trim().replace(/[\\\[\]]/g, '') : "Technical";
+
+            // Excerpt: first non-empty line after title
+            const lines = text.split('\n').filter(l =>
+                l.trim() !== '' &&
+                !l.startsWith('#') &&
+                !l.match(/^Date:/i) &&
+                !l.match(/^Category:/i) &&
+                !l.match(/^---/)
+            );
+            const excerpt = lines[0] ? (lines[0].length > 180 ? lines[0].substring(0, 177) + '...' : lines[0])
+                : "A deep dive into technical implementation and discovery.";
+
+            return {
+                slug: encodeURIComponent(file.name), // Use filename as slug
+                title,
+                date,
+                category,
+                readTime: this.estimateReadTime(text),
+                excerpt,
+                file: file.name
+            };
+        } catch (e) {
+            return {
+                slug: encodeURIComponent(file.name),
+                title: file.name,
+                date: new Date().toISOString().split('T')[0],
+                category: "Technical",
+                readTime: "5 min",
+                excerpt: "Failed to parse article metadata.",
+                file: file.name
+            };
+        }
+    },
+
+    estimateReadTime(text) {
+        const words = text.split(/\s+/).length;
+        const minutes = Math.ceil(words / 225);
+        return `${minutes} min`;
+    },
+
+    setupFilters() {
+        const categories = ['all', ...new Set(this.posts.map(p => p.category))];
+
+        if (this.filtersContainer) {
+            this.filtersContainer.innerHTML = categories.map(cat => `
+                <button class="filter-pill ${cat === 'all' ? 'active' : ''}" data-category="${cat}">
+                    ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </button>
+            `).join('');
+        }
+    },
+
+    setupEventListeners() {
+        // Category filtering
+        this.filtersContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-pill')) {
+                const category = e.target.dataset.category;
+
+                // Update UI
+                this.filtersContainer.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                // Filter
+                this.filterByCategory(category);
+            }
+        });
+
+        // Sorting
+        this.sortSelect.addEventListener('change', () => {
+            this.sortPosts(this.sortSelect.value);
+        });
+    },
+
+    filterByCategory(category) {
+        if (category === 'all') {
+            this.filteredPosts = [...this.posts];
+        } else {
+            this.filteredPosts = this.posts.filter(p => p.category === category);
+        }
+        this.currentPage = 1;
+        this.render();
+    },
+
+    sortPosts(method) {
+        switch (method) {
+            case 'latest':
+                this.filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                break;
+            case 'oldest':
+                this.filteredPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+                break;
+            case 'alphabetical':
+                this.filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+        }
+        this.render();
+    },
+
+    render() {
+        if (!this.grid) return;
+
+        // Pagination slice
+        const startIndex = (this.currentPage - 1) * this.postsPerPage;
+        const endIndex = startIndex + this.postsPerPage;
+        const paginatedPosts = this.filteredPosts.slice(startIndex, endIndex);
+
+        if (paginatedPosts.length === 0) {
+            this.grid.innerHTML = '<div class="blog-empty">No articles found in this category.</div>';
+            this.paginationContainer.innerHTML = '';
+            return;
+        }
+
+        this.grid.innerHTML = paginatedPosts.map(post => this.createCard(post)).join('');
+        this.renderPagination();
+
+        // Entry animation
+        gsap.from('.blog-card', {
+            opacity: 0,
+            y: 30,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out'
+        });
+    },
+
+    createCard(post) {
+        return `
+            <a href="blog-post.html?slug=${post.slug}" class="blog-card">
+                <div class="blog-card-meta">
+                    <span>${post.category}</span>
+                    <span class="blog-card-date">${this.formatDate(post.date)}</span>
+                </div>
+                <h2 class="blog-card-title">${post.title}</h2>
+                <p class="blog-card-excerpt">${post.excerpt}</p>
+                <div class="blog-card-footer">
+                    <span>Read Article</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </div>
+            </a>
+        `;
+    },
+
+    renderPagination() {
+        const totalPages = Math.ceil(this.filteredPosts.length / this.postsPerPage);
+        if (totalPages <= 1) {
+            this.paginationContainer.innerHTML = '';
+            return;
+        }
+
+        let html = '';
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === this.currentPage ? 'active' : ''}" onclick="BlogEngine.goToPage(${i})">${i}</button>`;
+        }
+        this.paginationContainer.innerHTML = html;
+    },
+
+    goToPage(page) {
+        this.currentPage = page;
+        this.render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    formatDate(dateStr) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateStr).toLocaleDateString(undefined, options);
+    }
+};
+
+// Global accessor for pagination buttons
+window.BlogEngine = BlogEngine;
+
+document.addEventListener('DOMContentLoaded', () => BlogEngine.init());

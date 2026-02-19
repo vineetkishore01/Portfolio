@@ -1,0 +1,284 @@
+/* ============================================
+   MOBILE ARCHITECTURE v2.0
+   Breakpoints:
+     - Tablet:  max-width: 1024px
+     - Phone:   max-width: 768px
+     - Small:   max-width: 480px
+   
+   Principle: No !important. Specificity through structure.
+   ============================================ */
+
+/* Global Mobile Rules */
+@media (max-width: 1024px) {
+
+    html,
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    body {
+        padding-bottom: 110px;
+        /* Space for dock */
+    }
+
+    .quantum-firefly {
+        display: none !important;
+    }
+
+    .kinetic-text {
+        display: none;
+        /* Reduce mobile jank */
+    }
+}
+
+/* ============================================
+   TABLET (≤1024px)
+   ============================================ */
+@media (max-width: 1024px) {
+
+    /* Navigation */
+    .nav-links {
+        display: none;
+    }
+
+    .nav-cta {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .nav-cta span {
+        display: none;
+    }
+
+    .nav-cta svg {
+        margin: 0;
+        width: 20px;
+        height: 20px;
+    }
+
+    .menu-toggle {
+        display: flex !important;
+    }
+
+    /* Hero */
+    .hero {
+        padding: 120px 5% 60px;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+        text-align: center;
+    }
+
+    .hero-content {
+        order: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-image-wrapper {
+        order: 2;
+    }
+
+    .hero-title-single {
+        justify-content: center;
+    }
+
+    .glitch-name {
+        justify-content: center;
+    }
+
+    /* Sections */
+    .about-grid,
+    .skills-grid,
+    .education-grid,
+    .insights-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .projects-cinema {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 0;
+    }
+
+    .project-cinema-card {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Terminal */
+    .terminal-wrapper {
+        display: none;
+    }
+
+    .terminal-teaser {
+        display: block;
+    }
+
+    .terminal-teaser.expanded+.terminal-wrapper {
+        display: block;
+    }
+
+    /* Dock */
+    .mobile-dock-wrapper {
+        display: flex;
+        position: fixed;
+        bottom: 24px;
+        left: 20px;
+        right: 20px;
+        z-index: 1000;
+        justify-content: center;
+    }
+
+    .mobile-dock {
+        display: flex;
+        width: 100%;
+        max-width: 500px;
+        height: 64px;
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 32px;
+        padding: 0 12px;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .mobile-dock-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.4);
+        text-decoration: none;
+        transition: color 0.3s var(--ease-smooth);
+    }
+
+    .mobile-dock-item.active {
+        color: var(--accent-blue);
+    }
+
+    .mobile-dock-item.active::after {
+        content: '';
+        position: absolute;
+        bottom: 12px;
+        width: 4px;
+        height: 4px;
+        background: var(--accent-blue);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--accent-blue);
+    }
+}
+
+/* ============================================
+   PHONE (≤768px)
+   ============================================ */
+@media (max-width: 768px) {
+
+    /* Hero */
+    .hero-profile-card {
+        width: 220px;
+        height: 300px;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 9vw, 3rem);
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+
+    .hero-cta-group {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        width: 100%;
+        margin-top: 2rem;
+    }
+
+    .hero-cta-primary,
+    .hero-cta-secondary {
+        flex: 1;
+        padding: 16px 12px;
+        font-size: 0.9rem;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .hero-stats {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 3rem;
+        gap: 1rem;
+    }
+
+    .hero-stat {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Timeline */
+    .timeline-container {
+        padding-left: 20px;
+    }
+
+    .timeline-line {
+        left: 0;
+    }
+
+    .timeline-item {
+        padding-left: 30px;
+    }
+
+    .timeline-dot {
+        left: -5px;
+    }
+
+    /* Contact */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+}
+
+/* ============================================
+   SMALL PHONE (≤480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-stats {
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .hero-stat {
+        flex: 1 1 40%;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}

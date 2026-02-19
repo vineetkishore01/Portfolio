@@ -53,117 +53,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
     <link rel="stylesheet" href="core/css/style.css">
-    <link rel="stylesheet" href="core/css/mobile.css">
-    <style id="mobile-force-overdrive">
-        /* Hide dock on desktop by default */
-        .mobile-dock-wrapper {
-            display: none !important;
-        }
+    <link rel="stylesheet" href="core/css/mobile-v2.css">
 
-        @media (max-width: 768px) {
-
-            html body #menu-toggle,
-            html body .menu-toggle {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                position: relative !important;
-                z-index: 99999 !important;
-                width: 30px !important;
-                height: 22px !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
-            }
-
-            html body #menu-toggle span,
-            html body .menu-toggle span {
-                display: block !important;
-                width: 100% !important;
-                height: 3px !important;
-                background-color: #ffffff !important;
-                border-radius: 4px !important;
-            }
-
-            html body .mobile-dock-wrapper {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                position: fixed !important;
-                bottom: 24px !important;
-                left: 16px !important;
-                right: 16px !important;
-                width: calc(100% - 32px) !important;
-                height: 64px !important;
-                z-index: 99999 !important;
-                transform: none !important;
-                justify-content: center !important;
-                align-items: center !important;
-            }
-
-            html body .mobile-dock {
-                display: flex !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: rgba(18, 18, 20, 0.9) !important;
-                backdrop-filter: blur(25px) !important;
-                -webkit-backdrop-filter: blur(25px) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                border-radius: 32px !important;
-                justify-content: space-around !important;
-                padding: 0 10px !important;
-                margin: 0 !important;
-            }
-
-            html body .mobile-dock-item {
-                flex: 1 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                color: rgba(255, 255, 255, 0.4) !important;
-                text-decoration: none !important;
-            }
-
-            html body .mobile-dock-item.active {
-                color: #007AFF !important;
-            }
-
-            html body .hero-cta-group {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: nowrap !important;
-                gap: 12px !important;
-                width: 100% !important;
-                align-items: stretch !important;
-            }
-
-            html body .hero-cta-group a,
-            html body .hero-cta-group button {
-                flex: 1 !important;
-                width: 48% !important;
-                max-width: none !important;
-                margin: 0 !important;
-                text-align: center !important;
-                padding: 16px 10px !important;
-            }
-
-            html body .hero {
-                padding: 100px 20px 40px 20px !important;
-            }
-
-            html body .project-filters {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-            }
-
-            html body .timeline-container {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-            }
-        }
-    </style>
 
 
 
@@ -177,17 +68,7 @@
     <!-- Libraries -->
 </head>
 
-<body class="unselectable">
-    <!-- Premium Preloader -->
-    <div id="preloader" class="preloader">
-        <div class="preloader-content">
-            <div class="preloader-logo">VK</div>
-            <div class="preloader-progress">
-                <div class="preloader-bar" id="preloader-bar"></div>
-            </div>
-            <div class="preloader-status" id="preloader-status">Initializing Core Systems...</div>
-        </div>
-    </div>
+<body class="nexus-theme no-cursor">
     <!-- Accessibility Skip Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -195,68 +76,6 @@
     <div class="quantum-firefly" id="quantum-firefly" aria-hidden="true">
         <div class="quantum-firefly-core"></div>
         <div class="quantum-firefly-trail" id="firefly-trail"></div>
-    </div>
-
-
-    <!-- Project Nexus Modal Overlay -->
-    <div class="project-nexus" id="project-nexus">
-        <div class="nexus-backdrop"></div>
-        <div class="nexus-container">
-            <div class="nexus-header">
-                <div class="nexus-title-group">
-                    <div class="nexus-id">PRJ-01</div>
-                    <h2 class="nexus-title">Droppy</h2>
-                </div>
-                <button class="nexus-close-btn" id="nexus-close">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div class="nexus-content">
-                <div class="nexus-grid">
-                    <div class="nexus-sidebar">
-                        <div class="nexus-stat-box">
-                            <span class="nexus-stat-label">Role</span>
-                            <span class="nexus-stat-value">Lead Developer</span>
-                        </div>
-                        <div class="nexus-stat-box">
-                            <span class="nexus-stat-label">Timeline</span>
-                            <span class="nexus-stat-value">3 Months</span>
-                        </div>
-                        <div class="nexus-stat-box">
-                            <span class="nexus-stat-label">Stack</span>
-                            <div class="nexus-tech-stack">
-                                <span>Swift</span><span>SwiftUI</span><span>AppKit</span>
-                            </div>
-                        </div>
-                        <a href="#" class="nexus-cta primary">View Source</a>
-                        <a href="#" class="nexus-cta secondary">Live Demo</a>
-                    </div>
-                    <div class="nexus-main">
-                        <div class="nexus-section">
-                            <h3>Overview</h3>
-                            <p>Droppy is a macOS utility that leverages the Dynamic Island concept. It provides a
-                                drag-and-drop shelf for temporary file storage, optimizing workflow efficiency for power
-                                users.</p>
-                        </div>
-                        <div class="nexus-section">
-                            <h3>Key Engineering Challenges</h3>
-                            <ul class="nexus-list">
-                                <li>Implemented low-level Drag & Drop API hooks within AppKit.</li>
-                                <li>Optimized memory usage for handling large file references.</li>
-                                <li>Designed fluid animations using SwiftUI with 60fps performance target.</li>
-                            </ul>
-                        </div>
-                        <div class="nexus-gallery">
-                            <div class="nexus-image-placeholder"></div>
-                            <div class="nexus-image-placeholder"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -272,8 +91,8 @@
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
             <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="javascript:void(0)" class="nav-link" style="opacity: 0.6; cursor: default;"
-                    title="Coming Soon">Blogs</a></li>
+            <li><a href="blog.html" class="nav-link">Blogs</a></li>
+
             <li><a href="#terminal" class="nav-link">Terminal</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
@@ -315,18 +134,7 @@
                 <div class="hero-label">Infrastructure Engineer</div>
                 <div class="mobile-badge">Available for opportunities</div>
                 <h1 class="hero-title">
-                    <div class="hero-title-single" id="name-container">
-                        <span class="glitch-name active" data-lang="English" data-index="0"
-                            data-text="Vineet Kishore">Vineet Kishore</span>
-                        <span class="glitch-name" data-lang="Hindi" data-index="1" data-text="विनीत किशोर">विनीत
-                            किशोर</span>
-                        <span class="glitch-name" data-lang="Japanese" data-index="2" data-text="ヴィニート キショール">ヴィニート
-                            キショール</span>
-                        <span class="glitch-name" data-lang="Korean" data-index="3" data-text="비니트 키쇼어">비니트 키쇼어</span>
-                        <span class="glitch-name" data-lang="Chinese" data-index="4" data-text="维尼特 基肖尔">维尼特 基肖尔</span>
-                        <span class="glitch-name" data-lang="Russian" data-index="5" data-text="Винит Кишор">Винит
-                            Кишор</span>
-                    </div>
+                    <span class="glitch-name" data-text="Vineet Kishore">Vineet Kishore</span>
                 </h1>
 
                 <p class="hero-subtitle">Building resilient systems with 99.9% uptime. Strategic technologist
@@ -705,7 +513,7 @@
                     hybrid cloud environments.</p>
                 <div class="insight-meta">
                     <span>5 min read</span>
-                    <a href="#" class="insight-link">Read Article →</a>
+                    <a href="blog-post.html?slug=building-self-healing-clusters" class="insight-link">Read Article →</a>
                 </div>
             </article>
             <article class="insight-card">
@@ -715,7 +523,7 @@
                     API costs while maintaining accuracy.</p>
                 <div class="insight-meta">
                     <span>8 min read</span>
-                    <a href="#" class="insight-link">Read Article →</a>
+                    <a href="blog-post.html?slug=optimizing-token-usage-rag" class="insight-link">Read Article →</a>
                 </div>
             </article>
             <article class="insight-card">
@@ -725,11 +533,15 @@
                     Island animations.</p>
                 <div class="insight-meta">
                     <span>6 min read</span>
-                    <a href="#" class="insight-link">Read Article →</a>
+                    <a href="blog-post.html?slug=physics-fluid-interfaces" class="insight-link">Read Article →</a>
                 </div>
             </article>
         </div>
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="blog.html" class="hero-cta-secondary">View All Articles →</a>
+        </div>
     </section>
+
 
     <!-- Terminal Section -->
     <section class="terminal-section" id="terminal">
@@ -821,8 +633,8 @@
                 <div class="contact-value">vineetkishore01@gmail.com</div>
             </a>
 
-            <a href="https://linkedin.com/in/vineetkishore" target="_blank" rel="noopener noreferrer"
-                class="contact-card" data-copy="linkedin.com/in/vineetkishore">
+            <a href="https://www.linkedin.com/in/vineet-kishore/" target="_blank" rel="noopener noreferrer"
+                class="contact-card" data-copy="linkedin.com/in/vineet-kishore">
                 <div class="contact-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
@@ -831,11 +643,11 @@
                     </svg>
                 </div>
                 <div class="contact-title">LinkedIn</div>
-                <div class="contact-value">/in/vineetkishore</div>
+                <div class="contact-value">/in/vineet-kishore</div>
             </a>
 
-            <a href="https://github.com/vineetkishore" target="_blank" rel="noopener noreferrer" class="contact-card"
-                data-copy="github.com/vineetkishore">
+            <a href="https://github.com/vineetkishore01" target="_blank" rel="noopener noreferrer" class="contact-card"
+                data-copy="github.com/vineetkishore01">
                 <div class="contact-icon">
                     <svg viewBox="0 0 24 24">
                         <path
@@ -843,11 +655,11 @@
                     </svg>
                 </div>
                 <div class="contact-title">GitHub</div>
-                <div class="contact-value">@vineetkishore</div>
+                <div class="contact-value">@vineetkishore01</div>
             </a>
 
-            <a href="https://youtube.com/@vineetkishore" target="_blank" rel="noopener noreferrer" class="contact-card"
-                data-copy="@vineetkishore">
+            <a href="https://youtube.com/@vineetkishore_upsc" target="_blank" rel="noopener noreferrer"
+                class="contact-card" data-copy="@vineetkishore_upsc">
                 <div class="contact-icon">
                     <svg viewBox="0 0 24 24">
                         <path
@@ -856,7 +668,7 @@
                     </svg>
                 </div>
                 <div class="contact-title">YouTube</div>
-                <div class="contact-value">@vineetkishore</div>
+                <div class="contact-value">@vineetkishore_upsc</div>
             </a>
         </div>
     </section>
