@@ -22,7 +22,9 @@ const PostReader = {
 
         try {
             // 1. Fetch the markdown file directly
-            const postResponse = await fetch(`blogs/${this.currentSlug}`);
+            // Ensure spaces and special chars are encoded for the fetch
+            const safePath = `blogs/${encodeURIComponent(this.currentSlug)}`;
+            const postResponse = await fetch(safePath);
             if (!postResponse.ok) throw new Error('File not found');
             const markdown = await postResponse.text();
 

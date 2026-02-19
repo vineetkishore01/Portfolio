@@ -1,0 +1,493 @@
+# Portfolio Visual Enhancement — Implementation Plan
+
+> **Audience**: Worker AI agent (Google Gemini). This document is your *complete* construction blueprint. Follow it section-by-section, phase-by-phase. **Do not remove any existing functionality.** All changes are additive or refactoring-only.
+
+---
+
+## Current State Summary
+
+| Asset | Size | Role |
+|---|---|---|
+| [index.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/index.html) | 933 lines | Single-page app: 10 content sections + mobile dock |
+| [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css) | 4315 lines (120 KB) | All desktop + scattered mobile `@media` blocks |
+| [mobile.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile.css) | 108 lines | Aggressive `!important` overrides at `≤1024px` |
+| [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js) | 2296 lines (77 KB) | 20+ modules: GSAP animations, Lenis scroll, filters, modals, morph, etc. |
+| [terminal-enhanced.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/terminal-enhanced.js) | 30 KB | Standalone interactive terminal |
+| [Subject.png](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/Subject.png) | 683 KB | Hero profile image |
+| `extras/generated_assets/` | 11 files | Depth maps, layers, glitch, edges, transparent subject, video |
+| `extras/generated_assets_ultra/` | 25 files | Cinematic (cyberpunk, noir, teal-orange, vintage), neon, halftone, sketch, embossed |
+
+### Sections in `index.html`
+
+1. **Preloader** (VK logo + progress bar)
+2. **Quantum Firefly Cursor**
+3. **Project Nexus Modal** (detailed project overlay)
+4. **Navigation** (fixed top bar + hamburger + Resume CTA)
+5. **Hero** (name glitch morph in 6 languages, profile card, stats, CTAs)
+6. **About** (4 cards: Engineer, Creator, Mentor, Athlete)
+7. **Experience** (vertical timeline, 3 items)
+8. **Projects** (3 cinema-style cards with filters: All/Dev/Infra/AI)
+9. **Skills** (4 category grids)
+10. **Education** (3 cards)
+11. **Insights** (3 placeholder articles — *"Coming Soon"*)
+12. **Terminal** (interactive command-line with progressive disclosure on mobile)
+13. **Contact** (4 cards: Email, LinkedIn, GitHub, YouTube)
+14. **Footer** (minimal)
+15. **Mobile Bottom Dock** (6-item macOS-style bar)
+
+### Key Libraries
+- **GSAP 3.12.2** + ScrollTrigger (CDN)
+- **Lenis 1.1.18** smooth scroll (CDN, desktop-only)
+- **Inter** + **JetBrains Mono** (Google Fonts)
+
+### Known Issues
+- `mobile.css` uses blanket `!important` nuclear overrides—any desktop CSS change can break mobile
+- `style.css` has mobile `@media` sprinkled at least 8 different places, creating specificity wars
+- Insights section is completely hardcoded — no blog engine
+- Blog nav link is disabled (`Coming Soon`)
+- Several JS modules disabled: `CardTiltEffect`, `MagneticButtons`, `HeroWaterBubble`
+- No page transitions / section entry choreography — everything fades in generically
+- Contact section and footer are visually plain
+- The `extras/` folder has 36 image assets (cinematic, glitch, neon) completely unused
+
+---
+
+## Design Philosophy
+
+> **Principle: "Silent Confidence"** — Inspired by Apple's HIG, Stripe's motion design, and Linear's dark-mode elegance. Every animation has *purpose*. Nothing moves without reason. The site should feel like a precision instrument: fast, quiet, confident, with moments of awe.
+
+### Core Design Tokens
+- **Motion**: Every animation uses `cubic-bezier(0.16, 1, 0.3, 1)` (Apple spring) or `power3.out` (GSAP)
+- **Timing**: Entry animations 0.6–0.8s, micro-interactions 0.2–0.3s, hover 0.15s
+- **Color**: Keep existing `#000` primary, `#007AFF` accent blue. Add a secondary warm accent `#FF6B35` for CTAs requiring contrast
+- **Typography**: Keep Inter/JetBrains Mono. Increase section title sizes for drama
+- **Spacing**: Use 8px grid system throughout. Sections breathe with `clamp(6rem, 12vh, 10rem)` padding
+
+---
+
+## Phase 1: CSS Architecture Refactoring
+
+> **Goal**: Untangle the CSS spaghetti. Create a clean separation between desktop and mobile so future iterations on either don't break the other.
+
+### File Changes
+
+#### [MODIFY] [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css)
+
+1. **Extract all `@media` blocks** scattered throughout — move them to the bottom of the file in a single organized `/* ========== RESPONSIVE OVERRIDES ========== */` section, **BUT** only for minor tweaks (font sizes, padding)
+2. **Remove any mobile-specific layout rules** from `style.css` — these belong in the mobile file
+3. **Add CSS custom properties for motion** to `:root`:
+   ```css
+   --spring: cubic-bezier(0.16, 1, 0.3, 1);
+   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+   --duration-fast: 0.2s;
+   --duration-normal: 0.4s;
+   --duration-slow: 0.8s;
+   --accent-warm: #FF6B35;
+   ```
+4. **Consolidate duplicate selectors** — there are multiple `.nav-link::after` definitions, multiple `.filter-btn.active` blocks, etc.
+
+#### [NEW] [mobile-v2.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-v2.css)
+
+A complete mobile stylesheet that replaces both `mobile.css` and the inline `<style id="mobile-force-overdrive">` in `index.html`. Architecture:
+
+```css
+/* ============================================
+   MOBILE ARCHITECTURE v2.0
+   Breakpoints:
+     - Tablet:  max-width: 1024px
+     - Phone:   max-width: 768px
+     - Small:   max-width: 480px
+   ============================================ */
+
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  /* Navigation → hamburger */
+  /* Hero grid → single column */
+  /* Cards/grids → single column stacking */
+  /* Terminal → progressive disclosure */
+  /* Bottom dock → visible */
+}
+
+/* Phone (≤768px) */
+@media (max-width: 768px) {
+  /* Hero profile card downsized */
+  /* Typography scaled down */
+  /* Padding/margins compressed */
+  /* Timeline → horizontal scroll snap */
+}
+
+/* Small Phone (≤480px) */
+@media (max-width: 480px) {
+  /* Further size reductions */
+  /* Single-column everything */
+}
+```
+
+**Key rules**:
+- **No `!important`** — achieve specificity through proper selector nesting (e.g., `body .hero-grid` instead of `html body .hero-grid { ... !important }`)
+- **No layout rules in desktop CSS** dependent on mobile — each file is self-contained
+- **Use `clamp()` and `min()`** for fluid sizing instead of hard breakpoints where possible
+
+#### [MODIFY] [index.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/index.html)
+
+1. Remove the inline `<style id="mobile-force-overdrive">` block (lines 57–166)
+2. Replace `<link rel="stylesheet" href="core/css/mobile.css">` with `<link rel="stylesheet" href="core/css/mobile-v2.css">`
+
+> [!IMPORTANT]
+> Keep `mobile.css` and `mobile-overhaul.css.bak` in the filesystem as backups, but they should NOT be linked in the HTML.
+
+---
+
+## Phase 2: God-Tier Animations & Visual Flow (Desktop)
+
+> **Goal**: Transform the scroll experience into a cinematic journey. Each section reveals with choreographed intent—not generic fade-ins.
+
+### 2A. Hero Entrance Sequence
+
+The hero is the first impression. It must be **breathtaking**.
+
+#### Animation Sequence (after preloader fades out):
+
+| Step | Element | Animation | Duration | Delay |
+|---|---|---|---|---|
+| 1 | `.hero-orb-1, .hero-orb-2, .hero-orb-3` | Scale from 0, blur in | 1.2s | 0s |
+| 2 | `.hero-label` | Typewriter effect (keep existing) | — | 0.3s |
+| 3 | `.hero-title` / `.glitch-name` | Slide up from 30px + blur | 0.8s | 0.5s |
+| 4 | `.hero-subtitle` | Fade + slide up 20px | 0.6s | 0.8s |
+| 5 | `.hero-cta-group` | Scale from 0.9 + fade | 0.5s | 1.0s |
+| 6 | `.hero-stats` | Stagger each stat counter (count-up) | 0.4s each | 1.2s |
+| 7 | `.hero-profile-card` | Slide from right + gentle 3D rotate | 0.8s | 0.6s |
+
+#### [MODIFY] [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js)
+- Create a `HeroEntranceTimeline` using `gsap.timeline()` that orchestrates all of the above
+- Replace existing individual `gsap.from(...)` calls (lines ~410–456) with this unified timeline
+- Add a **number count-up animation** for hero stats (5K+, 91st, 99.9%) — animate from 0 to target value
+
+### 2B. Section Scroll Choreography
+
+Replace the generic `SectionReveals.init()` (lines 1549–1590) with a **per-section custom choreography system**:
+
+#### About Section
+- Section header fades in, then kinetic text slides in from right
+- 4 about-cards **stagger** in from bottom (0.15s between each)
+- Each card has a subtle `clipPath` reveal: `inset(100% 0 0 0)` → `inset(0)`
+
+#### Experience Section
+- Vertical timeline line **draws** itself (height 0 → 100%, synced with scroll)
+- Timeline dots **pulse** as they activate
+- Cards slide in **alternately** from left and right
+
+#### Projects Section
+- Cards enter with a **3D perspective tilt** (rotateY from ±15deg → 0)
+- On hover: card lifts with elongated shadow + subtle glow border
+- Filter transitions: cards scale down to 0.8 → reposition → scale back to 1
+
+#### Skills Section
+- Each category **slides in from the left** with staggered timing
+- Skill tags inside each category **ripple in** (staggered 0.03s each)
+
+#### Education Section
+- Cards **fan in** like dealing playing cards (slight rotation + translate)
+
+#### [MODIFY] [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js)
+- Replace existing generic reveal logic with section-specific GSAP ScrollTrigger timelines
+- Use `scrub: 0.5` for parallax-style animations where appropriate
+- Keep `start: 'top 85%'` for trigger points
+
+### 2C. Page-Wide Ambient Effects
+
+#### [MODIFY] [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js)
+- **Re-enable and improve `HeroWaterBubble`** (currently commented out at line 914–917): Make it follow cursor with a 150ms lag, with subtle color shift based on section
+- **Reactivate `CardTiltEffect`** with reduced sensitivity (max 3deg tilt)
+- **Reactivate `MagneticButtons`** on CTA buttons only (hero CTAs + nav resume)
+- Add `scroll-progress` micro-animation: a thin accent-blue line at the very top of the viewport that grows from 0% → 100% as user scrolls (already partially implemented — enhance to be more visible)
+
+### 2D. Section Transitions (Scroll-Linked)
+
+#### [MODIFY] [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css)
+- Add subtle gradient dividers between sections:
+  ```css
+  section + section::before {
+      content: '';
+      display: block;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,122,255,0.3), transparent);
+      margin: 0 auto;
+      max-width: 200px;
+  }
+  ```
+- Add a **subtle parallax depth** to kinetic text (already partially done — increase the `y` movement from 20% to 40% for more drama)
+
+### 2E. Cursor & Interaction Polish
+
+#### [MODIFY] [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css)
+- Enhance the quantum firefly cursor with a larger trail and smooth color transitions
+- Add `cursor: none` on desktop (since custom cursor exists)
+- Ensure the cursor changes appearance when hovering interactive elements (grows larger, slight color pulse)
+
+---
+
+## Phase 3: Mobile Layout Overhaul
+
+> **Goal**: A pixel-perfect, bug-free mobile experience isolated from desktop CSS.
+
+### 3A. Critical Mobile Fixes
+
+All in [mobile-v2.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-v2.css):
+
+1. **Hero Section** (`≤768px`):
+   - `.hero-grid` → single column, hero content first, image below
+   - Profile card: `width: 200px; height: 270px;` centered
+   - Hero title font: `clamp(1.8rem, 8vw, 2.8rem)`
+   - CTA buttons side-by-side (flex-row, equal width)
+   - Stats row: horizontal, evenly spaced
+
+2. **Navigation** (`≤1024px`):
+   - Hide `.nav-links` — hamburger menu opens full-screen overlay
+   - `.nav-cta` (Resume) → hide text, show icon-only
+   - Full-screen menu: slide-down panel with large touch-friendly links (48px min touch target)
+
+3. **Cards & Grids** (`≤768px`):
+   - `.about-grid`, `.skills-grid`, `.education-grid`, `.insights-grid` → `display: flex; flex-direction: column; gap: 1rem;`
+   - `.projects-cinema` → vertical stack with full-width cards
+   - Remove all horizontal scroll jank
+
+4. **Timeline** (`≤768px`):
+   - Convert to vertical-only layout (no horizontal scroll)
+   - Each timeline item full-width, stacked
+
+5. **Bottom Dock**:
+   - Cleaner glassmorphism: `background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(30px) saturate(180%);`
+   - Proper safe-area inset for iPhone notch: `padding-bottom: env(safe-area-inset-bottom);`
+   - Active indicator animation: dot grows + glow
+
+6. **Contact Grid** (`≤768px`):
+   - `grid-template-columns: 1fr 1fr;` (2×2 grid)
+   - On `≤480px` → single column
+
+7. **Global Mobile Rules**:
+   - `body { padding-bottom: 100px; }` to clear bottom dock
+   - Disable Quantum Firefly cursor: `.quantum-firefly { display: none; }`
+   - Disable kinetic text parallax for performance
+   - Ensure no horizontal overflow: `html, body { overflow-x: hidden; }`
+
+### 3B. Mobile JS Adjustments
+
+#### [MODIFY] [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js)
+- Gate ALL desktop-only effects behind `window.innerWidth > 1024` or `!('ontouchstart' in window)`:
+  - `CardTiltEffect`, `MagneticButtons`, `HeroWaterBubble`, custom cursor
+- On mobile, use simpler GSAP animations (shorter durations, no 3D transforms)
+- Mobile dock active-state updater (IntersectionObserver) — keep existing, just ensure debouncing
+
+---
+
+## Phase 4: Blog Engine (Markdown → Native Pages)
+
+> **Goal**: A fully static blog powered by markdown files in a `blogs/` folder. No backend. Fetches `blogs/index.json` for metadata. Pages look native to the site.
+
+### Architecture
+
+```
+portfolio-root/
+├── blogs/
+│   ├── index.json          ← Manifest of all blog posts (manually maintained or auto-generated)
+│   ├── 2026-02-15-building-self-healing-clusters.md
+│   ├── 2026-02-10-optimizing-token-usage-rag.md
+│   └── 2026-01-28-physics-fluid-interfaces.md
+├── blog.html               ← Blog listing page (pagination, sort)
+└── blog-post.html          ← Individual blog post reader
+```
+
+### 4A. Blog Manifest
+
+#### [NEW] [index.json](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/blogs/index.json)
+
+```json
+{
+  "posts": [
+    {
+      "slug": "building-self-healing-clusters",
+      "title": "Building Self-Healing Clusters with Ansible",
+      "date": "2026-02-15",
+      "category": "Infrastructure",
+      "readTime": "5 min",
+      "excerpt": "How I reduced manual intervention by 90% using event-driven automation.",
+      "file": "2026-02-15-building-self-healing-clusters.md"
+    },
+    {
+      "slug": "optimizing-token-usage-rag",
+      "title": "Optimizing Token Usage in RAG Pipelines",
+      "date": "2026-02-10",
+      "category": "AI / LLM",
+      "readTime": "8 min",
+      "excerpt": "Strategies for efficient context retrieval and prompt engineering.",
+      "file": "2026-02-10-optimizing-token-usage-rag.md"
+    },
+    {
+      "slug": "physics-fluid-interfaces",
+      "title": "The Physics of Fluid Interfaces",
+      "date": "2026-01-28",
+      "category": "UX Engineering",
+      "readTime": "6 min",
+      "excerpt": "Deconstructing Apple's Dynamic Island animations.",
+      "file": "2026-01-28-physics-fluid-interfaces.md"
+    }
+  ]
+}
+```
+
+### 4B. Blog Listing Page
+
+#### [NEW] [blog.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/blog.html)
+
+- Same nav, footer, font stack, and color scheme as `index.html`
+- Fetches `blogs/index.json` via `fetch()`
+- Renders **10 posts per page** as styled cards
+- **Pagination**: Page 1, 2, 3... buttons at the bottom
+- **Sort dropdown**: Latest, Oldest, A–Z
+- **Category filter** pills (drawn dynamically from manifest categories)
+- Uses same design language: dark cards, subtle borders, accent-blue highlights
+- Search is done client-side by filtering the already-fetched manifest
+
+### 4C. Blog Post Reader
+
+#### [NEW] [blog-post.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/blog-post.html)
+
+- Reads `?slug=building-self-healing-clusters` from URL params
+- Looks up the post in `blogs/index.json`
+- Fetches the corresponding `.md` file
+- Parses markdown → HTML using **marked.js** (CDN: `https://cdn.jsdelivr.net/npm/marked/marked.min.js`)
+- Renders with **syntax highlighting** via **highlight.js** (CDN)
+- Full markdown support: headings, bold, italic, lists, code blocks, tables, images, blockquotes, horizontal rules, links
+- Uses same nav/footer as main site
+- Styled with a dedicated `.blog-prose` class that ensures:
+  - `max-width: 720px` centered reading column
+  - `font-size: 1.1rem; line-height: 1.8`
+  - Proper heading hierarchy (h1–h6 with decreasing sizes + accent colors)
+  - Code blocks with dark background, mono font, horizontal scroll for overflow
+  - Tables with border styling matching the site
+  - Images: `max-width: 100%; border-radius: 12px;`
+  - Blockquotes: left accent-blue border + darker background
+  - Back button / breadcrumb at top: `← Back to Blog`
+
+### 4D. Blog CSS
+
+#### [NEW] [blog.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/blog.css)
+
+Dedicated styles for blog listing and blog-post pages. Includes:
+- `.blog-listing-grid` (responsive grid for post cards)
+- `.blog-card` (hover lift, accent border, date label)
+- `.blog-prose` (rendered markdown content styling)
+- `.blog-pagination` (page buttons)
+- `.blog-sort-controls` (dropdown + filter pills)
+- Mobile responsive rules for the blog
+
+### 4E. Nav Link Update
+
+#### [MODIFY] [index.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/index.html)
+
+Change the Blogs nav link from disabled to active:
+```diff
+- <a href="javascript:void(0)" class="nav-link" style="opacity: 0.6; cursor: default;" title="Coming Soon">Blogs</a>
++ <a href="blog.html" class="nav-link">Blogs</a>
+```
+
+### 4F. Sample Blog Posts
+
+Create 3 sample `.md` files in `blogs/` corresponding to the existing Insights section content:
+1. `2026-02-15-building-self-healing-clusters.md` — Infrastructure article
+2. `2026-02-10-optimizing-token-usage-rag.md` — AI article
+3. `2026-01-28-physics-fluid-interfaces.md` — UX article
+
+Each should be ~300–500 words of real content to demonstrate the rendering engine.
+
+---
+
+## Phase 5: Polish & Visual Excellence
+
+### 5A. Leverage Extras Assets
+
+#### [MODIFY] Hero section
+- Use `extras/generated_assets/subject_transparent.png` as an alternate hero image source for a parallax depth effect (transparent subject floating over a subtle gradient)
+- Use `extras/generated_assets_ultra/cinematic_cyberpunk.png` or `cinematic_teal_orange.png` as a subtle background texture on the about section (heavily blurred, low opacity — 3–5%)
+- Use `extras/generated_assets_ultra/neon_dual_tone.png` as the image inside the Project Nexus modal for Droppy
+
+### 5B. Footer Redesign
+
+#### [MODIFY] [index.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/index.html) + [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css)
+- Enlarge footer with a gradient fade-in from `#000` → `#0a0a0a`
+- Add social icon row (GitHub, LinkedIn, YouTube, Email) with hover glow
+- Add "Crafted with precision & passion" in `JetBrains Mono`
+- Subtle animated gradient line at the top of the footer
+
+### 5C. Contact Section Enhancement
+
+#### [MODIFY] [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css)
+- Make contact cards larger with more padding
+- Add a glowing icon state on hover
+- Add a copy-to-clipboard toast when clicking email card (already partially implemented in HTML `data-copy` attributes)
+
+### 5D. Preloader Upgrade
+
+#### [MODIFY] [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css) + [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js)
+- Make the VK logo smoother — replace `logo-glitch` with a cleaner breathing animation
+- Add a sleek blur-to-clear transition when preloader finishes
+- Progress bar: gradient accent blue → white tip
+
+### 5E. Insights → Blog Bridge
+
+#### [MODIFY] [index.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/index.html)
+- In the Insights section, change the article card links from `#` to `blog-post.html?slug=<slug>`
+- Add a "View All Articles →" link at the bottom that navigates to `blog.html`
+- Rename section from "Technical Perspectives" to "Latest Articles" (or keep — user's choice)
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Blog file structure**: The plan proposes `blogs/index.json` as a manually-maintained manifest. The user must add new posts to this JSON file when publishing. An alternative is to auto-discover `.md` files using GitHub API — but since this is a static site on GitHub Pages without a build step, the JSON manifest is the simplest approach. **Does this work for you?**
+
+> [!WARNING]
+> **CSS Architecture Reset**: Phase 1 removes the inline `<style id="mobile-force-overdrive">` and replaces `mobile.css` with `mobile-v2.css`. This is a clean break from the `!important` approach. During development, there may be a brief period where mobile styles are unstable before `mobile-v2.css` is complete. The old files will be kept as backups.
+
+> [!IMPORTANT]
+> **Extras Assets**: Several unused images in `extras/` could enhance the site. The plan uses a few of them judiciously. If you prefer to keep the site lean and skip the extras, let me know.
+
+---
+
+## Verification Plan
+
+### Automated / Browser Verification
+
+#### 1. Desktop Visual Checks (Browser)
+- Open `index.html` in browser at **1440×900** viewport
+- Verify: Preloader → Hero entrance → scroll through all sections
+- Check: section transitions are smooth, no visual glitches
+- Check: Project filters work (clicking filters shows/hides cards)
+- Check: Project Nexus modal opens and closes
+- Check: Terminal is interactive and functional
+- Check: Contact card click shows toast notification
+
+#### 2. Mobile Visual Checks (Browser at 390×844, iPhone 14 Pro)
+- Verify: Hamburger menu visible and functional
+- Verify: Bottom dock visible, items tappable, active state updates on scroll
+- Verify: Hero section: text readable, image below text, CTAs side-by-side
+- Verify: All card sections stack vertically, no horizontal overflow
+- Verify: Timeline cards stack vertically
+- Verify: No horizontal scrollbar on any section
+- Verify: Terminal teaser visible, tappable to reveal terminal
+
+#### 3. Blog Engine Checks (Browser)
+- Navigate to `blog.html` — verify 3 sample posts render as cards
+- Click pagination (with 3 posts there should be 1 page — test with 15+ posts later)
+- Test sort: Latest → Oldest  
+- Click on a blog card → verify `blog-post.html?slug=...` loads
+- Verify markdown renders: headings, code blocks, lists, bold, italic, links, tables, blockquotes
+- Press "← Back to Blog" → returns to listing
+- Check blog pages on mobile (390px) — verify responsive layout
+
+### Manual Verification (by user)
+1. Deploy to GitHub Pages and verify all links and asset loading work with relative paths
+2. Add a new `.md` file to `blogs/`, update `index.json`, and verify it appears on the listing page
+3. Test on a real iPhone / Android device for touch responsiveness
