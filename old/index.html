@@ -23,7 +23,7 @@
 
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com;">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
 
@@ -52,11 +52,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-    <link rel="stylesheet" href="core/css/style.css?v=c8">
-    <link rel="stylesheet" href="core/css/mobile.css?v=c8">
-
-
-
+    <link rel="stylesheet" href="core/css/style.css">
+    <link rel="stylesheet" href="core/css/mobile.css">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +65,17 @@
     <!-- Libraries -->
 </head>
 
-<body class="nexus-theme no-cursor">
+<body class="unselectable">
+    <!-- Premium Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">VK</div>
+            <div class="preloader-progress">
+                <div class="preloader-bar" id="preloader-bar"></div>
+            </div>
+            <div class="preloader-status" id="preloader-status">Initializing Core Systems...</div>
+        </div>
+    </div>
     <!-- Accessibility Skip Link -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -76,6 +83,68 @@
     <div class="quantum-firefly" id="quantum-firefly" aria-hidden="true">
         <div class="quantum-firefly-core"></div>
         <div class="quantum-firefly-trail" id="firefly-trail"></div>
+    </div>
+
+
+    <!-- Project Nexus Modal Overlay -->
+    <div class="project-nexus" id="project-nexus">
+        <div class="nexus-backdrop"></div>
+        <div class="nexus-container">
+            <div class="nexus-header">
+                <div class="nexus-title-group">
+                    <div class="nexus-id">PRJ-01</div>
+                    <h2 class="nexus-title">Droppy</h2>
+                </div>
+                <button class="nexus-close-btn" id="nexus-close">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="nexus-content">
+                <div class="nexus-grid">
+                    <div class="nexus-sidebar">
+                        <div class="nexus-stat-box">
+                            <span class="nexus-stat-label">Role</span>
+                            <span class="nexus-stat-value">Lead Developer</span>
+                        </div>
+                        <div class="nexus-stat-box">
+                            <span class="nexus-stat-label">Timeline</span>
+                            <span class="nexus-stat-value">3 Months</span>
+                        </div>
+                        <div class="nexus-stat-box">
+                            <span class="nexus-stat-label">Stack</span>
+                            <div class="nexus-tech-stack">
+                                <span>Swift</span><span>SwiftUI</span><span>AppKit</span>
+                            </div>
+                        </div>
+                        <a href="#" class="nexus-cta primary">View Source</a>
+                        <a href="#" class="nexus-cta secondary">Live Demo</a>
+                    </div>
+                    <div class="nexus-main">
+                        <div class="nexus-section">
+                            <h3>Overview</h3>
+                            <p>Droppy is a macOS utility that leverages the Dynamic Island concept. It provides a
+                                drag-and-drop shelf for temporary file storage, optimizing workflow efficiency for power
+                                users.</p>
+                        </div>
+                        <div class="nexus-section">
+                            <h3>Key Engineering Challenges</h3>
+                            <ul class="nexus-list">
+                                <li>Implemented low-level Drag & Drop API hooks within AppKit.</li>
+                                <li>Optimized memory usage for handling large file references.</li>
+                                <li>Designed fluid animations using SwiftUI with 60fps performance target.</li>
+                            </ul>
+                        </div>
+                        <div class="nexus-gallery">
+                            <div class="nexus-image-placeholder"></div>
+                            <div class="nexus-image-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -91,8 +160,8 @@
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
             <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="core/pages/blog.html" class="nav-link">Blogs</a></li>
-
+            <li><a href="javascript:void(0)" class="nav-link" style="opacity: 0.6; cursor: default;"
+                    title="Coming Soon">Blogs</a></li>
             <li><a href="#terminal" class="nav-link">Terminal</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
@@ -513,17 +582,42 @@
         </div>
         <div class="section-header">
             <div class="section-label">06 / Insights</div>
-            <h2 class="section-title">Articles by Vineet</h2>
+            <h2 class="section-title">Technical Perspectives</h2>
             <p class="section-subtitle">Deep dives into engineering challenges and solutions</p>
         </div>
         <div class="insights-grid">
-            <div class="insight-loading">Loading latest articles...</div>
-        </div>
-        <div style="text-align: center; margin-top: 3rem;">
-            <a href="core/pages/blog.html" class="hero-cta-secondary">View All Articles →</a>
+            <article class="insight-card">
+                <div class="insight-category">Infrastructure</div>
+                <h3 class="insight-title">Building Self-Healing Clusters with Ansible</h3>
+                <p class="insight-excerpt">How I reduced manual intervention by 90% using event-driven automation in
+                    hybrid cloud environments.</p>
+                <div class="insight-meta">
+                    <span>5 min read</span>
+                    <a href="#" class="insight-link">Read Article →</a>
+                </div>
+            </article>
+            <article class="insight-card">
+                <div class="insight-category">AI / LLM</div>
+                <h3 class="insight-title">Optimizing Token Usage in RAG Pipelines</h3>
+                <p class="insight-excerpt">Strategies for efficient context retrieval and prompt engineering to lower
+                    API costs while maintaining accuracy.</p>
+                <div class="insight-meta">
+                    <span>8 min read</span>
+                    <a href="#" class="insight-link">Read Article →</a>
+                </div>
+            </article>
+            <article class="insight-card">
+                <div class="insight-category">UX Engineering</div>
+                <h3 class="insight-title">The Physics of Fluid Interfaces</h3>
+                <p class="insight-excerpt">Deconstructing the mathematics behind the natural feel of Apple's Dynamic
+                    Island animations.</p>
+                <div class="insight-meta">
+                    <span>6 min read</span>
+                    <a href="#" class="insight-link">Read Article →</a>
+                </div>
+            </article>
         </div>
     </section>
-
 
     <!-- Terminal Section -->
     <section class="terminal-section" id="terminal">
@@ -615,8 +709,8 @@
                 <div class="contact-value">vineetkishore01@gmail.com</div>
             </a>
 
-            <a href="https://www.linkedin.com/in/vineet-kishore/" target="_blank" rel="noopener noreferrer"
-                class="contact-card" data-copy="linkedin.com/in/vineet-kishore">
+            <a href="https://linkedin.com/in/vineetkishore" target="_blank" rel="noopener noreferrer"
+                class="contact-card" data-copy="linkedin.com/in/vineetkishore">
                 <div class="contact-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
@@ -625,11 +719,11 @@
                     </svg>
                 </div>
                 <div class="contact-title">LinkedIn</div>
-                <div class="contact-value">/in/vineet-kishore</div>
+                <div class="contact-value">/in/vineetkishore</div>
             </a>
 
-            <a href="https://github.com/vineetkishore01" target="_blank" rel="noopener noreferrer" class="contact-card"
-                data-copy="github.com/vineetkishore01">
+            <a href="https://github.com/vineetkishore" target="_blank" rel="noopener noreferrer" class="contact-card"
+                data-copy="github.com/vineetkishore">
                 <div class="contact-icon">
                     <svg viewBox="0 0 24 24">
                         <path
@@ -637,11 +731,11 @@
                     </svg>
                 </div>
                 <div class="contact-title">GitHub</div>
-                <div class="contact-value">@vineetkishore01</div>
+                <div class="contact-value">@vineetkishore</div>
             </a>
 
-            <a href="https://youtube.com/@vineetkishore_upsc" target="_blank" rel="noopener noreferrer"
-                class="contact-card" data-copy="@vineetkishore_upsc">
+            <a href="https://youtube.com/@vineetkishore" target="_blank" rel="noopener noreferrer" class="contact-card"
+                data-copy="@vineetkishore">
                 <div class="contact-icon">
                     <svg viewBox="0 0 24 24">
                         <path
@@ -650,7 +744,7 @@
                     </svg>
                 </div>
                 <div class="contact-title">YouTube</div>
-                <div class="contact-value">@vineetkishore_upsc</div>
+                <div class="contact-value">@vineetkishore</div>
             </a>
         </div>
     </section>
@@ -720,9 +814,8 @@
     </div>
     <!-- Smart Animations & Effects Script -->
 
-    <script src="core/js/latest-articles.js?v=c8"></script>
-    <script src="core/js/app.js?v=c8"></script>
-    <script src="core/js/mobile-enhancer.js?v=c8"></script>
+    <script src="core/js/app.js"></script>
+    <script src="core/js/mobile-enhancer.js"></script>
 </body>
 
 </html>

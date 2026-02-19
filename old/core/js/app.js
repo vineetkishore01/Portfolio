@@ -5,135 +5,105 @@
  * Handles the removal of the preloader once the site has loaded.
  * Implements a simulated progress bar for better UX and fallback timeout.
  */
-// ==========================================
-// SITE INITIALIZATION
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded. Initializing Systems...');
+const PreloaderController = {
+    init() {
+        this.preloader = document.getElementById('preloader');
+        this.bar = document.getElementById('preloader-bar');
+        this.status = document.getElementById('preloader-status');
 
-    // Skip preloader and go straight to Hero
-    const preloader = document.getElementById('preloader');
-    if (preloader) preloader.style.display = 'none';
-    document.body.classList.remove('unselectable');
-
-    // Initialize core systems
-    initHeroEntrance();
-
-    // Initialize other controllers
-    ModernNavigation.init();
-    GlobalScrollEffects.init();
-    ProjectFilterSystem.init();
-    TerminalTeaser.init();
-    EducationController.init();
-    ContactSystem.init();
-
-    // Refresh ScrollTrigger
-    setTimeout(() => {
-        ScrollTrigger.refresh();
-    }, 100);
-});
-
-// Number count-up animation helper
-function animateNumber(element, target, suffix = '') {
-    let current = 0;
-    const duration = 1500; // 1.5s
-    const start = performance.now();
-
-    function step(timestamp) {
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const value = Math.floor(progress * target);
-
-        // Handle decimals if target is float
-        if (target % 1 !== 0) {
-            element.textContent = (progress * target).toFixed(1) + suffix;
-        } else {
-            element.textContent = value + suffix;
+        if (!this.preloader) {
+            console.warn('PreloaderController: #preloader element not found');
+            return;
         }
 
-        if (progress < 1) {
-            requestAnimationFrame(step);
-        } else {
-            // Ensure exact target value is set
-            element.textContent = target + suffix;
-        }
+        console.log('PreloaderController: Initializing...');
+        this.startProgress();
+
+        // Listen for full window load
+        window.addEventListener('load', () => {
+            console.log('PreloaderController: Window fully loaded');
+            this.completeProgress();
+        }, { once: true });
+
+        // Heavy Fallback: Ensure preloader is removed even if 'load' event hangs
+        setTimeout(() => {
+            if (this.preloader && !this.preloader.classList.contains('fade-out')) {
+                console.warn('PreloaderController: Forced removal after timeout');
+                this.finish();
+            }
+        }, 8000);
+    },
+
+    startProgress() {
+        let progress = 0;
+        const interval = setInterval(() => {
+            // Slower progress as it nears 90%
+            const increment = Math.max(0.2, (90 - progress) * 0.05 * Math.random());
+            progress += increment;
+
+            if (progress > 90) {
+                progress = 90;
+                clearInterval(this.progressInterval);
+            }
+
+            if (this.bar) this.bar.style.width = progress + '%';
+
+            const statuses = [
+                'Initializing Core Systems...',
+                'Loading Neural Assets...',
+                'Establishing Secure Connection...',
+                'Optimizing Visual Matrix...',
+                'Synchronizing State...',
+                'Calibrating Quantum Flux...',
+                'Loading Strategic Intelligence...'
+            ];
+
+            if (this.status && Math.random() > 0.85) {
+                this.status.textContent = statuses[Math.floor(Math.random() * statuses.length)];
+            }
+        }, 150);
+        this.progressInterval = interval;
+    },
+
+    completeProgress() {
+        clearInterval(this.progressInterval);
+
+        // Rapidly complete the bar
+        if (this.bar) this.bar.style.width = '100%';
+        if (this.status) this.status.textContent = 'SYSTEMS ONLINE';
+
+        setTimeout(() => this.finish(), 600);
+    },
+
+    finish() {
+        if (!this.preloader) return;
+
+        this.preloader.classList.add('fade-out');
+
+        // Cleanup after animation completes
+        setTimeout(() => {
+            if (this.preloader) this.preloader.style.display = 'none';
+            document.body.classList.remove('unselectable');
+            console.log('✓ Preloader sequence complete');
+
+            // Force ScrollTrigger refresh to recalculate all positions after preloader is gone
+            if (typeof ScrollTrigger !== 'undefined') {
+                ScrollTrigger.refresh();
+            }
+
+            // Trigger any entry animations if needed
+            if (typeof gsap !== 'undefined') {
+                gsap.from('.hero-title', {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'expo.out',
+                    delay: 0.2
+                });
+            }
+        }, 800);
     }
-    requestAnimationFrame(step);
-}
-
-// Phase 2A: Hero Entrance Sequence
-function initHeroEntrance() {
-    if (typeof gsap === 'undefined') return;
-
-    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    // Step 1: Background Orbs
-    heroTl.from('.hero-orb', {
-        scale: 0,
-        opacity: 0,
-        duration: 1.2,
-        stagger: 0.2,
-        ease: 'power2.out'
-    }, 0);
-
-    // Step 2: Hero Title / Glitch Name
-    heroTl.from('#name-container', {
-        y: 60,
-        opacity: 0,
-        filter: 'blur(10px)',
-        duration: 1.2,
-        ease: 'power4.out',
-        clearProps: 'all'
-    }, 0.4);
-
-    // Step 4: Subtitle
-    heroTl.from('.hero-subtitle', {
-        y: 20,
-        opacity: 0,
-        duration: 0.8
-    }, 0.7);
-
-    // Step 5: CTA Group
-    heroTl.from('.hero-cta-group', {
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'back.out(1.7)'
-    }, 0.9);
-
-    // Step 6: Stats with Count-up
-    heroTl.from('.hero-stat', {
-        y: 20,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        onComplete: () => {
-            document.querySelectorAll('.hero-stat-value').forEach(el => {
-                const text = el.textContent.trim();
-                const value = parseFloat(text.replace(/[^\d.]/g, ''));
-                const suffix = text.replace(/[\d.]/g, '');
-                animateNumber(el, value, suffix);
-            });
-        }
-    }, 1.1);
-
-    // Step 7: Profile Card
-    heroTl.from('.hero-profile-card', {
-        x: 60,
-        opacity: 0,
-        rotateY: 15,
-        duration: 1.2,
-        clearProps: 'all'
-    }, 0.5);
-
-    // Mobile badge
-    heroTl.from('.mobile-badge', {
-        scale: 0,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'back.out(1.7)'
-    }, 0.8);
-}
-
+};
 
 // Initialize Preloader immediately
 PreloaderController.init();
@@ -148,12 +118,14 @@ try {
 
     if (typeof Lenis !== 'undefined' && !isMobile) {
         lenis = new Lenis({
-            duration: 0.7, // Snappier
+            duration: 1.2, // Smoother, standard duration
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            lerp: 0.1, // Hyper-responsive
-            wheelMultiplier: 1.2,
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            smoothTouch: false, // Disabled on touch devices for native feel
             touchMultiplier: 1.5,
-            smooth: true
+            wheelMultiplier: 1, // Standard sensitivity
         });
 
         // Handle navigation links with Lenis scrollTo for instantaneous feel
@@ -438,177 +410,277 @@ if (heroLabel) {
     }, 500);
 }
 
+// Enhanced hero entrance - animate full name properly
+const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+heroTl
+    .from('.hero-profile-card', {
+        opacity: 0,
+        scale: 0.8,
+        y: 50,
+        duration: 1.2,
+        delay: 0.2
+    })
+    .from('#name-container', {
+        y: 50,
+        opacity: 0,
+        duration: 1.2,
+        ease: 'power3.out'
+    }, '-=0.8')
+    .from('.hero-subtitle', {
+        y: 30,
+        opacity: 0,
+        duration: 0.6
+    }, '-=0.4')
+    .from('.hero-cta-group', {
+        y: 20,
+        opacity: 0,
+        duration: 0.5
+    }, '-=0.3')
+    .from('.hero-stat', {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.1
+    }, '-=0.2');
+
+// Mobile badge animation
+gsap.from('.mobile-badge', {
+    scale: 0,
+    opacity: 0,
+    duration: 0.5,
+    delay: 0.3,
+    ease: 'back.out(1.7)'
+});
+
+// Typing cursor style
+const typingStyle = document.createElement('style');
+typingStyle.textContent = `
+            .hero-label.typing::after {
+                content: '|';
+                animation: blink-cursor 0.7s infinite;
+                margin-left: 2px;
+                color: var(--accent-blue);
+            }
+            @keyframes blink-cursor {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0; }
+            }
+        `;
+document.head.appendChild(typingStyle);
+
 // ==========================================
-// SECTION CHOREOGRAPHY & AMBIENT EFFECTS
+// KINETIC TEXT PARALLAX & HERO TILT
 // ==========================================
 
-const SectionChoreography = {
+// AUTOMATIC KINETIC TEXT GENERATOR
+// Automatically adds kinetic text to any section that doesn't have one
+const KineticTextGenerator = {
     init() {
-        if (typeof gsap === 'undefined') return;
-
-        this.setupAbout();
-        this.setupExperience();
-        this.setupProjects();
-        this.setupSkills();
-        this.setupEducation();
-        this.setupAmbientEffects();
-    },
-
-    setupAbout() {
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: '.about',
-                start: 'top 85%',
-                toggleActions: 'play none none none'
-            }
-        });
-
-        tl.from('.about .section-header > *', {
-            opacity: 0,
-            y: 30,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power3.out'
-        })
-            .from('.about-card', {
-                opacity: 0,
-                y: 50,
-                clipPath: 'inset(100% 0 0 0)',
-                duration: 0.8,
-                stagger: 0.15,
-                ease: 'power3.out'
-            }, '-=0.4');
-    },
-
-    setupExperience() {
-        // Timeline line drawing - Enhanced highlight
-        gsap.to('.timeline-progress', {
-            height: '100%',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: '.timeline-container',
-                start: 'top 70%',
-                end: 'bottom 70%',
-                scrub: true // Immediate feedback
-            }
-        });
-
-        // Staggered items
-        document.querySelectorAll('.timeline-item').forEach((item, i) => {
-            gsap.from(item, {
-                opacity: 0,
-                x: i % 2 === 0 ? -50 : 50,
-                duration: 0.8,
-                scrollTrigger: {
-                    trigger: item,
-                    start: 'top 85%',
-                    toggleActions: 'play none none none'
-                }
-            });
-
-            // Dot pulse on activation
-            ScrollTrigger.create({
-                trigger: item,
-                start: 'top 70%',
-                onEnter: () => item.classList.add('active'),
-                onEnterBack: () => item.classList.add('active'),
-                onLeave: () => item.classList.remove('active'),
-                onLeaveBack: () => item.classList.remove('active')
-            });
-        });
-    },
-
-    setupProjects() {
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: '.projects',
-                start: 'top 80%',
-            }
-        });
-
-        tl.from('.projects .section-header > *', { opacity: 0, y: 30, stagger: 0.1 })
-            .from('.project-filters > *', { opacity: 0, y: 10, stagger: 0.05 }, '-=0.3')
-            .from('.project-cinema-card', {
-                opacity: 0,
-                y: 40,
-                rotateY: (i) => i % 2 === 0 ? 15 : -15,
-                duration: 1,
-                stagger: 0.15,
-                ease: 'power3.out',
-                onComplete: () => {
-                    gsap.set('.project-cinema-card', { clearProps: 'opacity,transform,rotateY' });
-                }
-            }, '-=0.5');
-    },
-
-    setupSkills() {
-        gsap.from('.skill-category', {
-            opacity: 0,
-            x: -40,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.skills-grid',
-                start: 'top 90%',
-                once: true
-            },
-            onComplete: () => {
-                gsap.set('.skill-category', { clearProps: 'all' });
-            }
-        });
-
-        document.querySelectorAll('.skill-category').forEach(cat => {
-            gsap.from(cat.querySelectorAll('.skill-tag'), {
-                opacity: 0,
-                scale: 0.8,
-                duration: 0.3,
-                stagger: 0.03,
-                ease: 'back.out(1.7)',
-                scrollTrigger: {
-                    trigger: cat,
-                    start: 'top 90%'
-                }
-            });
-        });
-    },
-
-    setupEducation() {
-        gsap.from('.education-card', {
-            opacity: 0,
-            y: 40,
-            rotation: (i) => (i - 1) * 3, // Slight fan effect
-            duration: 0.8,
-            stagger: 0.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.education-grid',
-                start: 'top 85%'
+        const sections = document.querySelectorAll('section[id]');
+        sections.forEach(section => {
+            // Check if section already has kinetic text
+            if (!section.querySelector('.kinetic-text')) {
+                this.addKineticText(section);
             }
         });
     },
 
-    setupAmbientEffects() {
-        // Re-enable and improve HeroWaterBubble
-        if (typeof HeroWaterBubble !== 'undefined' && window.innerWidth > 1024) {
-            HeroWaterBubble.init();
+    addKineticText(section) {
+        const sectionId = section.id;
+        if (!sectionId) return;
+
+        // Generate text based on section ID or title
+        let text = this.generateText(section);
+        if (!text) return;
+
+        // Create kinetic text element
+        const kineticDiv = document.createElement('div');
+        kineticDiv.className = 'kinetic-text';
+        kineticDiv.id = `kinetic-${sectionId}`;
+
+        const span = document.createElement('span');
+        span.textContent = text;
+        kineticDiv.appendChild(span);
+
+        // Insert as first child of section
+        section.insertBefore(kineticDiv, section.firstChild);
+
+        console.log(`KineticTextGenerator: Added kinetic text "${text}" to section #${sectionId}`);
+    },
+
+    generateText(section) {
+        // Try to get text from section title first
+        const title = section.querySelector('.section-title');
+        if (title) {
+            return title.textContent.trim().toUpperCase();
         }
 
-        // Section Title Highlights (requested scroll animations)
-        document.querySelectorAll('.section-title').forEach(title => {
-            ScrollTrigger.create({
-                trigger: title,
-                start: 'top 80%',
-                onEnter: () => title.classList.add('highlight-active'),
-                onLeaveBack: () => title.classList.remove('highlight-active')
-            });
-        });
+        // Fall back to section ID
+        const id = section.id;
+        if (id) {
+            return id.replace(/-/g, ' ').toUpperCase();
+        }
+
+        return null;
     }
 };
 
-// Initialize choreography
-SectionChoreography.init();
+// KineticTextGenerator disabled to reduce visual clutter - manual texts preferred
+// KineticTextGenerator.init();
 
+// Kinetic text parallax
+document.querySelectorAll('.kinetic-text').forEach(el => {
+    gsap.to(el.querySelector('span'), {
+        x: -200,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: el,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1
+        }
+    });
+});
+
+// 3D tilt effect on hero card - DISABLED (too distracting)
+// Using simple CSS hover instead
+
+// ==========================================
+// SECTION REVEAL ANIMATIONS - ENHANCED
+// ==========================================
+
+// Section headers reveal - Snappier & Earlier
+gsap.utils.toArray('section').forEach((section, i) => {
+    const headerElements = section.querySelectorAll('.section-header > *');
+    if (headerElements.length > 0) {
+        gsap.from(headerElements, {
+            opacity: 0,
+            y: 20,
+            duration: 0.4,
+            stagger: 0.08,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: section,
+                start: 'top 92%', // Trigger sooner
+                toggleActions: 'play none none none'
+            }
+        });
+    }
+});
+
+// Smooth reveal for general cards - Optimized
+const revealElements = document.querySelectorAll('.about-card, .timeline-card, .project-cinema-card, .insight-card, .skill-category');
+revealElements.forEach((el, i) => {
+    gsap.from(el, {
+        opacity: 0,
+        y: 20,
+        scale: 0.98,
+        duration: 0.4,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: el,
+            start: 'top 92%',
+            toggleActions: 'play none none none'
+        }
+    });
+});
+
+
+
+// Timeline items (already handled by general reveal logic, but adding stagger here)
+gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+    gsap.from(item, {
+        opacity: 0,
+        x: i % 2 === 0 ? -30 : 30,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: item,
+            start: 'top 90%',
+            toggleActions: 'play none none none'
+        }
+    });
+});
+
+// Timeline progress
+gsap.to('#timeline-progress', {
+    height: '100%',
+    ease: 'none',
+    scrollTrigger: {
+        trigger: '.timeline-container',
+        start: 'top 60%',
+        end: 'bottom 60%',
+        scrub: true
+    }
+});
+
+// Timeline dots activation
+document.querySelectorAll('.timeline-item').forEach((item, index) => {
+    ScrollTrigger.create({
+        trigger: item,
+        start: 'top 60%',
+        end: 'bottom 60%',
+        onEnter: () => item.classList.add('active'),
+        onLeave: () => item.classList.remove('active'),
+        onEnterBack: () => item.classList.add('active'),
+        onLeaveBack: () => item.classList.remove('active')
+    });
+});
+
+
+
+// Skill categories - Snappier
+gsap.from('.skill-category', {
+    opacity: 0,
+    y: 20,
+    duration: 0.4,
+    stagger: 0.08,
+    ease: 'power2.out',
+    scrollTrigger: {
+        trigger: '#skills', // Use section ID
+        start: 'top 92%',
+        toggleActions: 'play none none none'
+    }
+});
+
+// Education cards - Reliable reveal
+gsap.from('.education-card', {
+    opacity: 0,
+    y: 30,
+    duration: 0.6,
+    stagger: 0.1,
+    ease: 'power2.out',
+    scrollTrigger: {
+        trigger: '.education-grid',
+        start: 'top 85%', // More conservative trigger
+        toggleActions: 'play none none none'
+    }
+});
+
+// Contact cards - Bulletproof reveal using footer trigger
+const contactCards = document.querySelectorAll('.contact-card');
+const footerElement = document.querySelector('.footer');
+
+if (contactCards.length > 0 && footerElement) {
+    // Ensure initial state is HIDDEN so .to() has something to do
+    gsap.set(contactCards, { opacity: 0, y: 30 });
+
+    ScrollTrigger.create({
+        trigger: footerElement,
+        start: 'top 98%', // Trigger slightly before footer enters
+        onEnter: () => {
+            gsap.to(contactCards, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: 'power2.out',
+                overwrite: 'auto'
+            });
+        }
+    });
+}
 
 // Terminal is now in its own standalone <script> tag above
 // (isolated from this script block for reliability)
@@ -1219,6 +1291,191 @@ if (document.readyState === 'loading') {
 
 
 // ==========================================
+// PROJECT NEXUS MODAL LOGIC
+// ==========================================
+const nexusModal = document.getElementById('project-nexus');
+
+const projectData = {
+    'droppy': {
+        id: 'PRJ-01',
+        title: 'Droppy',
+        role: 'Lead Developer',
+        timeline: '3 Months',
+        stack: ['Swift', 'SwiftUI', 'AppKit', 'CoreDrag'],
+        overview: 'Droppy is a macOS utility that leverages the Dynamic Island concept. It provides a drag-and-drop shelf for temporary file storage, optimizing workflow efficiency for power users.',
+        challenges: [
+            'Implemented low-level Drag & Drop API hooks within AppKit.',
+            'Optimized memory usage for handling large file references.',
+            'Designed fluid animations using SwiftUI with 60fps performance target.'
+        ]
+    },
+    'homelab': {
+        id: 'PRJ-02',
+        title: 'Home Lab Infrastructure',
+        role: 'System Architect',
+        timeline: 'Ongoing',
+        stack: ['Docker', 'Linux', 'Traefik', 'Ansible'],
+        overview: 'An enterprise-grade home data center hosting 20+ services including media servers, DNS sinkholes, and private cloud storage. Built for 99.9% uptime and self-healing capabilities.',
+        challenges: [
+            'Automated service deployment and configuration using Ansible playbooks.',
+            'Implemented zero-trust security model with Cloudflare Tunnels.',
+            'Constructed custom monitoring dashboards with Grafana and Prometheus.'
+        ]
+    },
+    'n8n-llm': {
+        id: 'PRJ-03',
+        title: 'N8N LLM Pipeline',
+        role: 'Workflow Engineer',
+        timeline: '2 Months',
+        stack: ['n8n', 'Python', 'OpenAI API', 'PostgreSQL'],
+        overview: 'A generative AI automation pipeline designed to ingest high-volume news data, filter for relevance, and synthesize evidence for competitive intelligence reports.',
+        challenges: [
+            'Engineered token-efficient prompting strategies to reduce API costs by 40%.',
+            'Built resilient error handling for external API rate limits.',
+            'Integrated vector similarity search for improved context retrieval.'
+        ]
+    }
+};
+
+
+const openProjectNexus = (id, triggerElement) => {
+    const data = projectData[id];
+    if (!data) return;
+
+    // 1. Populate Modal Content (Data Binding)
+    const nexusId = nexusModal.querySelector('.nexus-id');
+    const nexusTitle = nexusModal.querySelector('.nexus-title');
+    if (nexusId) nexusId.innerText = data.id;
+    if (nexusTitle) nexusTitle.innerText = data.title;
+
+    const stats = nexusModal.querySelectorAll('.nexus-stat-value');
+    if (stats[0]) stats[0].innerText = data.role;
+    if (stats[1]) stats[1].innerText = data.timeline;
+
+    const stackContainer = nexusModal.querySelector('.nexus-tech-stack');
+    if (stackContainer) {
+        stackContainer.innerHTML = '';
+        data.stack.forEach(tech => {
+            const s = document.createElement('span');
+            s.innerText = tech;
+            stackContainer.appendChild(s);
+        });
+    }
+
+    const overviewP = nexusModal.querySelector('.nexus-section p');
+    if (overviewP) overviewP.innerText = data.overview;
+
+    const list = nexusModal.querySelector('.nexus-list');
+    if (list) {
+        list.innerHTML = '';
+        data.challenges.forEach(challenge => {
+            const li = document.createElement('li');
+            li.innerText = challenge;
+            list.appendChild(li);
+        });
+    }
+
+    // 2. Prepare FLIP Animation
+    // Get initial state of the card
+    let startRect = { top: 0, left: 0, width: 0, height: 0 };
+    if (triggerElement) {
+        startRect = triggerElement.getBoundingClientRect();
+    }
+
+    const nexusContainer = nexusModal.querySelector('.nexus-container');
+
+    // 3. Create the Timeline
+    // We use a simple fade+scale if no triggerElement, else a morph
+    nexusModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Lock Scroll
+
+    if (triggerElement) {
+        // Morph Effect: Animate from card position
+        gsap.fromTo(nexusContainer,
+            {
+                // Approximate the card's position/size
+                width: startRect.width,
+                height: startRect.height,
+                x: startRect.left - (window.innerWidth - startRect.width) / 2, // Centering math
+                y: startRect.top - (window.innerHeight - startRect.height) / 2,
+                opacity: 0,
+                scale: 0.8,
+                borderRadius: '12px'
+            },
+            {
+                width: '100%',
+                height: '90vh',
+                x: 0,
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                borderRadius: '24px',
+                duration: 0.6,
+                ease: 'power3.inOut',
+                clearProps: 'all' // Clean up inline styles after
+            }
+        );
+    } else {
+        // Fallback simple fade
+        gsap.fromTo(nexusContainer,
+            { opacity: 0, y: 50, scale: 0.9 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out' }
+        );
+    }
+
+    // Animate content elements stagger in
+    const contentElements = nexusModal.querySelectorAll('.nexus-header, .nexus-content');
+    gsap.fromTo(contentElements,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, delay: 0.2, ease: 'power2.out' }
+    );
+};
+
+const closeNexus = () => {
+    const nexusContainer = nexusModal.querySelector('.nexus-container');
+
+    // Safety: Unlock scroll after a timeout in case animation hangs
+    setTimeout(() => {
+        document.body.style.overflow = '';
+    }, 400);
+
+    // Animate out
+    gsap.to(nexusContainer, {
+        scale: 0.95,
+        opacity: 0,
+        y: 20,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete: () => {
+            nexusModal.classList.remove('active');
+            document.body.style.overflow = ''; // Unlock Scroll (Redundant but safe)
+            gsap.set(nexusContainer, { clearProps: 'all' });
+        }
+    });
+};
+
+if (nexusModal) {
+    const closeBtn = document.getElementById('nexus-close');
+    const backdrop = document.querySelector('.nexus-backdrop');
+
+    if (closeBtn) closeBtn.addEventListener('click', closeNexus);
+    if (backdrop) backdrop.addEventListener('click', closeNexus);
+
+    // Bind triggers (Cinema Cards)
+    document.querySelectorAll('.project-cinema-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        // Remove old listeners (if any) to prevent duplicates would be hard here without named functions
+        // but since we are replacing the block, it should be fine on fresh load.
+        card.addEventListener('click', (e) => {
+            const id = card.getAttribute('data-id');
+            // Pass the clicked card element for the FLIP animation origin
+            if (id) openProjectNexus(id, card);
+        });
+    });
+}
+
+
+// ==========================================
 // 3D TILT EFFECT FOR CARDS - ENHANCED
 // ==========================================
 const CardTiltEffect = {
@@ -1778,13 +2035,86 @@ const PerformanceManager = {
 //  FIX 1: INTELLIGENT NAME MORPH CONTROLLER
 //  Crossfade between pre-rendered states - no layout shift
 // ==========================================
+const NameMorphController = {
+    names: document.querySelectorAll('.glitch-name'),
+    currentIndex: 0,
+    interval: null,
+    isVisible: true,
+
+    init() {
+        this.names = document.querySelectorAll('.glitch-name');
+        if (!this.names.length) {
+            setTimeout(() => this.init(), 500);
+            return;
+        }
+
+        // Start cycling
+        this.start();
+
+        // Pause when tab hidden
+        document.addEventListener('visibilitychange', () => {
+            document.hidden ? this.pause() : this.resume();
+        });
+
+        // Pause when scrolled out of view (performance)
+        const observer = new IntersectionObserver((entries) => {
+            this.isVisible = entries[0].isIntersecting;
+        }, { threshold: 0.1 });
+
+        const container = document.getElementById('name-container');
+        if (container) observer.observe(container);
+
+        console.log("✓ Name Morph Controller initialized");
+    },
+
+    start() {
+        this.interval = setInterval(() => this.morph(), 4000);
+    },
+
+    pause() {
+        clearInterval(this.interval);
+    },
+
+    resume() {
+        if (this.isVisible) this.start();
+    },
+
+    morph() {
+        const current = this.names[this.currentIndex];
+        const nextIndex = (this.currentIndex + 1) % this.names.length;
+        const next = this.names[nextIndex];
+
+        // Trigger digital glitch and scanline pass
+        current.classList.add('transitioning');
+        current.classList.add('transitioning-scan');
+        next.classList.add('transitioning');
+
+        // Crossfade: new name enters while old exits
+        requestAnimationFrame(() => {
+            current.classList.remove('active');
+            next.classList.add('active');
+
+            // Clean up after transition (400ms matching CSS animation duration)
+            setTimeout(() => {
+                current.classList.remove('transitioning');
+                current.classList.remove('transitioning-scan');
+                next.classList.remove('transitioning');
+            }, 400);
+        });
+
+        this.currentIndex = nextIndex;
+    }
+};
+
 // Initialize Phase 3 Systems
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        NameMorphController.init();
         SoundManager.init();
         PerformanceManager.init();
     });
 } else {
+    NameMorphController.init();
     SoundManager.init();
     PerformanceManager.init();
 }
@@ -1948,106 +2278,11 @@ const SmartAnimations = {
 
 };
 
-// ==========================================
-//  FIX 1: INTELLIGENT NAME MORPH CONTROLLER
-//  Crossfade between pre-rendered states - no layout shift
-// ==========================================
-const NameMorphController = {
-    names: document.querySelectorAll('.glitch-name'),
-    currentIndex: 0,
-    interval: null,
-    isVisible: true,
-
-    init() {
-        this.names = document.querySelectorAll('.glitch-name');
-        if (!this.names.length) {
-            setTimeout(() => this.init(), 500);
-            return;
-        }
-
-        // Start cycling
-        this.start();
-
-        // Pause when tab hidden
-        document.addEventListener('visibilitychange', () => {
-            document.hidden ? this.pause() : this.resume();
-        });
-
-        // Pause when scrolled out of view (performance)
-        const observer = new IntersectionObserver((entries) => {
-            this.isVisible = entries[0].isIntersecting;
-        }, { threshold: 0.1 });
-
-        const container = document.getElementById('name-container');
-        if (container) {
-            observer.observe(container);
-        } else {
-            console.warn("NameMorphController: #name-container not found, defaulting to visible");
-            this.isVisible = true;
-        }
-
-        console.log("✓ Name Morph Controller initialized. Languages count:", this.names.length);
-    },
-
-    start() {
-        if (this.interval) clearInterval(this.interval);
-        this.interval = setInterval(() => this.morph(), 4000);
-    },
-
-    pause() {
-        clearInterval(this.interval);
-        this.interval = null;
-    },
-
-    resume() {
-        if (this.isVisible && !this.interval) this.start();
-    },
-
-    morph() {
-        if (!this.names || this.names.length < 2) return;
-
-        const current = this.names[this.currentIndex];
-        const nextIndex = (this.currentIndex + 1) % this.names.length;
-        const next = this.names[nextIndex];
-
-        // Trigger digital glitch and scanline pass
-        current.classList.add('transitioning');
-        current.classList.add('transitioning-scan');
-        next.classList.add('transitioning');
-
-        // Crossfade: new name enters while old exits
-        requestAnimationFrame(() => {
-            current.classList.remove('active');
-            next.classList.add('active');
-
-            // Clean up after transition (400ms matching CSS animation duration)
-            setTimeout(() => {
-                current.classList.remove('transitioning');
-                current.classList.remove('transitioning-scan');
-                next.classList.remove('transitioning');
-            }, 400);
-        });
-
-        this.currentIndex = nextIndex;
-    }
-};
-
-// Expose to window for global access/debugging
-window.NameMorphController = NameMorphController;
-
-// Initialize Systems
+// Initialize Smart Animations
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        SmartAnimations.init();
-        NameMorphController.init();
-        SoundManager.init();
-        PerformanceManager.init();
-    });
+    document.addEventListener('DOMContentLoaded', () => SmartAnimations.init());
 } else {
     SmartAnimations.init();
-    NameMorphController.init();
-    SoundManager.init();
-    PerformanceManager.init();
 }
 // Final safety refresh for ScrollTrigger after all assets and scripts are loaded
 window.addEventListener('load', () => {

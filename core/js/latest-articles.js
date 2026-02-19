@@ -11,7 +11,7 @@ const LatestArticles = {
 
         // GitHub API Config
         this.repo = "vineetkishore01/Portfolio";
-        this.path = "blogs";
+        this.path = "core/pages/blogs";
 
         try {
             const posts = await this.fetchLatestPosts();
@@ -21,8 +21,14 @@ const LatestArticles = {
                 this.container.innerHTML = '<div class="insight-loading">No articles at the moment. check back soon!</div>';
             }
         } catch (error) {
-            console.warn('LatestArticles: Could not fetch posts', error);
-            this.container.innerHTML = '<div class="insight-loading">Unable to load articles.</div>';
+            console.error('LatestArticles: Error loading posts:', error);
+            if (this.container) {
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                this.container.innerHTML = `<div class="insight-error" style="color: var(--text-secondary); text-align: center; padding: 2rem; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                    API stream interrupted.
+                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:0.5rem; font-size:0.7rem; font-family:monospace;">Dev Hint: GitHub API 403/404. Push your "core/pages/blogs" folder to GitHub to sync the content.</small>' : ''}
+                </div>`;
+            }
         }
     },
 
@@ -54,7 +60,11 @@ const LatestArticles = {
 
         } catch (e) {
             // Fallback to cache
+            console.warn('LatestArticles: API connection failed, checking cache...', e);
             posts = Object.values(cache).map(c => c.data);
+
+            // If no cache, propagate error so we can show the Dev Hint
+            if (posts.length === 0) throw e;
         }
 
         // Sort by date desc
@@ -129,13 +139,13 @@ const LatestArticles = {
 
     render(posts) {
         this.container.innerHTML = posts.map(post => `
-            <article class="insight-card" onclick="window.location.href='blog-post.html?slug=${post.slug}'">
+            <article class="insight-card" onclick="window.location.href='core/pages/blog-post.html?slug=${post.slug}'">
                 <div class="insight-category">${post.category}</div>
                 <h3 class="insight-title">${post.title}</h3>
                 <p class="insight-excerpt">${post.excerpt}</p>
                 <div class="insight-meta">
                     <span>${post.readTime}</span>
-                    <a href="blog-post.html?slug=${post.slug}" class="insight-link">Read Article →</a>
+                    <a href="core/pages/blog-post.html?slug=${post.slug}" class="insight-link">Read Article →</a>
                 </div>
             </article>
         `).join('');

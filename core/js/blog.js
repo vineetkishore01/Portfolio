@@ -12,7 +12,7 @@ const BlogEngine = {
 
         // GitHub API Config
         this.repo = "vineetkishore01/Portfolio";
-        this.path = "blogs";
+        this.path = "core/pages/blogs";
 
         this.posts = [];
         this.filteredPosts = [];
@@ -26,7 +26,11 @@ const BlogEngine = {
         } catch (error) {
             console.error('BlogEngine: Fatal error:', error);
             if (this.grid) {
-                this.grid.innerHTML = '<div class="blog-error">System offline. Data streams interrupted.</div>';
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                this.grid.innerHTML = `<div class="blog-error">
+                    System offline. Data streams interrupted.
+                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:1rem; font-family:monospace;">Dev Hint: The GitHub API is returning 404 because the "core/pages/blogs" path doesn\'t exist on the remote GitHub repository yet. Push your local changes to GitHub to enable auto-discovery.</small>' : ''}
+                </div>`;
             }
         }
     },

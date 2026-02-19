@@ -18,7 +18,7 @@ const PostReader = {
 
         // GitHub API Config (for neighbor discovery)
         this.repo = "vineetkishore01/Portfolio";
-        this.path = "blogs";
+        this.path = "core/pages/blogs";
 
         try {
             // 1. Fetch the markdown file directly
@@ -177,7 +177,7 @@ const PostReader = {
 
         // Calculate absolute URL
         const siteBase = "https://vineetkishore01.github.io/Portfolio";
-        const articleUrl = `${siteBase}/blog-post.html?slug=${post.slug}`;
+        const articleUrl = `${siteBase}/core/pages/blog-post.html?slug=${post.slug}`;
 
         shareToggle.addEventListener('click', () => {
             navigator.clipboard.writeText(articleUrl).then(() => {
