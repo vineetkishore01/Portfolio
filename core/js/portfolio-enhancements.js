@@ -672,7 +672,7 @@
         height: 8px;
         background: ${isWorkingHours ? '#10B981' : '#F59E0B'};
         border-radius: 50%;
-        animation: ${isWorkingHours ? 'pulse 2s ease-in-out infinite' : 'none'};
+        animation: none;
       `;
 
       statusIndicator.appendChild(dot);

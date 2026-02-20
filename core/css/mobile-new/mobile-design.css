@@ -1,0 +1,267 @@
+/* ==========================================
+   GOD-TIER MOBILE EXPERIENCE (SCRATCH REBUILD)
+   ========================================== */
+@media (max-width: 800px) {
+
+    /* --- Root & Overrides --- */
+    :root {
+        --accent-m: #007aff;
+        --bg-m: #000000;
+        --card-m: rgba(255, 255, 255, 0.03);
+    }
+
+    body {
+        background-color: var(--bg-m) !important;
+        overflow-x: hidden !important;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+        background: var(--bg-m) !important;
+        backdrop-filter: blur(10px) !important;
+        padding: 24px 24px 10px !important;
+        border: none !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+
+    .nav-logo {
+        margin-top: 8px !important;
+        margin-left: 4px !important;
+    }
+
+    .nav-links,
+    .nav-cta,
+    .menu-toggle {
+        display: none !important;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+        padding: 40px 24px 80px !important;
+        text-align: center !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .hero-image-wrapper {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 auto 24px !important;
+        display: flex !important;
+        justify-content: center !important;
+        order: -1 !important;
+    }
+
+    .hero-profile-card {
+        width: 120px !important;
+        height: 120px !important;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        border: 3px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 122, 255, 0.2) !important;
+        position: relative !important;
+        animation: float-m 6s ease-in-out infinite !important;
+    }
+
+    .hero-profile-inner,
+    .hero-profile-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .hero-profile-glow,
+    .hero-profile-overlay {
+        display: none !important;
+    }
+
+    @keyframes float-m {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    /* Make hero text fully visible and structured */
+    .hero-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    .hero-label {
+        justify-content: center !important;
+        margin-bottom: 24px !important;
+    }
+
+    .hero-title {
+        font-size: 2.5rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.04em !important;
+        margin-bottom: 12px !important;
+        line-height: 1.1 !important;
+        color: #ffffff !important;
+        background: none !important;
+        -webkit-text-fill-color: initial !important;
+    }
+
+    .hero-title span:not(:first-child) {
+        display: none !important;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+        color: var(--accent-m) !important;
+        margin-bottom: 24px !important;
+        font-weight: 500 !important;
+    }
+
+    .hero-description {
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        color: #9ca3af !important;
+        margin-bottom: 30px !important;
+    }
+
+    /* --- Mobile Dock Navigation --- */
+    .mobile-dock-wrapper {
+        display: flex !important;
+        position: fixed !important;
+        bottom: 28px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 100000;
+        pointer-events: none;
+        justify-content: center !important;
+    }
+
+    .mobile-dock {
+        background: rgba(10, 10, 10, 0.85) !important;
+        backdrop-filter: blur(25px) saturate(200%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 40px !important;
+        padding: 6px !important;
+        display: flex !important;
+        gap: 4px !important;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7) !important;
+        pointer-events: auto;
+        width: auto !important;
+    }
+
+    .mobile-dock-item {
+        width: 60px !important;
+        height: 56px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: #666 !important;
+        transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1) !important;
+        border-radius: 20px !important;
+        text-decoration: none !important;
+    }
+
+    .mobile-dock-item i {
+        font-size: 1.3rem !important;
+        margin-bottom: 3px !important;
+    }
+
+    .mobile-dock-item span {
+        font-size: 0.65rem !important;
+        font-weight: 600 !important;
+    }
+
+    .mobile-dock-item.active {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+    }
+
+    /* --- Project Filters --- */
+    .project-filters {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 12px !important;
+        padding: 5px 20px 20px !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        justify-content: flex-start !important;
+    }
+
+    .project-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-btn {
+        flex: 0 0 auto !important;
+        padding: 10px 20px !important;
+        border-radius: 25px !important;
+        font-size: 0.9rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* --- Cards & Grids --- */
+    .about-grid,
+    .skills-grid,
+    .projects-cinema,
+    .experience-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 0 20px !important;
+    }
+
+    .about-card,
+    .skill-group,
+    .project-card {
+        background: var(--card-m) !important;
+        border-radius: 24px !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        padding: 24px !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    /* --- Experience Timeline --- */
+    .timeline-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 32px !important;
+        padding: 0 20px !important;
+    }
+
+    .timeline-item {
+        border-left: 2.5px solid var(--accent-m) !important;
+        padding-left: 24px !important;
+        padding-bottom: 12px !important;
+        position: relative !important;
+    }
+
+    .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 0;
+        width: 14px;
+        height: 14px;
+        background: var(--accent-m);
+        border-radius: 50%;
+        box-shadow: 0 0 12px var(--accent-m);
+    }
+
+    /* --- Footer Spacing --- */
+    footer {
+        padding-bottom: 120px !important;
+    }
+}

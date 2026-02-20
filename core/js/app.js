@@ -80,7 +80,7 @@ function initHeroEntrance() {
         scale: 0,
         opacity: 0,
         duration: 0.5,
-        ease: 'back.out(1.7)'
+        ease: 'power3.out'
     }, 0.8);
 }
 
@@ -446,6 +446,64 @@ const NameMorphController = {
 window.NameMorphController = NameMorphController;
 
 // ==========================================
+// MOBILE DOCK NAV
+// ==========================================
+const MobileDock = {
+    init() {
+        this.items = document.querySelectorAll('.mobile-dock-item');
+        this.sections = document.querySelectorAll('section[id]');
+        if (!this.items.length) return;
+        this.setupEventListeners();
+    },
+    setupEventListeners() {
+        this.items.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const targetId = item.getAttribute('href');
+                if (targetId.startsWith('#')) {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        if (typeof lenis !== 'undefined' && lenis) {
+                            lenis.scrollTo(targetId, { duration: 0.8, offset: -20 });
+                        } else {
+                            window.scrollTo({
+                                top: target.offsetTop - 20,
+                                behavior: 'smooth'
+                            });
+                        }
+                        this.items.forEach(i => i.classList.remove('active'));
+                        item.classList.add('active');
+                        if (navigator.vibrate) navigator.vibrate(5);
+                    }
+                }
+            });
+        });
+
+        // Update active on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollPos = window.scrollY + 100;
+                    this.sections.forEach(section => {
+                        if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+                            this.items.forEach(item => {
+                                item.classList.remove('active');
+                                if (item.getAttribute('href') === `#${section.id}`) {
+                                    item.classList.add('active');
+                                }
+                            });
+                        }
+                    });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+};
+
+// ==========================================
 // UNIFIED INITIALIZATION
 // ==========================================
 const InitializationManager = {
@@ -459,7 +517,8 @@ const InitializationManager = {
             { name: 'NavigationScrollEffect', obj: NavigationScrollEffect },
             { name: 'ProjectFilterSystem', obj: ProjectFilterSystem },
             { name: 'HeroWaterBubble', obj: HeroWaterBubble },
-            { name: 'SectionChoreography', obj: SectionChoreography }
+            { name: 'SectionChoreography', obj: SectionChoreography },
+            { name: 'MobileDock', obj: MobileDock }
         ];
         modules.forEach(m => {
             if (m.obj && typeof m.obj.init === 'function') {
