@@ -536,4 +536,11 @@
     .blog-title {
         font-size: 3rem;
     }
+
+    .side-progress-container {
+        left: 3px;
+        /* Stick to the extreme left to avoid overlap */
+        width: 2px;
+        /* Thinner on mobile */
+    }
 }
