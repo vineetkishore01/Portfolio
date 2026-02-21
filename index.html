@@ -56,8 +56,8 @@
     <link rel="preload"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
         as="style">
-    <link rel="preload" href="core/css/style.css?v=c9" as="style">
-    <link rel="preload" href="core/Subject.png" as="image" fetchpriority="high">
+    <link rel="preload" href="core/css/style.css?v=v=1771655922" as="style">
+    <link rel="preload" href="core/Subject.webp" as="image" fetchpriority="high">
 
     <!-- Preconnect to External Domains -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -71,8 +71,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-    <link rel="stylesheet" href="core/css/style.css?v=c17">
-    <link rel="stylesheet" href="core/css/mobile-new/mobile-design.css?v=c2">
+    <link rel="stylesheet" href="core/css/style.css?v=v=1771655922">
+
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://vineetkishore.dev">
@@ -141,11 +141,12 @@
             </svg>
             Resume
         </a>
-        <div class="menu-toggle" id="menu-toggle">
+        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu"
+            aria-controls="nav-links">
             <span></span>
             <span></span>
             <span></span>
-        </div>
+        </button>
     </nav>
 
     <!-- Hero Section -->
@@ -212,8 +213,11 @@
             <div class="hero-image-wrapper">
                 <div class="hero-profile-card">
                     <div class="hero-profile-inner">
-                        <img src="core/Subject.png" alt="Vineet Kishore" class="hero-profile-img main-img"
-                            draggable="false">
+                        <picture>
+                            <source srcset="core/Subject.webp" type="image/webp">
+                            <img src="core/Subject.png" alt="Vineet Kishore" class="hero-profile-img main-img"
+                                draggable="false">
+                        </picture>
                         <div class="hero-profile-overlay"></div>
                     </div>
                     <div class="hero-profile-glow"></div>
@@ -346,11 +350,15 @@
             <p class="section-subtitle">Self-directed engineering with asymmetric impact</p>
         </div>
         <!-- Project Filters -->
-        <div class="project-filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="dev">Development</button>
-            <button class="filter-btn" data-filter="cloud">Infrastructure</button>
-            <button class="filter-btn" data-filter="ai">AI / LLM</button>
+        <div class="project-filters" role="tablist" aria-label="Filter projects">
+            <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true"
+                aria-controls="projects-cinema">All</button>
+            <button class="filter-btn" data-filter="dev" role="tab" aria-selected="false"
+                aria-controls="projects-cinema">Development</button>
+            <button class="filter-btn" data-filter="cloud" role="tab" aria-selected="false"
+                aria-controls="projects-cinema">Infrastructure</button>
+            <button class="filter-btn" data-filter="ai" role="tab" aria-selected="false"
+                aria-controls="projects-cinema">AI / LLM</button>
         </div>
 
         <div class="projects-cinema">
@@ -364,6 +372,10 @@
                         <h3 class="project-cinema-title">Droppy</h3>
                         <p class="project-cinema-desc">macOS Dynamic Island utility. Market-leading implementation with
                             5,000+ active users and 100x viral growth. Top-trending on GitHub and Reddit.</p>
+                        <a href="https://github.com/vineetkishore01/droppy" target="_blank"
+                            style="display:inline-block; font-size:0.8rem; color:var(--accent-blue); text-decoration:none; margin-bottom:12px; font-weight:600; border-bottom:1px solid transparent; transition:border 0.2s;"
+                            onmouseover="this.style.borderBottomColor='var(--accent-blue)'"
+                            onmouseout="this.style.borderBottomColor='transparent'">Read Case Study & View Source ↗</a>
                         <div class="project-cinema-stats">
                             <div class="project-cinema-stat">
                                 <div class="project-cinema-stat-value">5K+</div>
@@ -575,17 +587,17 @@
         </div>
 
         <!-- Terminal Teaser for Mobile -->
-        <div class="terminal-teaser"
-            onclick="this.classList.add('expanded'); this.nextElementSibling.style.display='block';">
-            <div class="terminal-teaser-icon">⌘</div>
-            <div class="terminal-teaser-text">Command Center available on desktop</div>
+        <button class="terminal-teaser" aria-expanded="false" aria-controls="terminal-wrapper"
+            onclick="this.classList.add('expanded'); this.setAttribute('aria-expanded', 'true'); this.nextElementSibling.style.display='block';">
+            <div class="terminal-teaser-icon" aria-hidden="true">⌘</div>
+            <div class="terminal-teaser-text">Best on Desktop - Tap to try anyway</div>
             <div class="terminal-teaser-hint">
-                <span>Tap to try anyway</span>
+                <span>Launch Terminal</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
             </div>
-        </div>
+        </button>
 
         <div class="terminal-wrapper">
             <div class="terminal" id="terminal-container">
@@ -755,11 +767,11 @@
     </div>
     <!-- Smart Animations & Effects Script -->
 
-    <script src="core/js/latest-articles.js?v=c17"></script>
-    <script src="core/js/app.js?v=c17"></script>
+    <script src="core/js/latest-articles.js?v=v=1771654823"></script>
+    <script src="core/js/app.js?v=v=1771654823"></script>
 
     <!-- Portfolio Enhancements (PWA, Analytics, GitHub Integration, Micro-interactions) -->
-    <script src="core/js/portfolio-enhancements.js?v=c17"></script>
+    <script src="core/js/portfolio-enhancements.js?v=v=1771654823"></script>
 </body>
 
 </html>

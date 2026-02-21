@@ -139,7 +139,7 @@ const LatestArticles = {
 
     render(posts) {
         this.container.innerHTML = posts.map(post => `
-            <article class="insight-card" onclick="window.location.href='core/pages/blog-post.html?slug=${post.slug}'">
+            <article class="insight-card" onclick="window.location.href='core/pages/blog-post.html?slug=${post.slug}'" onpointerenter="LatestArticles.prefetch('${post.slug}')">
                 <div class="insight-category">${post.category}</div>
                 <h3 class="insight-title">${post.title}</h3>
                 <p class="insight-excerpt">${post.excerpt}</p>
@@ -151,6 +151,24 @@ const LatestArticles = {
         `).join('');
 
         // Re-run animations if needed, though usually standard CSS hover works fine
+    },
+
+    prefetch(slug) {
+        if (!window.prefetchedPosts) window.prefetchedPosts = new Set();
+        if (window.prefetchedPosts.has(slug)) return;
+        window.prefetchedPosts.add(slug);
+
+        try {
+            const decodedSlug = decodeURIComponent(slug);
+            const url = `https://raw.githubusercontent.com/${this.repo}/main/${this.path}/${decodedSlug}`;
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = url;
+            link.as = 'fetch';
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+            console.log('Prefetching:', decodedSlug);
+        } catch (e) { /* ignore */ }
     }
 };
 

@@ -4430,3 +4430,365 @@
         .hero-cta-primary:hover::after {
             transform: rotate(30deg) translateX(100%);
         }
+/* ==========================================
+   GOD-TIER MOBILE EXPERIENCE (NATIVE APP FEEL)
+   ========================================== */
+@media (max-width: 800px) {
+
+    /* --- Root & Overrides --- */
+    :root {
+        --accent-m: #007aff;
+        --bg-m: #000000;
+        --card-m: #111111;
+    }
+
+    body {
+        background-color: var(--bg-m) !important;
+        overflow-x: hidden !important;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px !important;
+    }
+
+    /* --- Navigation & Logo --- */
+    .nav {
+        background: rgba(0, 0, 0, 0.85) !important;
+        backdrop-filter: blur(20px) !important;
+        padding: max(16px, env(safe-area-inset-top)) 16px 16px !important;
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 2147483647 !important;
+    }
+
+    .nav-logo {
+        margin: 0 !important;
+        font-size: 1.1rem !important;
+    }
+
+    .nav-links,
+    .nav-cta {
+        display: none !important;
+    }
+
+    .menu-toggle {
+        display: flex !important;
+        z-index: 2147483647 !important;
+        width: 28px !important;
+        height: 20px !important;
+        padding: 8px !important;
+        box-sizing: content-box !important;
+        margin-right: -8px !important;
+        /* Visual align right while keeping huge hit area */
+    }
+
+    .menu-toggle span {
+        height: 2px !important;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg) !important;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg) !important;
+    }
+
+    .nav-links.active {
+        display: flex !important;
+        flex-direction: column !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100vh !important;
+        background: #000000 !important;
+        backdrop-filter: none !important;
+        /* Forced solid color because Webkit glitches/WebGL bleed through backdrop-filters */
+        align-items: center;
+        justify-content: flex-start !important;
+        padding-top: max(120px, calc(env(safe-area-inset-top) + 80px)) !important;
+        overflow-y: auto !important;
+        z-index: 2147483647 !important;
+    }
+
+    .nav-links.active .nav-link {
+        font-size: 1.25rem !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+        padding: 30px 16px 40px !important;
+        text-align: center !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .hero-image-wrapper {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 auto 16px !important;
+        display: flex !important;
+        justify-content: center !important;
+        order: -1 !important;
+    }
+
+    .hero-profile-card {
+        width: 80px !important;
+        height: 80px !important;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        border: 2px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 122, 255, 0.2) !important;
+        position: relative !important;
+    }
+
+    .hero-profile-inner,
+    .hero-profile-img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .hero-profile-glow,
+    .hero-profile-overlay {
+        display: none !important;
+    }
+
+    /* Ensure desktop glitch is removed mostly */
+    .hero-title {
+        font-size: 1.8rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.03em !important;
+        margin-bottom: 8px !important;
+        line-height: 1.2 !important;
+        color: #ffffff !important;
+        background: none !important;
+        -webkit-text-fill-color: initial !important;
+    }
+
+    .hero-title span:not(:first-child) {
+        display: none !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem !important;
+        color: var(--accent-m) !important;
+        margin-bottom: 20px !important;
+        font-weight: 600 !important;
+    }
+
+    .hero-label {
+        margin-bottom: 16px !important;
+    }
+
+    .mobile-badge {
+        font-size: 0.75rem !important;
+        padding: 4px 10px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* --- Typography inside sections --- */
+    .section-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 12px !important;
+        font-weight: 700 !important;
+    }
+
+    .section-subtitle {
+        font-size: 0.85rem !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* --- Project Filters --- */
+    .project-filters {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 8px !important;
+        padding: 0 16px 12px !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        justify-content: flex-start !important;
+        margin-bottom: 16px !important;
+    }
+
+    .project-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-btn {
+        flex: 0 0 auto !important;
+        padding: 6px 12px !important;
+        border-radius: 16px !important;
+        font-size: 0.75rem !important;
+        white-space: nowrap !important;
+        font-weight: 600 !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* --- Cards & Grids --- */
+    .about-grid,
+    .skills-grid,
+    .projects-cinema,
+    .education-grid,
+    .experience-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+    }
+
+    .about-card,
+    .skill-group,
+    .project-card,
+    .project-cinema-card {
+        background: var(--card-m) !important;
+        border-radius: 16px !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 16px !important;
+    }
+
+    .about-card-icon {
+        font-size: 1.5rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .about-card h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 4px !important;
+    }
+
+    .about-card p {
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    .skill-category-title {
+        font-size: 0.9rem !important;
+        margin-bottom: 12px !important;
+    }
+
+    .skill-tag {
+        font-size: 0.75rem !important;
+        padding: 4px 10px !important;
+        border-radius: 6px !important;
+    }
+
+    /* --- Project Cards specifically --- */
+    .project-cinema-inner {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    .project-cinema-content {
+        padding: 12px !important;
+    }
+
+    .project-cinema-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .project-cinema-desc {
+        font-size: 0.8rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 12px !important;
+    }
+
+    .tech-stack-cinema span {
+        font-size: 0.65rem !important;
+        padding: 3px 8px !important;
+        border-radius: 4px !important;
+    }
+
+    /* --- Experience Timeline --- */
+    .timeline-container {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 0 16px 0 24px !important;
+    }
+
+    .timeline-item {
+        border-left: 2px solid var(--accent-m) !important;
+        padding-left: 16px !important;
+        padding-bottom: 0 !important;
+        position: relative !important;
+        border-radius: 0 !important;
+    }
+
+    .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -6px;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        background: var(--accent-m);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--accent-m);
+    }
+
+    .timeline-card {
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .timeline-role {
+        font-size: 1.05rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .timeline-company {
+        font-size: 0.85rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .timeline-date {
+        font-size: 0.75rem !important;
+    }
+
+    /* --- Footer Spacing --- */
+    footer {
+        padding-bottom: 40px !important;
+    }
+
+    /* --- Blog Specific Overrides --- */
+    .blog-prose h1,
+    .post-title {
+        font-size: 1.8rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .blog-prose h2 {
+        font-size: 1.25rem !important;
+        margin: 2rem 0 1rem !important;
+    }
+
+    pre,
+    code,
+    table {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        word-break: break-all !important;
+    }
+
+    .side-progress-container {
+        left: 0 !important;
+    }
+
+    .post-reader {
+        margin-left: 8px !important;
+    }
+}\n/* --- Terminal Mobile Layout Fix --- */\n@media (max-width: 800px) {\n    .terminal-header {\n        flex-wrap: wrap !important;\n        padding: 8px !important;\n    }\n    .terminal-title {\n        font-size: 0.7rem !important;\n        width: 100% !important;\n        text-align: center !important;\n        order: 3 !important;\n        margin-top: 4px !important;\n    }\n    .system-health-widget { display: flex !important; flex-wrap: wrap; justify-content: center; text-align: center; }\n}
+\n/* --- Desktop Enhancements --- */\n@media (min-width: 1024px) {\n    .terminal-teaser {\n        display: none !important;\n    }\n    .terminal-wrapper {\n        display: flex !important;\n    }\n    .nav {\n        backdrop-filter: blur(16px) !important;\n        background: rgba(0, 0, 0, 0.7) !important;\n        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;\n    }\n    .about-card, .project-cinema-card, .timeline-card {\n        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;\n    }\n    .about-card:hover, .project-cinema-card:hover, .timeline-card:hover {\n        transform: translateY(-4px) !important;\n        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(0, 122, 255, 0.1) !important;\n        border-color: rgba(255, 255, 255, 0.15) !important;\n    }\n    .terminal-input:focus {\n        outline: none !important;\n        box-shadow: none !important;\n    }\n}
