@@ -4839,7 +4839,7 @@
             }
 
             .terminal-wrapper {
-                display: flex !important;
+                display: block !important;
             }
 
             .nav {
