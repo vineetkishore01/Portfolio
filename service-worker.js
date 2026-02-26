@@ -6,10 +6,16 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/core/css/style.css',
-  '/core/css/mobile.css',
+  '/core/css/mobile-design.css',
+  '/core/css/blog.css',
   '/core/js/app.js',
-  '/core/terminal-enhanced.js',
-  '/core/js/mobile-enhancer.js',
+  '/core/js/portfolio-enhancements.js',
+  '/core/js/blog-post.js',
+  '/core/js/blog.js',
+  '/core/js/latest-articles.js',
+  '/core/js/terminal-enhanced.js',
+  '/articles/blog.html',
+  '/articles/blog-post.html',
   '/Vineet Kishore Resume.pdf'
 ];
 
@@ -48,18 +54,18 @@ self.addEventListener('activate', (event) => {
 // Fetch event - serve from cache or network
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  
+
   // Skip non-GET requests
   if (request.method !== 'GET') return;
-  
+
   // Skip analytics and external resources
-  if (request.url.includes('analytics') || 
-      request.url.includes('google') ||
-      request.url.includes('cdnjs') ||
-      request.url.includes('fonts')) {
+  if (request.url.includes('analytics') ||
+    request.url.includes('google') ||
+    request.url.includes('cdnjs') ||
+    request.url.includes('fonts')) {
     return;
   }
-  
+
   event.respondWith(
     caches.match(request)
       .then((response) => {
@@ -72,11 +78,11 @@ self.addEventListener('fetch', (event) => {
                 cache.put(request, fetchResponse.clone());
               });
             })
-            .catch(() => {});
-          
+            .catch(() => { });
+
           return response;
         }
-        
+
         // Otherwise fetch from network
         return fetch(request)
           .then((fetchResponse) => {
@@ -84,13 +90,13 @@ self.addEventListener('fetch', (event) => {
             if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
               return fetchResponse;
             }
-            
+
             // Clone and cache the response
             const responseToCache = fetchResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(request, responseToCache);
             });
-            
+
             return fetchResponse;
           })
           .catch(() => {
@@ -121,7 +127,7 @@ self.addEventListener('push', (event) => {
     badge: '/core/assets/icon-72x72.png',
     vibrate: [100, 50, 100]
   };
-  
+
   event.waitUntil(
     self.registration.showNotification('Vineet Kishore', options)
   );

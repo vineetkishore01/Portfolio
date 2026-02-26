@@ -56,7 +56,7 @@
     <link rel="preload"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
         as="style">
-    <link rel="preload" href="core/css/style.css?v=v=1771655922" as="style">
+    <link rel="preload" href="core/css/style.css" as="style">
     <link rel="preload" href="core/Subject.webp" as="image" fetchpriority="high">
 
     <!-- Preconnect to External Domains -->
@@ -71,7 +71,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-    <link rel="stylesheet" href="core/css/style.css?v=v=1771655922">
+    <link rel="stylesheet" href="core/css/style.css">
+    <link rel="stylesheet" href="core/css/mobile-design.css">
 
 
     <!-- Canonical URL -->
@@ -84,12 +85,6 @@
     <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 
-    <!-- Favicon & Icons: Commented out until assets are added
-    <link rel="icon" type="image/svg+xml" href="/core/assets/favicon.svg">
-    <link rel="apple-touch-icon" sizes="180x180" href="/core/assets/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/core/assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/core/assets/favicon-16x16.png">
-    <link rel="mask-icon" href="/core/assets/safari-pinned-tab.svg" color="#007AFF"> -->
     <meta name="msapplication-TileColor" content="#000000">
 
     <!-- Fonts -->
@@ -127,7 +122,7 @@
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
             <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="core/pages/blog.html" class="nav-link">Blogs</a></li>
+            <li><a href="articles/blog.html" class="nav-link">Blogs</a></li>
 
             <li><a href="#terminal" class="nav-link">Terminal</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -570,7 +565,7 @@
             <div class="insight-loading">Loading latest articles...</div>
         </div>
         <div style="text-align: center; margin-top: 3rem;">
-            <a href="core/pages/blog.html" class="hero-cta-secondary">View All Articles →</a>
+            <a href="articles/blog.html" class="hero-cta-secondary">View All Articles →</a>
         </div>
     </section>
 
@@ -637,7 +632,7 @@
 
 
     <!-- Terminal Script — ISOLATED from main script so it never breaks -->
-    <script src="core/terminal-enhanced.js"></script>
+    <script src="core/js/terminal-enhanced.js"></script>
 
     <!-- Contact Section -->
     <section class="contact" id="contact">
@@ -767,11 +762,11 @@
     </div>
     <!-- Smart Animations & Effects Script -->
 
-    <script src="core/js/latest-articles.js?v=v=1771659069"></script>
-    <script src="core/js/app.js?v=v=1771659069"></script>
+    <script src="core/js/latest-articles.js"></script>
+    <script src="core/js/app.js"></script>
 
     <!-- Portfolio Enhancements (PWA, Analytics, GitHub Integration, Micro-interactions) -->
-    <script src="core/js/portfolio-enhancements.js?v=v=1771659069"></script>
+    <script src="core/js/portfolio-enhancements.js"></script>
 </body>
 
 </html>

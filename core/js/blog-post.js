@@ -16,9 +16,8 @@ const PostReader = {
             return;
         }
 
-        // GitHub API Config (for neighbor discovery)
-        this.repo = "vineetkishore01/Portfolio";
-        this.path = "core/pages/blogs";
+        // Directory Paths
+        this.path = "blogs";
 
         try {
             // 1. Fetch the markdown file directly
@@ -84,9 +83,9 @@ const PostReader = {
 
             // If cache empty, we can optionaly fetch list, but usually the user comes from blog.html which populates it
             if (posts.length === 0) {
-                const apiResp = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.path}`);
-                const files = await apiResp.json();
-                posts = files.filter(f => f.name.endsWith('.md')).map(f => ({ slug: encodeURIComponent(f.name), file: f.name }));
+                const response = await fetch(`${this.path}/index.json`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                posts = await response.json();
             }
 
             const currentIndex = posts.findIndex(p => p.file === this.currentSlug || p.slug === encodeURIComponent(this.currentSlug));
@@ -177,7 +176,7 @@ const PostReader = {
 
         // Calculate absolute URL
         const siteBase = "https://vineetkishore01.github.io/Portfolio";
-        const articleUrl = `${siteBase}/core/pages/blog-post.html?slug=${post.slug}`;
+        const articleUrl = `${siteBase}/articles/blog-post.html?slug=${post.slug}`;
 
         shareToggle.addEventListener('click', () => {
             navigator.clipboard.writeText(articleUrl).then(() => {

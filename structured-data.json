@@ -10,7 +10,7 @@
       "jobTitle": "Infrastructure Engineer & Strategic Technologist",
       "description": "Infrastructure Engineer specializing in resilient systems, automation, and competitive intelligence. Expert in Docker, Kubernetes, AWS, and building 99.9% uptime systems.",
       "url": "https://vineetkishore.dev",
-      "image": "https://vineetkishore.dev/core/assets/profile-photo.jpg",
+      "image": "https://vineetkishore.dev/core/Subject.webp",
       "email": "mailto:vineetkishore01@gmail.com",
       "sameAs": [
         "https://linkedin.com/in/vineetkishore",
@@ -69,7 +69,7 @@
         "@id": "https://vineetkishore.dev/#person"
       },
       "primaryImageOfPage": {
-        "@id": "https://vineetkishore.dev/core/assets/og-image.jpg"
+        "@id": "https://vineetkishore.dev/core/Subject.webp"
       },
       "datePublished": "2024-01-01",
       "dateModified": "2024-12-01",
@@ -119,7 +119,11 @@
       },
       "description": "macOS Dynamic Island utility with 5,000+ users. Provides drag-and-drop shelf for temporary file storage.",
       "url": "https://github.com/vineetkishore/Droppy",
-      "programmingLanguage": ["Swift", "SwiftUI", "AppKit"],
+      "programmingLanguage": [
+        "Swift",
+        "SwiftUI",
+        "AppKit"
+      ],
       "applicationCategory": "Productivity",
       "operatingSystem": "macOS"
     },

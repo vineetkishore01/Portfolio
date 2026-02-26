@@ -11,7 +11,7 @@ const LatestArticles = {
 
         // GitHub API Config
         this.repo = "vineetkishore01/Portfolio";
-        this.path = "core/pages/blogs";
+        this.path = "articles/blogs";
 
         try {
             const posts = await this.fetchLatestPosts();
@@ -26,49 +26,23 @@ const LatestArticles = {
                 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 this.container.innerHTML = `<div class="insight-error" style="color: var(--text-secondary); text-align: center; padding: 2rem; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
                     API stream interrupted.
-                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:0.5rem; font-size:0.7rem; font-family:monospace;">Dev Hint: GitHub API 403/404. Push your "core/pages/blogs" folder to GitHub to sync the content.</small>' : ''}
+                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:0.5rem; font-size:0.7rem; font-family:monospace;">Dev Hint: GitHub API 403/404. Push your "articles/blogs" folder to GitHub to sync the content.</small>' : ''}
                 </div>`;
             }
         }
     },
 
     async fetchLatestPosts() {
-        // Check cache first
-        const cache = JSON.parse(localStorage.getItem('blog_cache') || '{}');
-        const now = Date.now();
-        let posts = [];
-
         try {
-            // Try fetching list
-            const apiResp = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.path}`);
-            const files = await apiResp.json();
+            const response = await fetch(`${this.path}/index.json`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-            if (!Array.isArray(files)) throw new Error('Could not list folder');
-
-            const mdFiles = files.filter(f => f.name.endsWith('.md') && f.size > 0);
-
-            posts = await Promise.all(mdFiles.map(async file => {
-                if (cache[file.sha] && cache[file.sha].expires > now) {
-                    return cache[file.sha].data;
-                }
-                const post = await this.parseMetadata(file);
-                cache[file.sha] = { expires: now + (1000 * 60 * 60 * 24), data: post };
-                return post;
-            }));
-
-            localStorage.setItem('blog_cache', JSON.stringify(cache));
-
+            const posts = await response.json();
+            return posts.slice(0, 3);
         } catch (e) {
-            // Fallback to cache
-            console.warn('LatestArticles: API connection failed, checking cache...', e);
-            posts = Object.values(cache).map(c => c.data);
-
-            // If no cache, propagate error so we can show the Dev Hint
-            if (posts.length === 0) throw e;
+            console.error('LatestArticles: Failed to load index.json', e);
+            throw e;
         }
-
-        // Sort by date desc
-        return posts.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
     },
 
     async parseMetadata(file) {
@@ -139,13 +113,13 @@ const LatestArticles = {
 
     render(posts) {
         this.container.innerHTML = posts.map(post => `
-            <article class="insight-card" onclick="window.location.href='core/pages/blog-post.html?slug=${post.slug}'" onpointerenter="LatestArticles.prefetch('${post.slug}')">
+            <article class="insight-card" onclick="window.location.href='articles/blog-post.html?slug=${post.slug}'" onpointerenter="LatestArticles.prefetch('${post.slug}')">
                 <div class="insight-category">${post.category}</div>
                 <h3 class="insight-title">${post.title}</h3>
                 <p class="insight-excerpt">${post.excerpt}</p>
                 <div class="insight-meta">
                     <span>${post.readTime}</span>
-                    <a href="core/pages/blog-post.html?slug=${post.slug}" class="insight-link">Read Article →</a>
+                    <a href="articles/blog-post.html?slug=${post.slug}" class="insight-link">Read Article →</a>
                 </div>
             </article>
         `).join('');
@@ -160,12 +134,11 @@ const LatestArticles = {
 
         try {
             const decodedSlug = decodeURIComponent(slug);
-            const url = `https://raw.githubusercontent.com/${this.repo}/main/${this.path}/${decodedSlug}`;
+            const url = `articles/blogs/${decodedSlug}`;
             const link = document.createElement('link');
             link.rel = 'prefetch';
             link.href = url;
             link.as = 'fetch';
-            link.crossOrigin = 'anonymous';
             document.head.appendChild(link);
             console.log('Prefetching:', decodedSlug);
         } catch (e) { /* ignore */ }

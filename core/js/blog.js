@@ -10,9 +10,8 @@ const BlogEngine = {
         this.sortSelect = document.getElementById('blog-sort-select');
         this.paginationContainer = document.getElementById('blog-pagination');
 
-        // GitHub API Config
-        this.repo = "vineetkishore01/Portfolio";
-        this.path = "core/pages/blogs";
+        // Directory Paths
+        this.path = "blogs";
 
         this.posts = [];
         this.filteredPosts = [];
@@ -29,119 +28,27 @@ const BlogEngine = {
                 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 this.grid.innerHTML = `<div class="blog-error">
                     System offline. Data streams interrupted.
-                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:1rem; font-family:monospace;">Dev Hint: The GitHub API is returning 404 because the "core/pages/blogs" path doesn\'t exist on the remote GitHub repository yet. Push your local changes to GitHub to enable auto-discovery.</small>' : ''}
+                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:1rem; font-family:monospace;">Dev Hint: The GitHub API is returning 404 because the "articles/blogs" path doesn\'t exist on the remote GitHub repository yet. Push your local changes to GitHub to enable auto-discovery.</small>' : ''}
                 </div>`;
             }
         }
     },
 
     async loadArticles() {
-        // Check cache first (sha-based)
-        const cache = JSON.parse(localStorage.getItem('blog_cache') || '{}');
-        const now = Date.now();
-
         try {
-            const apiResp = await fetch(`https://api.github.com/repos/${this.repo}/contents/${this.path}`);
-            const files = await apiResp.json();
+            const response = await fetch(`${this.path}/index.json`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-            if (!Array.isArray(files)) throw new Error('Could not list folder');
-
-            const mdFiles = files.filter(f => f.name.endsWith('.md') && f.size > 0);
-
-            this.posts = await Promise.all(mdFiles.map(async file => {
-                // If we have valid cache for this SHA, use it
-                if (cache[file.sha] && cache[file.sha].expires > now) {
-                    return cache[file.sha].data;
-                }
-
-                // Otherwise, fetch and parse metadata
-                const post = await this.parseMetadata(file);
-
-                // Cache it
-                cache[file.sha] = {
-                    expires: now + (1000 * 60 * 60 * 24), // 24hr cache
-                    data: post
-                };
-                return post;
-            }));
-
-            localStorage.setItem('blog_cache', JSON.stringify(cache));
+            this.posts = await response.json();
 
             // Sort by date descending by default
             this.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
             this.filteredPosts = [...this.posts];
 
         } catch (e) {
-            console.warn('BlogEngine: API error or local env, falling back to cache if available', e);
-            this.posts = Object.values(cache).map(c => c.data);
-            if (this.posts.length === 0) throw e;
+            console.error('BlogEngine: Failed to load index.json', e);
+            throw e;
         }
-    },
-
-    async parseMetadata(file) {
-        try {
-            const resp = await fetch(file.download_url);
-            const text = await resp.text();
-
-            // Basic extraction
-            const titleMatch = text.match(/^#\s+(.*)/m);
-            const title = titleMatch ? titleMatch[1].trim() : file.name.replace('.md', '');
-
-            // Try to find a date in the text YYYY-MM-DD
-            const dateMatch = text.match(/Date:\s*(\w+\s+\d{1,2},?\s+\d{4})/i) ||
-                text.match(/Date:\s*(\d{4}-\d{2}-\d{2})/i) ||
-                text.match(/20\d{2}-\d{2}-\d{2}/);
-
-            // Fallback: extract date from filename if exists, else use current
-            const fileDateMatch = file.name.match(/(\d{4}-\d{2}-\d{2})/);
-            const date = dateMatch ? dateMatch[1] : (fileDateMatch ? fileDateMatch[1] : new Date().toLocaleDateString('en-CA'));
-
-            // Excerpt: first non-empty line after title
-            const lines = text.split('\n').filter(l =>
-                l.trim() !== '' &&
-                !l.startsWith('#') &&
-                !l.match(/^Date:/i) &&
-                !l.match(/^Category:/i) &&
-                !l.match(/^---/)
-            );
-            // Excerpt: strip markdown and extract first clean line
-            const rawExcerpt = lines[0] || "A deep dive into technical implementation and discovery.";
-            const excerpt = this.stripMarkdown(rawExcerpt).substring(0, 180).trim() + (rawExcerpt.length > 180 ? '...' : '');
-
-            return {
-                slug: encodeURIComponent(file.name), // Use filename as slug
-                title,
-                date,
-                readTime: this.estimateReadTime(text),
-                excerpt,
-                file: file.name
-            };
-        } catch (e) {
-            return {
-                slug: encodeURIComponent(file.name),
-                title: file.name,
-                date: new Date().toISOString().split('T')[0],
-                readTime: "5 min",
-                excerpt: "Failed to parse article metadata.",
-                file: file.name
-            };
-        }
-    },
-
-    stripMarkdown(text) {
-        return text
-            .replace(/\*\*(.*?)\*\*/g, '$1') // Bold
-            .replace(/\*(.*?)\*/g, '$1')     // Italics
-            .replace(/`(.*?)`/g, '$1')       // Code
-            .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Links
-            .replace(/#+\s+/g, '')           // Headers
-            .trim();
-    },
-
-    estimateReadTime(text) {
-        const words = text.split(/\s+/).length;
-        const minutes = Math.ceil(words / 225);
-        return `${minutes} min`;
     },
 
     setupEventListeners() {
