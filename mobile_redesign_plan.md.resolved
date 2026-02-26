@@ -1,0 +1,337 @@
+# 📱 Mobile Redesign Plan — Ultra-Detailed, Section-by-Section
+
+> **Goal:** Transform the mobile experience from a "desktop-forced-into-a-phone" into a **premium, native-feeling app** that pops with the same Black × Electric Blue × White palette as desktop — without touching the desktop layout at all.
+
+> **Strategy:** All changes will be scoped inside `@media (max-width: 800px)` in [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) (or gated by a `.is-mobile` class). **Zero** edits to desktop rules.
+
+---
+
+## 🔬 Current State — Visual Evidence
+
+````carousel
+![Hero & Nav — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_nav_hero_top_1772112422428.png)
+<!-- slide -->
+![About — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_about_section_1772112583476.png)
+<!-- slide -->
+![Experience — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_experience_section_1772112589828.png)
+<!-- slide -->
+![Projects — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_projects_section_1772112468691.png)
+<!-- slide -->
+![Skills — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_skills_section_1772112596613.png)
+<!-- slide -->
+![Education — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_education_section_1772112611483.png)
+<!-- slide -->
+![Insights — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_insights_section_1772112618465.png)
+<!-- slide -->
+![Footer — Current State](/Users/vineetkishore/.gemini/antigravity/brain/1eac4a3c-8c8f-44db-aaa8-a4e0dc212142/mobile_contact_section_1772112639641.png)
+````
+
+---
+
+## Global Root Causes
+
+| # | Problem | Root Cause | Impact |
+|---|---------|-----------|--------|
+| 1 | **Grey-washed look** | Card override at L442–464 of [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) is outside the media query — applies to ALL screen sizes, including desktop. The `rgba(255,255,255,0.05)` gradient is barely visible on dark backgrounds. | Everything looks flat and lifeless |
+| 2 | **Low text contrast** | Body text uses inherited `--text-secondary (#86868b)` which is only ~35% contrast on `#000`. No mobile-specific contrast boost. | Hard to read, feels "greyed out" |
+| 3 | **Dead whitespace** | Excessive padding/margins between sections (often 80–100px from desktop rules bleeding through) | User scrolls forever through empty black space |
+| 4 | **No mobile animations** | [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css) line ~1792 has `prefers-reduced-motion` AND several `@media (max-width: 768px)` blocks that hardcode `animation: none` | Glitch name, kinetic text all broken |
+| 5 | **Hamburger too thick** | 3 lines rendered at `height: 2px` but the overall button takes up too much visual weight relative to the small nav | Looks like a chunky white block |
+| 6 | **No section dividers** | Sections just end abruptly with no visual separation | Layout feels haphazard |
+
+---
+
+## Section 1: Navigation Bar
+
+### Current Issues
+- Hamburger icon lines are disproportionately thick and wide
+- No subtle animation on menu open/close
+- Nav overlay has no stagger animation on link appearance
+- Missing "pill" style active link indicator
+
+### Redesign Steps
+
+1. **Reduce hamburger density** — Scale to `width: 22px; height: 14px`, with line thickness at `1.5px` and `gap: 4px` between lines
+2. **Animate the X transition** — Add a spring-curve `transition` that rotates lines into an ✕ with a 0.15s bounce
+3. **Nav overlay stagger** — When `.nav-links.active` triggers, each `.nav-link` should fade-in with a `0.05s` stagger (use `transition-delay: calc(var(--i) * 50ms)`)
+4. **Active link pill** — When a nav-link corresponds to the current viewport section, show a `background: rgba(0,122,255,0.15); border-radius: 8px; padding: 8px 16px` highlight
+5. **Safe area handling** — Use `env(safe-area-inset-top)` for padding-top to respect the iPhone Dynamic Island and notch
+
+---
+
+## Section 2: Hero Section
+
+### Current Issues
+- Profile photo is **tiny** (80×80px) and floating in a sea of dead space
+- The multilingual name animation is rendered but **position: absolute** causes a 0-height container collapse — name sometimes invisible
+- Subtitle text is too thin and pale
+- CTAs ("Get in Touch" / "View Projects") lack visual weight
+- Too much vertical dead space above and below
+
+### Redesign Steps
+
+1. **Enlarge profile photo** — Scale to `clamp(100px, 25vw, 120px)` with a subtle `box-shadow: 0 0 30px rgba(0,122,255,0.3)` blue glow ring
+2. **Fix name container** — Set `.hero-title-single` to `position: relative; min-height: clamp(50px, 10vw, 70px)` so it always reserves space. Active `.glitch-name` uses `position: relative`, all others use `position: absolute; inset: 0`
+3. **Re-enable glitch pseudo-elements** — Instead of `display: none` on `::before`/`::after`, keep them but with `opacity: 0.15` and `clip-path` for a subtle, non-overlapping shimmer
+4. **Boost subtitle** — Change from `color: var(--accent-blue)` to a brighter `color: #5ac8fa` (the `--accent-blue-light` token) with `font-weight: 700` and `letter-spacing: 0.02em`
+5. **Redesign CTAs** — Primary: Solid `background: var(--accent-blue); color: #fff; border-radius: 12px; padding: 14px 28px; font-weight: 700`. Secondary: Ghost button with `border: 1.5px solid var(--accent-blue); color: var(--accent-blue)`. Both side-by-side using `display: flex; gap: 12px`
+6. **Compress vertical space** — Reduce hero `padding` to `20px 16px 32px` and remove excess `margin-bottom` from child elements
+7. **Add scroll indicator** — A subtle bouncing chevron `▾` at the bottom of the hero with `animation: bounce 2s infinite`
+
+---
+
+## Section 3: About (Identity Switcher)
+
+### Current Issues
+- Card appears alone and small, floating in massive dead space
+- Card title "The Engineer" is dim grey
+- Body text is low-contrast `--text-secondary`
+- No visible tab/switcher UI — users don't know they can switch identities
+- Identity tabs are invisible or broken on mobile
+
+### Redesign Steps
+
+1. **Kill the dead space** — Reduce section padding to `padding: 40px 16px 24px`
+2. **Expose identity tabs** — Render horizontal pills at the top: `display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 16px`. Each pill: `background: rgba(255,255,255,0.06); border-radius: 20px; padding: 8px 16px; font-size: 0.8rem; color: #fff`. Active pill: `background: var(--accent-blue); color: #fff`
+3. **Boost card contrast** — Card title `h3`: `color: #ffffff; font-weight: 700; font-size: 1.2rem`. Card body `p`: `color: rgba(255,255,255,0.85); line-height: 1.6`
+4. **Replace emoji icon** — Instead of the ⚡ emoji, use a styled `<div>` with `background: var(--accent-blue); border-radius: 12px; width: 44px; height: 44px` containing a white SVG icon
+5. **Add card entry animation** — `opacity: 0; transform: translateY(20px)` → `opacity: 1; transform: translateY(0)` with `0.4s ease-out` on scroll intersection
+
+---
+
+## Section 4: Experience (Timeline)
+
+### Current Issues
+- The entire section is **grey-on-grey** — incredibly hard to read
+- Job title and company name blend into the background
+- Date badges are dark-on-dark (illegible)
+- Tech tags are flat grey pills with no personality
+- Timeline line is jarringly bright neon blue vs the muted cards
+- Excessive dead space above the first card
+
+### Redesign Steps
+
+1. **Contrast overhaul** — `.timeline-role`: `color: #ffffff; font-weight: 700; font-size: 1.15rem`. `.timeline-company`: `color: var(--accent-blue-light) (#5ac8fa); font-weight: 600`. `.timeline-desc` (body text): `color: rgba(255,255,255,0.8)`
+2. **Date badge redesign** — `background: rgba(0,122,255,0.2); color: #5ac8fa; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 6px; letter-spacing: 0.05em`
+3. **Tech tag upgrade** — `background: rgba(0,122,255,0.1); color: rgba(255,255,255,0.9); border: 0.5px solid rgba(0,122,255,0.3); border-radius: 6px; font-size: 0.7rem; padding: 4px 10px`
+4. **Harmonize timeline line** — Reduce line opacity: `border-left: 2px solid rgba(0,122,255,0.4)`. Dot glow: `box-shadow: 0 0 6px rgba(0,122,255,0.5)` (softer)
+5. **Reduce dead space** — Section title `margin-bottom: 24px`, gap between items: `16px`
+6. **Entry animation** — Each `.timeline-item` fades in from the left with `transform: translateX(-20px); opacity: 0` → `translateX(0); opacity: 1` on scroll
+
+---
+
+## Section 5: Projects
+
+### Current Issues
+- Project cards are excessively tall (~2× screen height for one card)
+- The large emoji icons (🚀, 🤖) are pixelated/low-res and look cheap
+- Filter buttons: inactive ones look disabled, no clear "active" highlight
+- Card descriptions are very dim
+- Too much internal padding/spacing in each card
+
+### Redesign Steps
+
+1. **Compact cards** — `.project-cinema-visual`: `max-height: 200px; border-radius: 16px 16px 0 0; overflow: hidden`. Overall card height should fit within ~70% of viewport
+2. **Redesign filter bar** — Active filter: `background: var(--accent-blue); color: #fff; font-weight: 700`. Inactive: `background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); border: 0.5px solid rgba(255,255,255,0.15)`. Add scroll snap: `scroll-snap-type: x mandatory` on the container, `scroll-snap-align: start` on each button
+3. **Replace emoji icons** — Use styled divs with gradient backgrounds and simple SVG icons, or at minimum render emojis at a controlled size with `font-size: 3rem` in a constrained box
+4. **Boost text contrast** — `.project-cinema-title`: `color: #fff; font-weight: 700`. `.project-cinema-desc`: `color: rgba(255,255,255,0.8)`. Tech tags same treatment as Experience section
+5. **Card hover/press feedback** — On `:active`, scale down to `transform: scale(0.98)` with `0.1s` transition for a tactile press feel
+6. **Add horizontal scroll peek** — Show a fading gradient on the right edge of the filter bar to hint at scrollability
+
+---
+
+## Section 6: Skills
+
+### Current Issues
+- Skill badges are flat grey pills — no color, no depth
+- Section feels monotonous with identical card layouts
+- Emoji icons (☁️, ⚙️) feel cheap for a premium portfolio
+- No visual hierarchy between skill categories
+
+### Redesign Steps
+
+1. **Badge color coding** — Each category gets a subtle colour accent: Infrastructure → Blue, DevOps → Cyan, Languages → Purple, etc. Badge `background: rgba([accent],0.12); border: 0.5px solid rgba([accent],0.3); color: rgba(255,255,255,0.9)`
+2. **Category header redesign** — Replace emoji with a small `width: 28px; height: 28px` colored circle containing a white SVG icon. Title: `font-weight: 700; color: #fff; font-size: 1rem`
+3. **Badge layout** — Use `display: flex; flex-wrap: wrap; gap: 8px` with consistent padding
+4. **Card visual enhancement** — Subtle left border accent: `border-left: 3px solid rgba(0,122,255,0.5); border-radius: 0 16px 16px 0` for visual hierarchy
+5. **Stagger card entry** — Cards fade in with `0.08s` stagger delay using CSS custom properties
+
+---
+
+## Section 7: Education
+
+### Current Issues
+- Very similar to Experience issues: low contrast, dim text
+- Achievement callouts (🏆, 🎤) are easily missed
+- Takes up too much vertical space for the content it holds
+
+### Redesign Steps
+
+1. **Contrast boost** — University name: `color: #fff; font-weight: 700; font-size: 1.3rem`. Degree: `color: var(--accent-blue-light); font-style: italic; font-weight: 500`. Body: `color: rgba(255,255,255,0.8)`
+2. **Achievement pills** — `display: inline-flex; align-items: center; gap: 6px; background: rgba(0,122,255,0.1); border: 0.5px solid rgba(0,122,255,0.2); border-radius: 8px; padding: 6px 12px; color: rgba(255,255,255,0.9); font-size: 0.8rem; margin: 4px`
+3. **Date badge** — Same treatment as Experience date badges
+4. **Reduce vertical footprint** — Tighter padding inside cards and reduced section margins
+
+---
+
+## Section 8: Insights (Blog)
+
+### Current Issues
+- Blog post titles are near-invisible (dark grey on black)
+- Category labels ("ENGINEERING") are dark blue on black — illegible
+- Excerpt text is nearly invisible
+- Cards are too tall with wasted space
+- Horizontal scroll has no visual hint (no gradient fade, no dots)
+
+### Redesign Steps
+
+1. **Title contrast** — `.insight-title`: `color: #ffffff; font-weight: 700; font-size: 1.15rem`
+2. **Category label** — `color: var(--accent-blue); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase`
+3. **Excerpt text** — `color: rgba(255,255,255,0.7); font-size: 0.85rem; line-height: 1.5`
+4. **Card compaction** — Reduce internal padding to `16px`. Limit card `max-width: 300px; min-width: 280px`
+5. **Scroll indicators** — Add small pagination dots below the carousel: a row of small `width: 6px; height: 6px; border-radius: 50%` circles, active one in `var(--accent-blue)`, others in `rgba(255,255,255,0.2)`
+6. **Fade gradient** — Right edge fade: `mask-image: linear-gradient(to right, black 85%, transparent)` on the scroll container
+
+---
+
+## Section 9: Terminal Teaser
+
+### Current Issues
+- Says "Best on Desktop" — feels like a cop-out
+- No visual hint of what the terminal does or looks like
+- Card is plain and uninspiring
+
+### Redesign Steps
+
+1. **Mini-terminal preview** — Show a tiny 3-line terminal mockup inside the teaser: `<div>` with dark background, green/blue monospace text showing `> vineet.status()` and `"online"`. This gives users a visual taste
+2. **Pulsing CTA** — "Launch Terminal" button with a subtle `box-shadow: 0 0 20px rgba(0,122,255,0.3)` pulse animation
+3. **Terminal icon** — Replace generic terminal icon with a `>_` monospace text rendered as the card's hero visual
+4. **Copy upgrade** — Change from "Best on Desktop" to "Experience the command line →" with a hint: `Rotate device for full terminal`
+
+---
+
+## Section 10: Contact & Footer
+
+### Current Issues
+- Footer is barren — just "VK." and copyright
+- No social links, no quick-action buttons
+- Ends abruptly with no visual closure
+- "Crafted with precision & passion" is grey-on-grey
+
+### Redesign Steps
+
+1. **Social icons row** — GitHub, LinkedIn, Email as `width: 44px; height: 44px` circular buttons with `background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.15)` and white SVG icons inside. `display: flex; justify-content: center; gap: 16px`
+2. **Tagline visibility** — `color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 8px`
+3. **Copyright** — `color: rgba(255,255,255,0.3); font-size: 0.75rem`
+4. **Visual closure** — Add a subtle `border-top: 0.5px solid rgba(255,255,255,0.1)` divider and `padding: 40px 16px calc(40px + env(safe-area-inset-bottom))`
+
+---
+
+## Cross-Cutting Improvements
+
+### A. Section Dividers
+Add between every section: `<hr>` styled as `height: 0.5px; background: linear-gradient(90deg, transparent, rgba(0,122,255,0.3), transparent); border: none; margin: 0 32px`
+
+### B. Scroll Animations
+Use `IntersectionObserver` to add `is-visible` class on scroll. Base styles: `opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease`. Visible: `opacity: 1; transform: translateY(0)`
+
+### C. Global Text Contrast Fix
+Inside `@media (max-width: 800px)`:
+```css
+body { color: rgba(255,255,255,0.92) !important; }
+p, .text-body { color: rgba(255,255,255,0.8) !important; }
+h1, h2, h3, h4 { color: #ffffff !important; }
+```
+
+### D. Card Glass Override Fix
+Move the global card styles at L442–464 of [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) **inside** the `@media (max-width: 800px)` block so they don't bleed to desktop.
+
+### E. Touch Feedback
+All interactive elements get: `-webkit-tap-highlight-color: transparent` and on `:active`: `transform: scale(0.97); transition: transform 0.1s ease`
+
+### F. Dynamic Font Sizing
+Replace all fixed `px` font sizes with `clamp()`:
+- Section titles: `clamp(1.4rem, 5vw, 1.8rem)`
+- Body text: `clamp(0.85rem, 2.5vw, 1rem)`
+- Badges/tags: `clamp(0.65rem, 2vw, 0.8rem)`
+
+---
+
+## Desktop-Coherence Additions
+
+These four items address elements that **work on desktop but are broken or absent on mobile**, creating a visual disconnect between the two experiences.
+
+### G. Kinetic Text Banner
+
+**Desktop behaviour:** A scrolling marquee of keywords/phrases runs horizontally across the screen between sections, adding dynamism and personality.
+
+**Mobile problem:** The kinetic text is either invisible (hidden by a `display: none` media query) or overflows because font sizes are too large and animation speed is uncalibrated for smaller widths.
+
+**Fix:**
+- Re-enable the kinetic text section on mobile (remove any `display: none` override)
+- Scale typography: `font-size: clamp(1rem, 4vw, 1.5rem)`
+- Reduce animation speed by ~40% (`animation-duration: 25s` instead of `15s`) so it's readable on a narrow viewport
+- Ensure `overflow: hidden` on the container to prevent horizontal bleed
+- Match the desktop's `color: rgba(255,255,255,0.15)` watermark aesthetic
+
+### H. Project Card Image Proportions
+
+**Desktop behaviour:** Each project card has a visual area (emoji/image) that occupies a proportional top section, with content below — the card feels balanced.
+
+**Mobile problem:** The visual area either stretches to fill the entire screen height (making one card = 2 full scroll lengths) or collapses to nothing. The proportions are completely lost.
+
+**Fix:**
+- Cap the visual area: `.project-cinema-visual { max-height: 200px; overflow: hidden; border-radius: 16px 16px 0 0 }`
+- Constrain emoji icons: render inside a `width: 80px; height: 80px; margin: 0 auto` centered box so they don't float in vast empty space
+- The overall card should fit within ~70–80% of the viewport height so the user can always see the card's title and at least the start of the next card (implying there's more content)
+
+### I. Education Achievement Callouts
+
+**Desktop behaviour:** The trophy (🏆) and debate (🎤) achievement lines pop with clear contrast and feel like badges of accomplishment.
+
+**Mobile problem:** Same contrast issue as Experience — the achievement text is dim grey, the emoji icons are tiny, and the entire callout blends into the card background. Users completely miss these.
+
+**Fix:**
+- Style achievement items as pills: `display: inline-flex; align-items: center; gap: 6px; background: rgba(0,122,255,0.1); border: 0.5px solid rgba(0,122,255,0.2); border-radius: 8px; padding: 6px 12px; color: rgba(255,255,255,0.9); font-size: 0.8rem`
+- Ensure emoji renders at `font-size: 1rem` (not inherited tiny size)
+- Add `margin: 4px` between achievement pills for clean wrapping
+
+### J. Scroll-Triggered Fade-In Parity
+
+**Desktop behaviour:** As the user scrolls, sections and cards fade in with subtle `translateY` + opacity transitions powered by `IntersectionObserver`. This gives the page a living, breathing quality.
+
+**Mobile problem:** Multiple `@media (max-width: 768px)` blocks in [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css) hardcode `animation: none !important` and `transition: none !important`, killing all scroll-triggered animations. The mobile page feels static and lifeless compared to desktop.
+
+**Fix:**
+- **Do NOT globally disable animations on mobile.** Instead, audit each `animation: none` override in [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css) and remove only the ones that kill scroll-triggered entry animations (keep any that disable CPU-heavy particle effects or complex 3D transforms)
+- Re-enable `IntersectionObserver`-based `.is-visible` class toggling on mobile (gate by `window.innerWidth <= 800` in [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js))
+- Use lightweight transitions only: `opacity 0.5s ease, transform 0.5s ease` — no heavy `clip-path` or `filter` animations that would hurt mobile performance
+- Apply to: `.about-card`, `.timeline-item`, `.project-cinema-card`, `.skill-group`, `.education-card`, `.insight-card`
+
+---
+
+## Implementation Order
+
+| Phase | Scope | Estimated Changes |
+|-------|-------|-------------------|
+| **Phase 1** | Global fixes (contrast, card override, section dividers, font sizing) | [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) |
+| **Phase 2** | Hero + Nav redesign | [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) |
+| **Phase 3** | About + Experience sections | [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) |
+| **Phase 4** | Projects (card compaction, image proportions, filter bar) + Skills + Education (achievements) | [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) |
+| **Phase 5** | Insights + Terminal + Footer | [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css), [latest-articles.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/latest-articles.js) |
+| **Phase 6** | Kinetic text banner + Scroll-triggered fade-in parity | [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css), [style.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/style.css) (audit only), [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js) |
+| **Phase 7** | Final testing across iPhone SE, iPhone 15, iPhone Pro Max | Browser testing |
+
+---
+
+## Files to Modify
+
+| File | Changes |
+|------|---------|
+| [mobile-design.css](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/css/mobile-design.css) | All CSS changes (primary file) |
+| [app.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/app.js) | Scroll animation observer, nav stagger, touch feedback |
+| [latest-articles.js](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/core/js/latest-articles.js) | Blog card scroll indicators |
+| [index.html](file:///Users/vineetkishore/Documents/iCloud%20Drive/Drive%20X/Softwares/Coding%20Projects/Portfolio%20Project/index.html) | Add section divider `<hr>` elements, scroll indicator chevron in hero |
+
+> [!IMPORTANT]
+> **All changes are mobile-only.** Every CSS rule goes inside `@media (max-width: 800px)`. Every JS change is gated by `window.innerWidth <= 800`. The desktop experience remains completely untouched.

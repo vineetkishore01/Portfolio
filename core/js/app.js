@@ -10,6 +10,7 @@
 // ==========================================
 // Core Entrance Animation - defined globally for access
 function initHeroEntrance() {
+    document.documentElement.classList.remove('js-loading');
     if (typeof gsap === 'undefined') return;
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
@@ -231,8 +232,10 @@ const MobileMenu = {
             e.preventDefault();
             this.toggleMenu();
         });
-        this.navLinks.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => this.closeMenu());
+        this.navLinks.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                this.closeMenu();
+            }
         });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isOpen) this.closeMenu();
@@ -334,13 +337,17 @@ const ProjectFilterSystem = {
         this.filterButtons = document.querySelectorAll('.filter-btn');
         this.projectCards = document.querySelectorAll('.project-cinema-card');
         if (!this.filterButtons.length) return;
-        this.filterButtons.forEach(btn => btn.addEventListener('click', () => this.applyFilter(btn.getAttribute('data-filter'))));
+        this.filterButtons.forEach(btn => btn.addEventListener('click', () => this.applyFilter(btn.getAttribute('data-filter'), btn)));
     },
-    applyFilter(filter) {
+    applyFilter(filter, activeBtn) {
         this.projectCards.forEach(card => {
             const visible = filter === 'all' || card.getAttribute('data-category') === filter;
             card.style.display = visible ? 'block' : 'none';
         });
+        if (activeBtn) {
+            this.filterButtons.forEach(b => b.classList.remove('active'));
+            activeBtn.classList.add('active');
+        }
     }
 };
 
@@ -504,12 +511,61 @@ const MobileDock = {
 };
 
 // ==========================================
+// MOBILE SCROLL ANIMATIONS (IntersectionObserver)
+// ==========================================
+const MobileScrollAnimations = {
+    init() {
+        // Only enable on mobile (Cross-Cutting Improvement J)
+        if (window.innerWidth > 800) return;
+
+        this.observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    // Optionally unobserve after animation
+                    // this.observer.unobserve(entry.target);
+                }
+            });
+        }, this.observerOptions);
+
+        this.observeElements();
+
+        // Also observe section headers
+        this.observeHeaders();
+
+        console.log('MobileScrollAnimations: Initialized successfully');
+    },
+    observeElements() {
+        const mobileElements = document.querySelectorAll(
+            '.about-card, .timeline-item, .project-cinema-card, .skill-category, .education-card, .insight-card'
+        );
+        mobileElements.forEach(el => this.observer.observe(el));
+    },
+    observeHeaders() {
+        const headers = document.querySelectorAll('.section-header');
+        headers.forEach(el => this.observer.observe(el));
+    }
+};
+
+// ==========================================
 // UNIFIED INITIALIZATION
 // ==========================================
 const InitializationManager = {
     init() {
         console.log('%c🚀 Initializing Portfolio Core...', 'color: #007AFF; font-weight: bold;');
         initHeroEntrance();
+
+        // Initialize mobile scroll animations (only on mobile)
+        if (window.innerWidth <= 800) {
+            MobileScrollAnimations.init();
+        }
+
         const modules = [
             { name: 'NameMorphController', obj: NameMorphController },
             { name: 'SmartAnimations', obj: SmartAnimations },

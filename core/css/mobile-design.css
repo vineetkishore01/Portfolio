@@ -1,23 +1,165 @@
 /* ==========================================
    GOD-TIER MOBILE EXPERIENCE (NATIVE APP FEEL)
+   Ultra-Detailed Mobile Redesign - All Changes Inside @media (max-width: 800px)
    ========================================== */
 @media (max-width: 800px) {
 
-    /* --- Root & Overrides --- */
+    /* ==========================================
+       PHASE 1: GLOBAL FIXES
+       ========================================== */
+
+    /* Root & Overrides */
     :root {
         --accent-m: #007aff;
+        --accent-m-light: #5ac8fa;
         --bg-m: #000000;
         --card-m: #111111;
     }
 
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    span,
+    a,
+    div {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    /* Global Text Contrast Fix (Cross-Cutting Improvement C) */
     body {
-        background-color: var(--bg-m) !important;
+        background-color: #000 !important;
         overflow-x: hidden !important;
         -webkit-font-smoothing: antialiased;
         font-size: 14px !important;
+        color: rgba(255, 255, 255, 0.92) !important;
     }
 
-    /* --- Navigation & Logo --- */
+    p,
+    .text-body,
+    .timeline-desc,
+    .project-cinema-desc,
+    .about-card-text,
+    .education-card-desc,
+    .insight-excerpt {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .section-title,
+    .hero-title {
+        color: #ffffff !important;
+    }
+
+    /* Section Dividers (Cross-Cutting Improvement A) */
+    section {
+        position: relative;
+    }
+
+    section:not(:first-of-type)::before {
+        content: '';
+        display: block;
+        height: 0.5px;
+        background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.3), transparent);
+        border: none;
+        margin: 0 32px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: calc(100% - 64px);
+    }
+
+    /* Touch Feedback (Cross-Cutting Improvement E) */
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button,
+    a,
+    .filter-btn,
+    .contact-card,
+    .project-cinema-card,
+    .about-card,
+    .timeline-card,
+    .skill-tag {
+        transition: transform 0.1s ease;
+    }
+
+    button:active,
+    a:active,
+    .filter-btn:active,
+    .contact-card:active,
+    .project-cinema-card:active {
+        transform: scale(0.97);
+    }
+
+    /* Dynamic Font Sizing (Cross-Cutting Improvement F) */
+    .section-title {
+        font-size: clamp(1.4rem, 5vw, 1.8rem) !important;
+    }
+
+    .section-subtitle,
+    .hero-subtitle {
+        font-size: clamp(0.85rem, 2.5vw, 1rem) !important;
+    }
+
+    .skill-tag,
+    .timeline-tag,
+    .tech-stack-cinema span,
+    .project-cinema-stats,
+    .filter-btn {
+        font-size: clamp(0.65rem, 2vw, 0.8rem) !important;
+    }
+
+    /* ==========================================
+       PHASE 3: STICKY CARD STACK ENGINE
+       ========================================== */
+    section:not(#home) {
+        position: sticky !important;
+        top: 0 !important;
+        /* Align to top of screen as they scroll up */
+        min-height: 100vh !important;
+        background: rgba(10, 10, 10, 0.45) !important;
+        backdrop-filter: blur(20px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+        border-radius: 40px 40px 0 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 60px 20px 100px 20px !important;
+        /* Space for content and dock */
+        box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.6) !important;
+        z-index: 10 !important;
+        /* Stack context will naturally layer them based on DOM order */
+        margin-top: -40px !important;
+        /* Pull up slightly over the previous */
+    }
+
+    /* Apply stacking to footer as well to complete the deck */
+    .footer {
+        position: sticky !important;
+        top: 0 !important;
+        background: rgba(10, 10, 10, 0.45) !important;
+        backdrop-filter: blur(20px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+        border-radius: 40px 40px 0 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 60px 20px 120px 20px !important;
+        box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.6) !important;
+        z-index: 10 !important;
+        margin-top: -40px !important;
+    }
+
+    /* ==========================================
+       PHASE 2: NAVIGATION BAR
+       ========================================== */
+
     .nav {
         background: rgba(0, 0, 0, 0.85) !important;
         backdrop-filter: blur(20px) !important;
@@ -34,6 +176,7 @@
     .nav-logo {
         margin: 0 !important;
         font-size: 1.1rem !important;
+        color: #ffffff !important;
     }
 
     .nav-links,
@@ -41,29 +184,41 @@
         display: none !important;
     }
 
+    /* Hamburger Redesign - Steps 1-2 */
     .menu-toggle {
         display: flex !important;
         z-index: 2147483647 !important;
-        width: 28px !important;
-        height: 20px !important;
-        padding: 8px !important;
+        width: 22px !important;
+        height: 14px !important;
+        padding: 10px !important;
         box-sizing: content-box !important;
-        margin-right: -8px !important;
-        /* Visual align right while keeping huge hit area */
+        margin-right: -10px !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
 
     .menu-toggle span {
-        height: 2px !important;
+        height: 1.5px !important;
+        width: 100% !important;
+        background-color: #ffffff !important;
+        border-radius: 2px !important;
+        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease !important;
     }
 
     .menu-toggle.active span:nth-child(1) {
-        transform: translateY(9px) rotate(45deg) !important;
+        transform: translateY(6px) rotate(45deg) !important;
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0 !important;
     }
 
     .menu-toggle.active span:nth-child(3) {
-        transform: translateY(-9px) rotate(-45deg) !important;
+        transform: translateY(-6px) rotate(-45deg) !important;
     }
 
+    /* Nav Overlay Redesign - Steps 3-5 */
     .nav-links.active {
         display: flex !important;
         flex-direction: column !important;
@@ -75,7 +230,6 @@
         height: 100vh !important;
         background: #000000 !important;
         backdrop-filter: none !important;
-        /* Forced solid color because Webkit glitches/WebGL bleed through backdrop-filters */
         align-items: center;
         justify-content: flex-start !important;
         padding-top: max(120px, calc(env(safe-area-inset-top) + 80px)) !important;
@@ -84,38 +238,168 @@
     }
 
     .nav-links.active .nav-link {
-        font-size: 1.25rem !important;
-        margin-bottom: 20px !important;
+        font-size: 1.5rem !important;
+        margin-bottom: 24px !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease !important;
+        padding: 8px 20px !important;
+        border-radius: 8px !important;
     }
 
-    /* --- Hero Section --- */
+    /* Stagger animation for nav links - Step 3 */
+    .nav-links.active .nav-link:nth-child(1) {
+        transition-delay: 0.05s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(2) {
+        transition-delay: 0.1s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(3) {
+        transition-delay: 0.15s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(4) {
+        transition-delay: 0.2s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(5) {
+        transition-delay: 0.25s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(6) {
+        transition-delay: 0.3s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(7) {
+        transition-delay: 0.35s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-links.active .nav-link:nth-child(8) {
+        transition-delay: 0.4s;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Active link pill indicator - Step 4 */
+    .nav-links.active .nav-link.active {
+        background: rgba(0, 122, 255, 0.15) !important;
+        color: #5ac8fa !important;
+    }
+
+    /* Safe area handling - Step 5 */
+    .nav {
+        padding-top: max(16px, env(safe-area-inset-top)) !important;
+    }
+
+    /* ==========================================
+       PHASE 2: HERO SECTION
+       ========================================== */
+
     .hero {
-        padding: 30px 16px 40px !important;
+        padding: 0 20px 120px 20px !important;
+        /* Space for dock */
         text-align: center !important;
-        min-height: auto !important;
+        min-height: 100vh !important;
+        height: 100vh !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
+        justify-content: flex-end !important;
+        /* Push text to bottom */
+        position: sticky !important;
+        /* Stick to viewport globally */
+        top: 0 !important;
+        overflow: hidden;
+        z-index: 1 !important;
     }
 
-    .hero-image-wrapper {
+    /* Gradient overlay for text readability */
+    .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, transparent 30%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.95) 90%, #000 100%) !important;
+        z-index: -1 !important;
+        pointer-events: none;
+    }
+
+    /* Step 7: Scroll Indicator */
+    .hero::after {
+        content: '▾';
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.6);
+        animation: bounce 2s infinite;
+        z-index: 2 !important;
+    }
+
+    @keyframes bounce {
+
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        40% {
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        60% {
+            transform: translateX(-50%) translateY(-4px);
+        }
+    }
+
+    .hero-content {
+        z-index: 2 !important;
         width: 100% !important;
-        height: auto !important;
-        margin: 0 auto 16px !important;
         display: flex !important;
-        justify-content: center !important;
-        order: -1 !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    /* Step 1: Full Page Hero Image */
+    .hero-image-wrapper {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        display: block !important;
+        z-index: -2 !important;
     }
 
     .hero-profile-card {
-        width: 80px !important;
-        height: 80px !important;
-        border-radius: 50% !important;
-        overflow: hidden !important;
-        border: 2px solid rgba(255, 255, 255, 0.1) !important;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 122, 255, 0.2) !important;
-        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        position: absolute !important;
+        inset: 0 !important;
     }
 
     .hero-profile-inner,
@@ -123,6 +407,8 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
+        object-position: center 20% !important;
+        /* Frame the face better */
     }
 
     .hero-profile-glow,
@@ -130,9 +416,9 @@
         display: none !important;
     }
 
-    /* Ensure desktop glitch is removed mostly */
+    /* Step 2: Fix name container */
     .hero-title {
-        font-size: 1.8rem !important;
+        font-size: clamp(1.5rem, 6vw, 2rem) !important;
         font-weight: 700 !important;
         letter-spacing: -0.03em !important;
         margin-bottom: 8px !important;
@@ -142,158 +428,206 @@
         -webkit-text-fill-color: initial !important;
     }
 
+    .hero-title-single {
+        position: relative !important;
+        min-height: clamp(50px, 10vw, 70px) !important;
+        display: block;
+    }
+
+    .glitch-name {
+        position: absolute !important;
+        inset: 0;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .glitch-name.active {
+        position: relative !important;
+    }
+
+    /* Step 3: Re-enable glitch pseudo-elements subtly */
+    .glitch-name::before,
+    .glitch-name::after {
+        opacity: 0.15 !important;
+    }
+
     .hero-title span:not(:first-child) {
         display: none !important;
     }
 
+    /* Step 4: Boost subtitle */
     .hero-subtitle {
-        font-size: 0.95rem !important;
-        color: var(--accent-m) !important;
-        margin-bottom: 20px !important;
-        font-weight: 600 !important;
+        font-size: clamp(0.9rem, 3vw, 1rem) !important;
+        color: #5ac8fa !important;
+        margin-bottom: 24px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+        line-height: 1.5 !important;
+        max-width: 90%;
     }
 
     .hero-label {
-        margin-bottom: 16px !important;
+        margin-bottom: 12px !important;
     }
 
     .mobile-badge {
         font-size: 0.75rem !important;
-        padding: 4px 10px !important;
-        margin-bottom: 12px !important;
+        padding: 6px 14px !important;
+        margin-bottom: 16px !important;
+        background: rgba(0, 122, 255, 0.15) !important;
+        color: #5ac8fa !important;
+        border-radius: 20px !important;
+        display: inline-block;
     }
 
-    /* --- Typography inside sections --- */
-    .section-title {
-        font-size: 1.5rem !important;
-        margin-bottom: 12px !important;
-        font-weight: 700 !important;
+    /* Step 5: Redesign CTAs */
+    .hero-cta-group {
+        display: flex !important;
+        gap: 12px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        width: 100%;
     }
 
-    .section-subtitle {
-        font-size: 0.85rem !important;
+    .hero-cta-primary {
+        background: var(--accent-blue) !important;
+        color: #fff !important;
+        border-radius: 999px !important;
+        /* Apple HIG pill shape */
+        padding: 16px 32px !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        border: none !important;
+        text-decoration: none !important;
+        display: inline-block;
+        transition: transform 0.1s ease, box-shadow 0.2s ease !important;
+        box-shadow: 0 4px 14px rgba(0, 122, 255, 0.4) !important;
+    }
+
+    .hero-cta-primary:active {
+        transform: scale(0.97);
+    }
+
+    .hero-cta-secondary {
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.2) !important;
+        color: #fff !important;
+        border-radius: 999px !important;
+        /* Apple HIG pill shape */
+        padding: 16px 32px !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        text-decoration: none !important;
+        display: inline-block;
+        transition: background 0.2s ease, transform 0.1s ease !important;
+    }
+
+    .hero-cta-secondary:active {
+        background: rgba(0, 122, 255, 0.1) !important;
+        transform: scale(0.97);
+    }
+
+    /* Hide hero stats for cleaner mobile view */
+    .hero-stats {
+        display: none !important;
+    }
+
+    /* ==========================================
+       PHASE 3: ABOUT SECTION (Identity Switcher)
+       ========================================== */
+
+    .about {
+        padding: 40px 16px 24px !important;
+    }
+
+    /* Step 1: Kill the dead space */
+    .about-grid {
+        gap: 16px !important;
+    }
+
+    /* Step 2: Expose identity tabs */
+    .about .section-header {
         margin-bottom: 20px !important;
     }
 
-    /* --- Project Filters --- */
-    .project-filters {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        gap: 8px !important;
-        padding: 0 16px 12px !important;
-        scrollbar-width: none !important;
-        -webkit-overflow-scrolling: touch !important;
-        justify-content: flex-start !important;
-        margin-bottom: 16px !important;
-    }
-
-    .project-filters::-webkit-scrollbar {
-        display: none;
-    }
-
-    .filter-btn {
-        flex: 0 0 auto !important;
-        padding: 6px 12px !important;
-        border-radius: 16px !important;
-        font-size: 0.75rem !important;
-        white-space: nowrap !important;
-        font-weight: 600 !important;
+    /* About cards redesign */
+    .about-card {
+        background: rgba(255, 255, 255, 0.03) !important;
+        /* Flattened inner card per Apple HIG */
+        border-radius: 20px !important;
         border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 24px !important;
+        position: relative;
+        overflow: hidden;
     }
 
-    /* --- Cards & Grids --- */
-    .about-grid,
-    .skills-grid,
-    .projects-cinema,
-    .education-grid,
-    .experience-grid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-        padding: 0 16px !important;
-    }
-
-    .about-card,
-    .skill-group,
-    .project-card,
-    .project-cinema-card {
-        background: var(--card-m) !important;
-        border-radius: 16px !important;
-        border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
-        padding: 16px !important;
-    }
-
-    .about-card-icon {
-        font-size: 1.5rem !important;
-        margin-bottom: 8px !important;
-    }
-
+    /* Step 3: Boost card contrast */
     .about-card h3 {
-        font-size: 1.1rem !important;
-        margin-bottom: 4px !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 1.2rem !important;
+        margin-bottom: 8px !important;
     }
 
     .about-card p {
-        font-size: 0.85rem !important;
-        line-height: 1.5 !important;
         color: rgba(255, 255, 255, 0.85) !important;
-    }
-
-    .skill-category-title {
+        line-height: 1.6 !important;
         font-size: 0.9rem !important;
+    }
+
+    /* Step 4: Replace emoji icon with styled div */
+    .about-card-icon {
+        width: 44px !important;
+        height: 44px !important;
+        background: var(--accent-blue) !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 1.2rem !important;
         margin-bottom: 12px !important;
     }
 
-    .skill-tag {
-        font-size: 0.75rem !important;
-        padding: 4px 10px !important;
-        border-radius: 6px !important;
+    /* Step 5: Card entry animation */
+    .about-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out !important;
     }
 
-    /* --- Project Cards specifically --- */
-    .project-cinema-inner {
-        padding: 0 !important;
-        border: none !important;
-        background: transparent !important;
+    .about-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 
-    .project-cinema-content {
-        padding: 12px !important;
+    /* ==========================================
+       PHASE 3: EXPERIENCE SECTION (Timeline)
+       ========================================== */
+
+    .experience {
+        padding: 40px 16px 24px !important;
     }
 
-    .project-cinema-title {
-        font-size: 1.1rem !important;
-        margin-bottom: 8px !important;
-    }
-
-    .project-cinema-desc {
-        font-size: 0.8rem !important;
-        line-height: 1.4 !important;
-        margin-bottom: 12px !important;
-    }
-
-    .tech-stack-cinema span {
-        font-size: 0.65rem !important;
-        padding: 3px 8px !important;
-        border-radius: 4px !important;
-    }
-
-    /* --- Experience Timeline --- */
+    /* Step 1: Contrast overhaul */
     .timeline-container {
         display: flex !important;
         flex-direction: column !important;
-        gap: 20px !important;
+        gap: 16px !important;
         padding: 0 16px 0 24px !important;
     }
 
     .timeline-item {
-        border-left: 2px solid var(--accent-m) !important;
-        padding-left: 16px !important;
+        border-left: 2px solid rgba(0, 122, 255, 0.4) !important;
+        padding-left: 20px !important;
         padding-bottom: 0 !important;
         position: relative !important;
         border-radius: 0 !important;
     }
 
+    /* Step 4: Harmonize timeline line */
     .timeline-item::before {
         content: "";
         position: absolute;
@@ -301,88 +635,945 @@
         top: 0;
         width: 10px;
         height: 10px;
-        background: var(--accent-m);
+        background: var(--accent-blue);
         border-radius: 50%;
-        box-shadow: 0 0 8px var(--accent-m);
+        box-shadow: 0 0 6px rgba(0, 122, 255, 0.5) !important;
     }
 
     .timeline-card {
-        padding: 12px !important;
+        padding: 16px !important;
         border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
     }
 
+    /* Step 1: Contrast overhaul - Role, Company, Desc */
     .timeline-role {
-        font-size: 1.05rem !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 1.15rem !important;
         margin-bottom: 2px !important;
     }
 
     .timeline-company {
+        color: #5ac8fa !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .timeline-desc {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Step 2: Date badge redesign */
+    .timeline-date {
+        background: rgba(0, 122, 255, 0.2) !important;
+        color: #5ac8fa !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        padding: 4px 12px !important;
+        border-radius: 6px !important;
+        letter-spacing: 0.05em !important;
+        display: inline-block !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Step 3: Tech tag upgrade */
+    .timeline-tags {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    .timeline-tag {
+        background: rgba(0, 122, 255, 0.1) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        border: 0.5px solid rgba(0, 122, 255, 0.3) !important;
+        border-radius: 6px !important;
+        font-size: 0.7rem !important;
+        padding: 4px 10px !important;
+    }
+
+    /* Step 6: Entry animation */
+    .timeline-item {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+    }
+
+    .timeline-item.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* ==========================================
+       PHASE 4: PROJECTS SECTION
+       ========================================== */
+
+    .projects {
+        padding: 40px 16px 24px !important;
+    }
+
+    /* Step 1: Compact cards */
+    .project-filters {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 8px !important;
+        padding: 0 16px 16px !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        justify-content: flex-start !important;
+        margin-bottom: 16px !important;
+        scroll-snap-type: x mandatory !important;
+    }
+
+    .project-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Step 2: Filter bar redesign */
+    .filter-btn {
+        flex: 0 0 auto !important;
+        padding: 8px 16px !important;
+        border-radius: 20px !important;
+        font-size: 0.75rem !important;
+        white-space: nowrap !important;
+        font-weight: 600 !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.15) !important;
+        scroll-snap-align: start !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .filter-btn.active {
+        background: var(--accent-blue) !important;
+        color: #fff !important;
+        font-weight: 700 !important;
+    }
+
+    /* Step 6: Horizontal scroll peek */
+    .project-filters::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+        background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.5));
+        pointer-events: none;
+    }
+
+    .projects-cinema {
+        gap: 16px !important;
+        padding: 0 16px !important;
+    }
+
+    .project-cinema-card {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 16px !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+        overflow: hidden !important;
+        max-height: 70vh !important;
+        transition: transform 0.1s ease !important;
+    }
+
+    .project-cinema-card:active {
+        transform: scale(0.98) !important;
+    }
+
+    .project-cinema-inner {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+    }
+
+    /* Step 1: Visual area compaction */
+    .project-cinema-visual {
+        max-height: 180px !important;
+        border-radius: 16px 16px 0 0 !important;
+        overflow: hidden !important;
+        background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(0, 122, 255, 0.05)) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Step 3: Constrained emoji icons */
+    .project-cinema-icon {
+        font-size: 3rem !important;
+        width: 80px !important;
+        height: 80px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .project-cinema-content {
+        padding: 16px !important;
+    }
+
+    /* Step 4: Boost text contrast */
+    .project-cinema-title {
+        color: #fff !important;
+        font-weight: 700 !important;
+        font-size: 1.15rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .project-cinema-desc {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Tech tags */
+    .tech-stack-cinema {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    .tech-stack-cinema span {
+        background: rgba(0, 122, 255, 0.1) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        border: 0.5px solid rgba(0, 122, 255, 0.3) !important;
+        border-radius: 6px !important;
+        font-size: 0.7rem !important;
+        padding: 4px 10px !important;
+    }
+
+    /* Project stats */
+    .project-cinema-stats {
+        display: flex !important;
+        gap: 16px !important;
+        margin-top: 12px !important;
+        padding-top: 12px !important;
+        border-top: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .project-cinema-stat-value {
+        color: #5ac8fa !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+    }
+
+    .project-cinema-stat-label {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.7rem !important;
+    }
+
+    /* Entry animation */
+    .project-cinema-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+    }
+
+    .project-cinema-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ==========================================
+       PHASE 4: SKILLS SECTION
+       ========================================== */
+
+    .skills-section {
+        padding: 40px 16px 24px !important;
+    }
+
+    .skills-grid {
+        gap: 16px !important;
+        padding: 0 16px !important;
+    }
+
+    /* Step 1 & 4: Badge color coding & card visual enhancement */
+    .skill-category {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 0 16px 16px 0 !important;
+        border-left: 3px solid rgba(0, 122, 255, 0.5) !important;
+        padding: 16px !important;
+    }
+
+    /* Step 2: Category header redesign */
+    .skill-category-title {
+        font-weight: 700 !important;
+        color: #fff !important;
+        font-size: 1rem !important;
+        margin-bottom: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .skill-category-title::before {
+        content: '';
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--accent-blue) !important;
+        display: inline-block;
+    }
+
+    /* Step 3: Badge layout */
+    .skill-tags {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    /* Step 1: Badge color coding - Infrastructure (Blue) */
+    .skill-category:nth-child(1) .skill-tag {
+        background: rgba(0, 122, 255, 0.12) !important;
+        border-color: rgba(0, 122, 255, 0.3) !important;
+    }
+
+    /* Step 1: Badge color coding - DevOps (Cyan) */
+    .skill-category:nth-child(2) .skill-tag {
+        background: rgba(90, 200, 250, 0.12) !important;
+        border-color: rgba(90, 200, 250, 0.3) !important;
+    }
+
+    /* Step 1: Badge color coding - Development (Purple) */
+    .skill-category:nth-child(3) .skill-tag {
+        background: rgba(175, 82, 222, 0.12) !important;
+        border-color: rgba(175, 82, 222, 0.3) !important;
+    }
+
+    /* Step 1: Badge color coding - Data (Green) */
+    .skill-category:nth-child(4) .skill-tag {
+        background: rgba(90, 200, 100, 0.12) !important;
+        border-color: rgba(90, 200, 100, 0.3) !important;
+    }
+
+    .skill-tag {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 0.75rem !important;
+        padding: 6px 12px !important;
+        border-radius: 8px !important;
+        border: 0.5px solid !important;
+    }
+
+    /* Step 5: Stagger card entry */
+    .skill-category {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+    }
+
+    .skill-category.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ==========================================
+       PHASE 4: EDUCATION SECTION
+       ========================================== */
+
+    .education-section {
+        padding: 40px 16px 24px !important;
+    }
+
+    .education-grid {
+        gap: 16px !important;
+        padding: 0 16px !important;
+    }
+
+    /* Step 1: Contrast boost */
+    .education-card {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 16px !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 20px !important;
+    }
+
+    .education-card-year {
+        background: rgba(0, 122, 255, 0.2) !important;
+        color: #5ac8fa !important;
+        font-family: var(--font-mono) !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        padding: 4px 12px !important;
+        border-radius: 6px !important;
+        letter-spacing: 0.05em !important;
+        display: inline-block !important;
+        margin-bottom: 12px !important;
+    }
+
+    .education-card-title {
+        color: #fff !important;
+        font-weight: 700 !important;
+        font-size: 1.3rem !important;
+        margin-bottom: 4px !important;
+    }
+
+    .education-card-degree {
+        color: #5ac8fa !important;
+        font-style: italic !important;
+        font-weight: 500 !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 12px !important;
+    }
+
+    .education-card-desc {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Step 2: Achievement pills */
+    .education-card-highlights {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .education-highlight {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background: rgba(0, 122, 255, 0.1) !important;
+        border: 0.5px solid rgba(0, 122, 255, 0.2) !important;
+        border-radius: 8px !important;
+        padding: 6px 12px !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Entry animation */
+    .education-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+    }
+
+    .education-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ==========================================
+       PHASE 5: INSIGHTS (BLOG) SECTION
+       ========================================== */
+
+    .insights-section {
+        padding: 40px 16px 24px !important;
+    }
+
+    .insights-grid {
+        display: flex !important;
+        overflow-x: auto !important;
+        gap: 16px !important;
+        padding: 0 16px !important;
+        scroll-snap-type: x mandatory !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        mask-image: linear-gradient(to right, black 85%, transparent) !important;
+        -webkit-mask-image: linear-gradient(to right, black 85%, transparent) !important;
+    }
+
+    .insights-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Step 5: Scroll indicators (dots) */
+    .insights-section .section-header {
+        position: relative;
+    }
+
+    .insights-section .section-header::after {
+        content: '';
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 16px;
+    }
+
+    .insight-card {
+        min-width: 280px !important;
+        max-width: 300px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 16px !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 16px !important;
+        scroll-snap-align: start !important;
+    }
+
+    /* Step 1: Title contrast */
+    .insight-title {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 1.15rem !important;
+        margin-bottom: 8px !important;
+        line-height: 1.4 !important;
+    }
+
+    /* Step 2: Category label */
+    .insight-category {
+        color: var(--accent-blue) !important;
+        font-weight: 700 !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0.1em !important;
+        text-transform: uppercase !important;
+        margin-bottom: 8px !important;
+        display: block !important;
+    }
+
+    /* Step 3: Excerpt text */
+    .insight-excerpt {
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-size: 0.85rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Entry animation */
+    .insight-card {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease !important;
+    }
+
+    .insight-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ==========================================
+       PHASE 5: TERMINAL TEASER
+       ========================================== */
+
+    .terminal-section {
+        padding: 40px 16px 24px !important;
+    }
+
+    /* Step 1: Mini-terminal preview */
+    .terminal-teaser {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+        margin: 0 16px !important;
+        width: calc(100% - 32px) !important;
+        max-width: 400px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+        cursor: pointer;
+        transition: all 0.2s ease !important;
+    }
+
+    .terminal-teaser:active {
+        transform: scale(0.98);
+    }
+
+    /* Step 3: Terminal icon - replace with >_ */
+    .terminal-teaser-icon {
+        font-family: var(--font-mono) !important;
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        color: var(--accent-blue) !important;
+        background: rgba(0, 122, 255, 0.1) !important;
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .terminal-teaser-text {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        text-align: center;
+    }
+
+    /* Step 4: Copy upgrade */
+    .terminal-teaser-hint {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.85rem !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    /* Step 2: Pulsing CTA */
+    .terminal-teaser-hint span {
+        background: var(--accent-blue) !important;
+        color: #fff !important;
+        padding: 8px 16px !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4);
+        }
+
+        50% {
+            box-shadow: 0 0 20px 5px rgba(0, 122, 255, 0.3);
+        }
+    }
+
+    /* Hide actual terminal on mobile by default - users can tap to expand */
+    .terminal-wrapper {
+        display: none !important;
+    }
+
+    .terminal-wrapper.expanded {
+        display: block !important;
+    }
+
+    /* ==========================================
+       PHASE 5: CONTACT & FOOTER
+       ========================================== */
+
+    .contact {
+        padding: 40px 16px 24px !important;
+        min-height: auto !important;
+    }
+
+    .contact-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+    }
+
+    .contact-card {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 16px !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .contact-icon {
+        width: 44px !important;
+        height: 44px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .contact-icon svg {
+        width: 20px !important;
+        height: 20px !important;
+        stroke: #fff !important;
+    }
+
+    .contact-title {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.8rem !important;
+        margin-bottom: 2px !important;
+    }
+
+    .contact-value {
+        color: #fff !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Footer Redesign */
+    .footer {
+        padding: 32px 16px calc(40px + env(safe-area-inset-bottom)) !important;
+        text-align: center !important;
+        border-top: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Step 1: Social icons row */
+    .footer::before {
+        content: '';
+        display: flex !important;
+        justify-content: center !important;
+        gap: 16px !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* We'll add social icons via HTML - but style here */
+    .footer-social {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 16px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .footer-social a {
+        width: 44px !important;
+        height: 44px !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 0.5px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .footer-social svg {
+        width: 20px !important;
+        height: 20px !important;
+        fill: #fff !important;
+    }
+
+    /* Step 2: Tagline visibility */
+    .footer-text {
+        color: rgba(255, 255, 255, 0.6) !important;
         font-size: 0.85rem !important;
         margin-bottom: 8px !important;
     }
 
-    .timeline-date {
+    /* Step 3: Copyright */
+    .footer-copy {
+        color: rgba(255, 255, 255, 0.3) !important;
         font-size: 0.75rem !important;
     }
 
-    /* --- Footer Spacing --- */
-    footer {
-        padding-bottom: 40px !important;
+    .footer-logo {
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-bottom: 12px !important;
     }
 
-    /* --- Blog Specific Overrides --- */
-    .blog-prose h1,
-    .post-title {
-        font-size: 1.8rem !important;
-        line-height: 1.2 !important;
-        margin-bottom: 1rem !important;
+    /* ==========================================
+       PHASE 6: KINETIC TEXT BANNER
+       ========================================== */
+
+    /* Step G: Re-enable kinetic text on mobile */
+    .kinetic-text {
+        display: block !important;
+        overflow: hidden !important;
+        padding: 8px 0 !important;
+        margin-bottom: 16px !important;
     }
 
-    .blog-prose h2 {
-        font-size: 1.25rem !important;
-        margin: 2rem 0 1rem !important;
+    .kinetic-text span {
+        display: inline-block !important;
+        font-size: clamp(1rem, 4vw, 1.5rem) !important;
+        color: rgba(255, 255, 255, 0.15) !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.05em !important;
+        white-space: nowrap !important;
+        animation: kinetic-scroll 25s linear infinite !important;
     }
 
-    pre,
-    code,
-    table {
-        max-width: 100% !important;
-        overflow-x: auto !important;
-        word-break: break-all !important;
+    @keyframes kinetic-scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
     }
 
-    .side-progress-container {
-        left: 0 !important;
+    /* Hide the second span in kinetic text to prevent doubling */
+    .kinetic-text span:nth-child(2) {
+        display: none !important;
     }
 
-    .post-reader {
-        margin-left: 8px !important;
+    /* ==========================================
+       PHASE 6: SCROLL ANIMATIONS
+       ========================================== */
+
+    /* Base scroll animation styles */
+    .about-card,
+    .timeline-item,
+    .project-cinema-card,
+    .skill-category,
+    .education-card,
+    .insight-card {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
+
+    .about-card.is-visible,
+    .timeline-item.is-visible,
+    .project-cinema-card.is-visible,
+    .skill-category.is-visible,
+    .education-card.is-visible,
+    .insight-card.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Section header animations */
+    .section-header {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        padding: 0 16px;
+    }
+
+    .section-header.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Stagger delays for cards */
+    .about-card:nth-child(1) {
+        transition-delay: 0s;
+    }
+
+    .about-card:nth-child(2) {
+        transition-delay: 0.08s;
+    }
+
+    .about-card:nth-child(3) {
+        transition-delay: 0.16s;
+    }
+
+    .about-card:nth-child(4) {
+        transition-delay: 0.24s;
+    }
+
+    .skill-category:nth-child(1) {
+        transition-delay: 0s;
+    }
+
+    .skill-category:nth-child(2) {
+        transition-delay: 0.08s;
+    }
+
+    .skill-category:nth-child(3) {
+        transition-delay: 0.16s;
+    }
+
+    .skill-category:nth-child(4) {
+        transition-delay: 0.24s;
+    }
+
+    .education-card:nth-child(1) {
+        transition-delay: 0s;
+    }
+
+    .education-card:nth-child(2) {
+        transition-delay: 0.1s;
+    }
+
+    .education-card:nth-child(3) {
+        transition-delay: 0.2s;
+    }
+
+    .project-cinema-card:nth-child(1) {
+        transition-delay: 0s;
+    }
+
+    .project-cinema-card:nth-child(2) {
+        transition-delay: 0.1s;
+    }
+
+    .project-cinema-card:nth-child(3) {
+        transition-delay: 0.2s;
+    }
+
+    /* ==========================================
+       MOBILE DOCK
+       ========================================== */
+
+    .mobile-dock-wrapper {
+        display: flex !important;
+    }
+
+    .mobile-dock {
+        background: rgba(0, 0, 0, 0.9) !important;
+        backdrop-filter: blur(20px) !important;
+        border-top: 0.5px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 8px 16px calc(8px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .mobile-dock-item {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .mobile-dock-item.active {
+        color: var(--accent-blue) !important;
+    }
+
+    .mobile-dock-item svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .dock-label {
+        font-size: 0.65rem !important;
+    }
+
+    /* ==========================================
+       TYPOGRAPHY INSIDE SECTIONS
+       ========================================== */
+
+    .section-title {
+        font-size: clamp(1.4rem, 5vw, 1.8rem) !important;
+        margin-bottom: 8px !important;
+        font-weight: 700 !important;
+    }
+
+    .section-subtitle {
+        font-size: clamp(0.8rem, 2.5vw, 0.95rem) !important;
+        margin-bottom: 16px !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .section-label {
+        font-size: 0.7rem !important;
+        color: var(--accent-blue) !important;
+        letter-spacing: 0.1em !important;
+        margin-bottom: 4px !important;
+        display: block !important;
+    }
+
 }
 
 /* ==========================================
-   GLOBAL PREMIUM GLASSY CARDS OVERRIDE - MOBILE
+   GLOBAL PREMIUM GLASSY CARDS OVERRIDE - MOBILE ONLY
+   (Cross-Cutting Improvement D - moved inside media query)
    ========================================== */
-.hero-profile-card,
-.about-card,
-.timeline-card,
-.project-card,
-.project-cinema-card,
-.education-card,
-.contact-card,
-.insight-card,
-.blog-card,
-.glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow:
-        0 8px 32px -8px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px rgba(255, 255, 255, 0.15),
-        inset 0 0 20px rgba(255, 255, 255, 0.03) !important;
-    border-radius: 20px !important;
-    /* Slightly smaller border radius for mobile */
+@media (max-width: 800px) {
+
+    .hero-profile-card,
+    .about-card,
+    .timeline-card,
+    .project-card,
+    .project-cinema-card,
+    .education-card,
+    .contact-card,
+    .insight-card,
+    .blog-card,
+    .glass-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow:
+            0 8px 32px -8px rgba(0, 0, 0, 0.5),
+            inset 0 1px 1px rgba(255, 255, 255, 0.15),
+            inset 0 0 20px rgba(255, 255, 255, 0.03) !important;
+        border-radius: 20px !important;
+    }
 }
