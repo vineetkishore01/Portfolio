@@ -49,6 +49,12 @@
 
     <title>Vineet Kishore | Infrastructure Engineer & Strategic Technologist</title>
 
+    <!-- Fast, zero-config Favicon to prevent 404s -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💻</text></svg>">
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/site.webmanifest">
 
@@ -71,8 +77,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
-    <link rel="stylesheet" href="core/css/style.css?v=5">
-    <link rel="stylesheet" href="core/css/mobile-design.css?v=5">
+    <link rel="stylesheet" href="core/css/style.css?v=10">
+    <link rel="stylesheet" href="core/css/mobile-design.css?v=10">
 
 
     <!-- Canonical URL -->
@@ -153,7 +159,7 @@
             Resume
         </a>
         <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu"
-            aria-controls="nav-links">
+            style="display: none !important;" aria-controls="nav-links">
             <span></span>
             <span></span>
             <span></span>
@@ -202,7 +208,7 @@
                     <a href="#contact" class="hero-cta-secondary">Get in Touch</a>
                 </div>
 
-                <div class="hero-search-hint">
+                <div class="hero-search-hint" style="display: none !important;">
                     Press <span class="cmd-key">⌘ K</span> or <span class="cmd-key">Ctrl K</span> for spotlight search
                 </div>
                 <!-- Hero stats hidden by user request (can be revived by uncommenting)
@@ -570,10 +576,10 @@
     <!-- Technical Insights Section -->
     <section class="insights-section" id="insights">
         <div class="kinetic-text" id="kinetic-insights">
-            <span>INSIGHTS</span>
+            <span>ARTICLES</span>
         </div>
         <div class="section-header">
-            <div class="section-label">06 / Insights</div>
+            <div class="section-label">06 / Articles</div>
             <h2 class="section-title">Articles by Vineet</h2>
             <p class="section-subtitle">Deep dives into engineering challenges and solutions</p>
         </div>
@@ -719,28 +725,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-social">
-            <a href="https://github.com/vineetkishore01" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                <svg viewBox="0 0 24 24">
-                    <path
-                        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                </svg>
-            </a>
-            <a href="https://www.linkedin.com/in/vineet-kishore/" target="_blank" rel="noopener noreferrer"
-                aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                    <rect x="2" y="9" width="4" height="12" />
-                    <circle cx="4" cy="4" r="2" />
-                </svg>
-            </a>
-            <a href="mailto:vineetkishore01@gmail.com" aria-label="Email">
-                <svg viewBox="0 0 24 24">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                </svg>
-            </a>
-        </div>
+
         <div class="footer-logo">VK.</div>
         <p class="footer-text">Crafted with precision & passion</p>
 
@@ -748,10 +733,17 @@
             <script>document.write(new Date().getFullYear())</script> Vineet Kishore. All rights reserved.
         </p>
     </footer>
-
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Scroll to top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <svg viewBox="0 0 24 24" fill="none" class="back-to-top-icon">
+            <polyline points="18 15 12 9 6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" />
+        </svg>
+    </button>
 
     <!-- Mobile Bottom Navigation.. -->
-    <div class="mobile-dock-wrapper">
+    <div class="mobile-dock-wrapper" style="display: flex !important; z-index: 2147483647 !important;">
         <nav class="mobile-dock">
             <a href="#home" class="mobile-dock-item active">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"

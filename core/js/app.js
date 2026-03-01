@@ -12,6 +12,7 @@
 function initHeroEntrance() {
     document.documentElement.classList.remove('js-loading');
     if (typeof gsap === 'undefined') return;
+    gsap.config({ nullTargetWarn: false });
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     // Step 1: Background Orbs
@@ -361,6 +362,9 @@ const SmartAnimations = {
         console.log("✓ Smart Animations initialized");
     },
     initTextScramble() {
+        // Skip scramble effect on mobile — readability > aesthetics
+        if (window.innerWidth <= 800) return;
+
         const chars = '!<>-_\\/[]{}—=+*^?#________';
         document.querySelectorAll('.section-title').forEach(el => {
             const originalText = el.textContent;
@@ -411,6 +415,15 @@ const NameMorphController = {
     interval: null,
     isVisible: true,
     init() {
+        if (window.innerWidth <= 800) {
+            const firstName = document.querySelector('.glitch-name[data-index="0"]');
+            if (firstName) {
+                firstName.style.opacity = '1';
+                firstName.style.visibility = 'visible';
+                firstName.classList.add('active');
+            }
+            return;
+        }
         this.names = document.querySelectorAll('.glitch-name');
         if (!this.names.length) return;
         this.start();
@@ -590,3 +603,15 @@ if (document.readyState === 'loading') {
 } else {
     InitializationManager.init();
 }
+
+// Back to top button logic
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('backToTop');
+    if (btn) {
+        if (window.scrollY > 800) {
+            btn.classList.add('is-visible');
+        } else {
+            btn.classList.remove('is-visible');
+        }
+    }
+});

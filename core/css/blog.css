@@ -3,9 +3,8 @@
    ============================================ */
 
 :root {
-    --blog-max-width: 1400px;
-    --prose-max-width: 1250px;
-    /* Further expanded to utilize space */
+    --blog-max-width: 100%;
+    --prose-max-width: 100%;
 }
 
 .blog-page,
@@ -647,5 +646,21 @@
         /* Stick to the extreme left to avoid overlap */
         width: 2px;
         /* Thinner on mobile */
+    }
+
+    /* Hide navigation on mobile blog post pages as requested */
+    .blog-post-page .nav {
+        display: none !important;
+    }
+
+    /* Adjust the top padding so the text isn't miles below the top edge */
+    .blog-post-page .post-reader {
+        padding-top: 2rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .blog-post-page .post-header {
+        padding-top: 1rem !important;
     }
 }

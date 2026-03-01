@@ -205,8 +205,11 @@
            INSIGHTS SECTION
            ========================================== */
         .insights-section {
-            padding: 8rem 5%;
             position: relative;
+            /* Mimic large content sections to force the title to sit cleanly over the background exact same spot */
+            justify-content: center !important;
+            padding-top: 5rem !important;
+            padding-bottom: 30rem !important;
         }
 
         .insights-grid {
@@ -674,7 +677,9 @@
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: inherit;
+            margin: 0 1rem;
+            column-gap: clamp(0.75rem, 1vw, 1.5rem);
             list-style: none;
         }
 
@@ -759,7 +764,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.2rem;
             background: var(--bg-glass);
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -1866,13 +1871,12 @@
            SECTION BASE STYLES
            ========================================== */
         section {
-            padding: 4rem 5% 8rem 5%;
+            padding: 80px 5%;
             position: relative;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding-bottom: clamp(8rem, 15vh, 12rem);
+            min-height: auto !important;
         }
 
         .section-header {
@@ -2031,6 +2035,7 @@
             color: var(--text-secondary);
             line-height: 1.7;
             flex: 1;
+            max-width: 55ch;
         }
 
         .about-card-text strong {
@@ -2087,7 +2092,11 @@
             justify-content: flex-end;
             padding-right: calc(50% + 40px);
             position: relative;
-            margin-bottom: 4rem;
+            margin-bottom: 0px;
+        }
+
+        .timeline-item:not(:first-child) {
+            margin-top: -40px;
         }
 
         .timeline-item:nth-child(even) {
@@ -2121,7 +2130,8 @@
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 2rem;
-            max-width: 400px;
+            max-width: 600px;
+            width: 100%;
             transition: all 0.4s var(--ease-out-expo);
         }
 
@@ -2312,15 +2322,21 @@
             }
 
             section {
-                padding: 3rem 1.5rem;
+                padding: 4rem 1.5rem;
+                /* Better breathing room */
             }
 
             .section-title {
-                font-size: clamp(1.75rem, 8vw, 2.5rem);
+                font-size: clamp(2rem, 8vw, 2.5rem);
+                letter-spacing: -0.02em;
+                /* Apple-style typography */
+                font-weight: 700;
             }
 
             .section-subtitle {
-                font-size: 1rem;
+                font-size: 1.05rem;
+                opacity: 0.8;
+                line-height: 1.5;
             }
 
             /* Hero Section Mobile */
@@ -2371,61 +2387,67 @@
 
 
 
+            /* Hide UI clutter on mobile (Focus on native reading experience) */
+            .menu-toggle,
+            .nav-cta,
+            .terminal-section {
+                display: none !important;
+            }
+
             /* Hide scrollbar */
             .about-grid::-webkit-scrollbar,
             .timeline-container::-webkit-scrollbar,
             .projects-cinema::-webkit-scrollbar,
             .insights-grid::-webkit-scrollbar,
+            .skills-grid::-webkit-scrollbar,
+            .education-grid::-webkit-scrollbar,
             .contact-grid::-webkit-scrollbar {
                 display: none;
             }
 
-            /* Common container styles for swipeable areas on mobile */
+            /* Common container styles for native vertical scroll on mobile */
             .about-grid,
             .timeline-container,
             .projects-cinema,
-            .insights-grid {
+            .insights-grid,
+            .skills-grid,
+            .education-grid {
                 display: flex !important;
-                flex-wrap: nowrap !important;
-                overflow-x: auto !important;
-                scroll-snap-type: x mandatory;
-                padding: 1rem 5% 3rem 5% !important;
-                /* Added bottom padding for dots */
-                margin: 0 -5% !important;
-                gap: 1rem !important;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                position: relative;
+                flex-direction: column !important;
+                gap: 1.25rem !important;
+                padding: 1rem 0 !important;
+                margin: 0 !important;
+                /* Reset horizontal logic */
+                width: 100% !important;
+                overflow-x: hidden !important;
+                scroll-snap-type: none !important;
             }
 
-            /* Hide scrollbar */
-            .about-grid::-webkit-scrollbar,
-            .timeline-container::-webkit-scrollbar,
-            .projects-cinema::-webkit-scrollbar,
-            .insights-grid::-webkit-scrollbar {
-                display: none;
-            }
-
-            /* Common card styles for snap alignment */
+            /* Common card styles for native linear list - Apple Premium Feel */
             .about-card,
             .timeline-item,
             .project-cinema-card,
-            .insight-card {
-                flex: 0 0 85% !important;
-                width: 85% !important;
-                max-width: 320px !important;
-                scroll-snap-align: center;
+            .insight-card,
+            .skill-category,
+            .education-card {
+                flex: 0 0 auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                scroll-snap-align: none !important;
                 margin: 0 !important;
-                opacity: 0.5;
-                /* Fade out non-active cards */
-                transform: scale(0.92);
-                transition: opacity 0.3s ease, transform 0.3s ease;
-            }
 
-            /* Active state (handled by JS IntersectionObserver) */
-            .mobile-card-active {
+                /* Reset swipe scaling/fading to native reading mode */
                 opacity: 1 !important;
-                transform: scale(1) !important;
+                transform: none !important;
+                transition: none !important;
+
+                /* Glassmorphism & Modern Radii */
+                background: rgba(255, 255, 255, 0.04) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                border-radius: 20px !important;
+                /* iOS squircle look */
             }
 
 
@@ -2453,20 +2475,16 @@
 
             /* Adjust visual hierarchy for swiped projects */
             .project-cinema-card {
-                min-height: 450px;
+                min-height: 480px;
                 display: flex;
                 flex-direction: column;
+                overflow: hidden;
+                /* Ensure images don't break the border radius */
             }
 
             /* Pagination Dots Container */
             .carousel-indicators {
-                display: flex;
-                justify-content: center;
-                gap: 8px;
-                margin-top: -1.5rem;
-                margin-bottom: 2rem;
-                position: relative;
-                z-index: 10;
+                display: none !important;
             }
 
             .carousel-dot {
@@ -2526,14 +2544,7 @@
                 border-color: var(--accent-blue) !important;
             }
 
-            .contact-title {
-                display: none !important;
-                /* Hide text label, keep icon only */
-            }
-
-            .contact-value {
-                display: none !important;
-            }
+            /* Contact text classes removed from media query to inherit visibility */
 
             /* Nexus Gallery - Horizontal Scroll */
             .nexus-gallery {
@@ -2594,15 +2605,6 @@
            MOBILE PROJECTS CINEMA - ENHANCED
            ========================================== */
         @media (max-width: 768px) {
-            .projects-cinema {
-                grid-template-columns: 1fr !important;
-                gap: 1.5rem;
-                padding: 1rem 0;
-            }
-
-            .project-cinema-card {
-                min-height: auto;
-            }
 
             .project-cinema-inner {
                 border-radius: 16px;
@@ -2699,14 +2701,6 @@
             }
 
             /* Projects on very small screens */
-            .projects-cinema {
-                grid-template-columns: 1fr !important;
-                gap: 1rem;
-            }
-
-            .project-cinema-card {
-                min-height: auto;
-            }
 
             .project-cinema-visual {
                 height: 150px;
@@ -3238,9 +3232,9 @@
 
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -3932,44 +3926,8 @@
 
 
 
-        /* Mobile Tinder-like Swipe Cards */
+        /* Mobile Tinder-like Swipe Cards Overrides */
         @media (max-width: 1024px) {
-
-            .about-grid,
-            .projects-cinema,
-            .skills-grid,
-            .education-grid {
-                display: flex !important;
-                flex-direction: column !important;
-                /* Force VERTICAL */
-                width: 100% !important;
-                margin-left: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                justify-content: flex-start !important;
-                overflow-x: hidden !important;
-                /* No horizontal scroll */
-            }
-
-            .about-grid>*,
-            .project-cinema-card,
-            .skill-category,
-            .education-card {
-                min-width: 0 !important;
-                /* Allow shrinking */
-                width: 100% !important;
-                flex: 1 1 auto !important;
-                margin: 0 0 20px 0 !important;
-                /* Vertical spacing */
-            }
-
-            /* Hide scrollbars */
-            .about-grid::-webkit-scrollbar,
-            .projects-cinema::-webkit-scrollbar,
-            .skills-grid::-webkit-scrollbar,
-            .education-grid::-webkit-scrollbar {
-                display: none;
-            }
 
             .hero-profile-card {
                 width: 180px;
@@ -4991,4 +4949,65 @@
             border-top-color: rgba(255, 255, 255, 0.3) !important;
             border-left-color: rgba(255, 255, 255, 0.25) !important;
             transform: translateY(-5px) !important;
+        }
+
+        /* Unique backgrounds for project thumbnails */
+        .project-cinema-card[data-id="droppy"] .project-cinema-visual {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.2), rgba(0, 122, 255, 0.05)) !important;
+        }
+
+        .project-cinema-card[data-id="homelab"] .project-cinema-visual {
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.2), rgba(52, 199, 89, 0.05)) !important;
+        }
+
+        .project-cinema-card[data-id="n8n-llm"] .project-cinema-visual {
+            background: linear-gradient(135deg, rgba(142, 67, 231, 0.2), rgba(142, 67, 231, 0.05)) !important;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s var(--ease-out-expo);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-to-top.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            background: var(--bg-glass-hover);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        .back-to-top svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .back-to-top {
+                bottom: calc(2rem + 60px);
+                right: 1.5rem;
+            }
         }
