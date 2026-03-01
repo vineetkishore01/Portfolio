@@ -25,10 +25,10 @@ const BlogEngine = {
         } catch (error) {
             console.error('BlogEngine: Fatal error:', error);
             if (this.grid) {
-                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const isLocal = window.location.protocol === 'file:';
                 this.grid.innerHTML = `<div class="blog-error">
                     System offline. Data streams interrupted.
-                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:1rem; font-family:monospace;">Dev Hint: The GitHub API is returning 404 because the "articles/blogs" path doesn\'t exist on the remote GitHub repository yet. Push your local changes to GitHub to enable auto-discovery.</small>' : ''}
+                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:1rem; font-family:monospace;">Dev Hint: You are viewing this via the file:// protocol. Browsers restrict fetch() for local files. Please use a local web server (e.g., Live Server) to preview articles properly.</small>' : ''}
                 </div>`;
             }
         }

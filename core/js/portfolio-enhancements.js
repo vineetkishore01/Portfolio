@@ -10,18 +10,12 @@
   // CONFIGURATION
   // ==========================================
   const CONFIG = {
-    // GitHub username for API calls
-    githubUsername: 'vineetkishore01',
-
     // Analytics - using Plausible (privacy-friendly, GDPR compliant)
     // Replace with your actual domain when you set up Plausible
     plausibleDomain: 'vineetkishore.dev',
 
     // Contact email for copy functionality
     contactEmail: 'vineetkishore01@gmail.com',
-
-    // GitHub repository names to fetch stats for
-    githubRepos: ['Droppy'],
 
     // Enable debug mode
     debug: false
@@ -284,111 +278,6 @@
   };
 
   // ==========================================
-  // GITHUB INTEGRATION
-  // ==========================================
-  const GitHubIntegration = {
-    cache: new Map(),
-
-    async init() {
-      // Fetch GitHub stats for specified repos
-      for (const repo of CONFIG.githubRepos) {
-        await this.fetchRepoStats(repo);
-      }
-
-      // Fetch user profile
-      await this.fetchUserProfile();
-
-      // Update UI with GitHub data
-      this.updateProjectCards();
-    },
-
-    async fetchRepoStats(repoName) {
-      const cacheKey = `github-repo-${repoName}`;
-      const cached = this.cache.get(cacheKey);
-
-      if (cached && Date.now() - cached.timestamp < 300000) { // 5 min cache
-        return cached.data;
-      }
-
-      try {
-        const response = await fetch(`https://api.github.com/repos/${CONFIG.githubUsername}/${repoName}`);
-        if (!response.ok) throw new Error('GitHub API error');
-
-        const data = await response.json();
-        this.cache.set(cacheKey, { data, timestamp: Date.now() });
-
-        utils.log(`Fetched GitHub stats for ${repoName}`);
-        return data;
-      } catch (error) {
-        utils.log(`Failed to fetch GitHub stats: ${error}`, 'error');
-        return null;
-      }
-    },
-
-    async fetchUserProfile() {
-      const cacheKey = 'github-user';
-      const cached = this.cache.get(cacheKey);
-
-      if (cached && Date.now() - cached.timestamp < 600000) { // 10 min cache
-        return cached.data;
-      }
-
-      try {
-        const response = await fetch(`https://api.github.com/users/${CONFIG.githubUsername}`);
-        if (!response.ok) throw new Error('GitHub API error');
-
-        const data = await response.json();
-        this.cache.set(cacheKey, { data, timestamp: Date.now() });
-
-        // Update stats display
-        this.updateGitHubStats(data);
-
-        return data;
-      } catch (error) {
-        utils.log(`Failed to fetch GitHub profile: ${error}`, 'error');
-        return null;
-      }
-    },
-
-    updateGitHubStats(data) {
-      // Add GitHub stats to hero section if it exists
-      const heroStats = document.querySelector('.hero-stats');
-      if (heroStats && data) {
-        const githubStat = document.createElement('div');
-        githubStat.className = 'hero-stat';
-        githubStat.innerHTML = `
-          <div class="hero-stat-value" style="color: #6e5494;">${data.public_repos}</div>
-          <div class="hero-stat-label">GitHub Repos</div>
-        `;
-        heroStats.appendChild(githubStat);
-      }
-    },
-
-    updateProjectCards() {
-      // Add live GitHub stats to project cards
-      document.querySelectorAll('.project-cinema-card').forEach(async (card) => {
-        const projectId = card.getAttribute('data-id');
-        if (!projectId || !CONFIG.githubRepos.includes(projectId)) return;
-
-        const stats = await this.fetchRepoStats(projectId);
-        if (!stats) return;
-
-        // Add GitHub stats badge
-        const meta = card.querySelector('.project-cinema-meta');
-        if (meta) {
-          const githubBadge = document.createElement('span');
-          githubBadge.className = 'project-github-stats';
-          githubBadge.innerHTML = `
-            <span style="color: #6e5494;">⭐ ${stats.stargazers_count}</span>
-            <span style="color: #f1e05a; margin-left: 8px;">🍴 ${stats.forks_count}</span>
-          `;
-          meta.appendChild(githubBadge);
-        }
-      });
-    }
-  };
-
-  // ==========================================
   // COPY EMAIL FUNCTIONALITY
   // ==========================================
   const CopyEmail = {
@@ -623,7 +512,6 @@
   const FreshnessIndicators = {
     init() {
       this.addLastUpdatedDate();
-      this.addGitHubActivityIndicator();
     },
 
     addLastUpdatedDate() {
@@ -644,45 +532,6 @@
         `;
         updated.innerHTML = `Portfolio updated: <span style="color: var(--accent-blue);">${formatted}</span>`;
         heroSubtitle.appendChild(updated);
-      }
-    },
-
-    addGitHubActivityIndicator() {
-      // Show if user is currently working
-      const hour = new Date().getHours();
-      const isWorkingHours = hour >= 9 && hour <= 18;
-
-      const statusIndicator = document.createElement('div');
-      statusIndicator.className = 'status-indicator';
-      statusIndicator.style.cssText = `
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255,255,255,0.05);
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        margin-top: 16px;
-      `;
-
-      const dot = document.createElement('span');
-      dot.style.cssText = `
-        width: 8px;
-        height: 8px;
-        background: ${isWorkingHours ? '#10B981' : '#F59E0B'};
-        border-radius: 50%;
-        animation: none;
-      `;
-
-      statusIndicator.appendChild(dot);
-      statusIndicator.appendChild(document.createTextNode(
-        isWorkingHours ? 'Available for opportunities' : 'Coding after hours'
-      ));
-
-      const heroContent = document.querySelector('.hero-content');
-      if (heroContent) {
-        heroContent.appendChild(statusIndicator);
       }
     }
   };
@@ -893,7 +742,6 @@
     // Core features
     PWA.init();
     Analytics.init();
-    GitHubIntegration.init();
     CopyEmail.init();
 
     // UI enhancements

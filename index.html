@@ -137,11 +137,12 @@
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#skills" class="nav-link">Skills</a></li>
             <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="articles/blog.html" class="nav-link">Blogs</a></li>
+            <li><a href="articles/blog.html" class="nav-link">Articles</a></li>
 
             <li><a href="#terminal" class="nav-link">Terminal</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
+
         <a href="https://drive.google.com/file/d/1wJGbPT4FdXkRTixubtMcmjHRfVLUL08z/view?usp=sharing" target="_blank"
             class="nav-cta">
             <svg viewBox="0 0 24 24">
@@ -179,7 +180,6 @@
         <div class="hero-grid">
             <div class="hero-content">
                 <div class="hero-label">Infrastructure Engineer</div>
-                <div class="mobile-badge">Available for opportunities</div>
                 <h1 class="hero-title">
                     <div class="hero-title-single" id="name-container">
                         <span class="glitch-name active" data-lang="English" data-index="0"
@@ -200,6 +200,10 @@
                 <div class="hero-cta-group">
                     <a href="#projects" class="hero-cta-primary">View Projects</a>
                     <a href="#contact" class="hero-cta-secondary">Get in Touch</a>
+                </div>
+
+                <div class="hero-search-hint">
+                    Press <span class="cmd-key">⌘ K</span> or <span class="cmd-key">Ctrl K</span> for spotlight search
                 </div>
                 <!-- Hero stats hidden by user request (can be revived by uncommenting)
                 <div class="hero-stats">
@@ -376,7 +380,6 @@
                 <div class="project-cinema-inner">
                     <div class="project-cinema-visual">
                         <div class="project-cinema-icon">🚀</div>
-                        <div class="project-cinema-scanline"></div>
                     </div>
                     <div class="project-cinema-content">
                         <h3 class="project-cinema-title">Droppy</h3>
@@ -408,7 +411,6 @@
                 <div class="project-cinema-inner">
                     <div class="project-cinema-visual">
                         <div class="project-cinema-icon">🏠</div>
-                        <div class="project-cinema-scanline"></div>
                     </div>
                     <div class="project-cinema-content">
                         <h3 class="project-cinema-title">Home Lab Infrastructure</h3>
@@ -436,7 +438,6 @@
                 <div class="project-cinema-inner">
                     <div class="project-cinema-visual">
                         <div class="project-cinema-icon">🤖</div>
-                        <div class="project-cinema-scanline"></div>
                     </div>
                     <div class="project-cinema-content">
                         <h3 class="project-cinema-title">N8N LLM Pipeline</h3>
@@ -593,7 +594,8 @@
         <div class="section-header">
             <div class="section-label">07 / Terminal</div>
             <h2 class="section-title">Command Center</h2>
-            <p class="section-subtitle">Type commands to explore my digital workspace</p>
+            <p class="section-subtitle">Type commands below, or press <strong>Cmd + K</strong> anywhere for the global
+                command palette</p>
         </div>
 
         <!-- Terminal Teaser for Mobile -->
@@ -623,6 +625,9 @@
                 <div class="terminal-body" id="terminal-body">
                     <div class="terminal-line" style="opacity: 1;">Welcome to Vineet Kishore's interactive terminal.
                     </div>
+                    <div class="terminal-line" style="opacity: 1; color: var(--text-tertiary); font-size: 0.85em;">💡
+                        Hint: Press <span style="color: var(--accent-blue);">Cmd + K</span> (or Ctrl + K) anywhere for
+                        the global command palette.</div>
                     <div class="terminal-line" style="opacity: 1;">Type <span
                             style="color: var(--accent-blue);">help</span> to see available commands.</div>
                     <div class="terminal-line" style="opacity: 1; margin-bottom: 1rem;">———————————————————————</div>
@@ -801,6 +806,15 @@
 
     <script src="core/js/latest-articles.js"></script>
     <script src="core/js/app.js"></script>
+
+    <!-- Audio Interactions Layer -->
+    <script src="core/js/audio-interactions.js"></script>
+
+    <!-- Seamless Project Modals -->
+    <script src="core/js/project-modals.js"></script>
+
+    <!-- Command Palette (Cmd+K) -->
+    <script src="core/js/command-palette.js"></script>
 
     <!-- Portfolio Enhancements (PWA, Analytics, GitHub Integration, Micro-interactions) -->
     <script src="core/js/portfolio-enhancements.js"></script>

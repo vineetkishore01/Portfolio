@@ -23,10 +23,10 @@ const LatestArticles = {
         } catch (error) {
             console.error('LatestArticles: Error loading posts:', error);
             if (this.container) {
-                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const isLocal = window.location.protocol === 'file:';
                 this.container.innerHTML = `<div class="insight-error" style="color: var(--text-secondary); text-align: center; padding: 2rem; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
                     API stream interrupted.
-                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:0.5rem; font-size:0.7rem; font-family:monospace;">Dev Hint: GitHub API 403/404. Push your "articles/blogs" folder to GitHub to sync the content.</small>' : ''}
+                    ${isLocal ? '<br><small style="color:var(--accent-blue); display:block; margin-top:0.5rem; font-size:0.7rem; font-family:monospace;">Dev Hint: You are viewing this via file:// protocol. Browsers block local file fetching. Please use a local web server (e.g., VS Code Live Server).</small>' : ''}
                 </div>`;
             }
         }
@@ -114,9 +114,9 @@ const LatestArticles = {
     render(posts) {
         this.container.innerHTML = posts.map(post => `
             <article class="insight-card" onclick="window.location.href='articles/blog-post.html?slug=${post.slug}'" onpointerenter="LatestArticles.prefetch('${post.slug}')">
-                <div class="insight-category">${post.category}</div>
+                <div class="insight-category">${post.category || 'Article'}</div>
                 <h3 class="insight-title">${post.title}</h3>
-                <p class="insight-excerpt">${post.excerpt}</p>
+                <p class="insight-excerpt">${post.excerpt || ''}</p>
                 <div class="insight-meta">
                     <span>${post.readTime}</span>
                     <a href="articles/blog-post.html?slug=${post.slug}" class="insight-link">Read Article →</a>

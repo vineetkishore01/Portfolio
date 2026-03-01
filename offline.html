@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Offline / Vineet Kishore</title>
+    <link rel="icon" type="image/x-icon" href="/core/assets/favicon.ico">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --text: #a1a1aa;
+            --accent: #3b82f6;
+            --error: #ef4444;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .terminal {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .line {
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            .line {
+                font-size: 1rem;
+            }
+        }
+
+        .prefix {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .error {
+            color: var(--error);
+        }
+
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Animation delays */
+        .l1 {
+            animation-delay: 0.2s;
+        }
+
+        .l2 {
+            animation-delay: 0.8s;
+        }
+
+        .l3 {
+            animation-delay: 1.4s;
+        }
+
+        .l4 {
+            animation-delay: 2.0s;
+        }
+
+        .l5 {
+            animation-delay: 2.6s;
+        }
+
+        .l6 {
+            animation-delay: 3.2s;
+        }
+
+        .l7 {
+            animation-delay: 3.8s;
+        }
+
+        .btn-retry {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            background: transparent;
+            text-decoration: none;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+            animation-delay: 4.5s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-retry:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(59, 130, 246, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="terminal">
+        <div class="line l1"><span class="prefix">SYSTEM:</span> Connection to mainframe severed.</div>
+        <div class="line l2"><span class="prefix">DIAGNOSTIC:</span> Network link failure detected <span
+                class="error">[ERR_OFFLINE]</span>.</div>
+        <div class="line l3"><span class="prefix">STATUS:</span> Engaging local cache failovers.</div>
+        <div class="line l4"><span class="prefix">ACTION:</span> Restricted to offline assets.</div>
+        <div class="line l5"><span class="prefix">MESSAGE:</span> "Even when disconnected, the system holds." - V.K.
+        </div>
+        <div class="line l6"><br />Please verify your local uplink.</div>
+        <div class="line l7"><span class="prefix">guest@vk-sys</span>:~# <span class="blink">_</span></div>
+
+        <a href="/" class="btn-retry" onclick="window.location.reload(); return false;">[ Reconnect ]</a>
+    </div>
+</body>
+
+</html>

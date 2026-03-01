@@ -1,10 +1,11 @@
 // Service Worker for Vineet Kishore Portfolio
 // Enables offline functionality and caching
 
-const CACHE_NAME = 'vineet-portfolio-v1';
+const CACHE_NAME = 'vineet-portfolio-v1.1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  '/offline.html',
   '/core/css/style.css',
   '/core/css/mobile-design.css',
   '/core/css/blog.css',
@@ -102,7 +103,9 @@ self.addEventListener('fetch', (event) => {
           .catch(() => {
             // Return offline fallback for HTML requests
             if (request.headers.get('accept').includes('text/html')) {
-              return caches.match('/index.html');
+              return caches.match('/offline.html').then((response) => {
+                return response || caches.match('/index.html');
+              });
             }
           });
       })

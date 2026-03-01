@@ -93,12 +93,19 @@ const PostReader = {
             if (currentIndex > 0) {
                 const prevPost = posts[currentIndex - 1];
                 prevBtn.href = `blog-post.html?slug=${prevPost.slug}`;
+                prevBtn.innerHTML = `<span style="opacity: 0.6; font-size: 0.8rem; display: block; margin-bottom: 0.2rem;">← Previous Article</span><span>${prevPost.title || 'Previous'}</span>`;
                 prevBtn.style.display = 'inline-flex';
+                prevBtn.style.flexDirection = 'column';
+                prevBtn.style.alignItems = 'flex-start';
             }
             if (currentIndex < posts.length - 1 && currentIndex !== -1) {
                 const nextPost = posts[currentIndex + 1];
                 nextBtn.href = `blog-post.html?slug=${nextPost.slug}`;
+                nextBtn.innerHTML = `<span style="opacity: 0.6; font-size: 0.8rem; display: block; margin-bottom: 0.2rem;">Next Article →</span><span>${nextPost.title || 'Next'}</span>`;
                 nextBtn.style.display = 'inline-flex';
+                nextBtn.style.flexDirection = 'column';
+                nextBtn.style.alignItems = 'flex-end';
+                nextBtn.style.textAlign = 'right';
             }
         } catch (e) {
             console.warn('PostReader: Could not load navigation', e);
@@ -136,9 +143,39 @@ const PostReader = {
         // Highlight logic for code blocks
         document.querySelectorAll('pre code').forEach((el) => {
             hljs.highlightElement(el);
+
+            // Add Copy Button
+            const pre = el.parentElement;
+            if (pre.tagName === 'PRE') {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-code-btn';
+                copyBtn.textContent = 'Copy';
+                copyBtn.setAttribute('aria-label', 'Copy code to clipboard');
+                wrapper.appendChild(copyBtn);
+
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(el.innerText).then(() => {
+                        copyBtn.textContent = 'Copied!';
+                        copyBtn.style.color = 'var(--accent-blue)';
+                        copyBtn.style.borderColor = 'var(--accent-blue)';
+                        setTimeout(() => {
+                            copyBtn.textContent = 'Copy';
+                            copyBtn.style.color = '';
+                            copyBtn.style.borderColor = '';
+                        }, 2000);
+                    });
+                });
+            }
         });
 
-        // Entrance animation
+        this.generateTOC();
+
+        // Entrance animation for header only
         gsap.from('.post-header > *', {
             opacity: 0,
             y: 20,
@@ -147,14 +184,71 @@ const PostReader = {
             ease: 'power3.out'
         });
 
-        gsap.from('.blog-prose > *', {
+        // Simple fade-in for the prose body (avoiding per-element stagger issues)
+        gsap.from('.blog-prose', {
             opacity: 0,
-            y: 20,
-            duration: 0.6,
-            stagger: 0.05,
+            duration: 1.2,
             ease: 'power3.out',
-            delay: 0.4
+            delay: 0.2
         });
+    },
+
+    generateTOC() {
+        const contentArea = document.getElementById('post-content');
+        const tocList = document.getElementById('toc-list');
+        if (!contentArea || !tocList) return;
+
+        const headings = contentArea.querySelectorAll('h2, h3');
+        if (headings.length === 0) {
+            const tocNode = document.getElementById('post-toc');
+            if (tocNode) tocNode.style.display = 'none';
+            return;
+        }
+
+        headings.forEach((heading) => {
+            // Ensure heading has an ID
+            if (!heading.id) {
+                heading.id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            }
+
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${heading.id}`;
+            a.textContent = heading.textContent;
+            a.className = `toc-link toc-level-${heading.tagName.toLowerCase().substring(1)}`;
+            a.dataset.targetId = heading.id;
+
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.pushState(null, null, `#${heading.id}`);
+            });
+
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+
+        // Setup Intersection Observer for active TOC links
+        const observerOptions = {
+            root: null,
+            rootMargin: '-100px 0px -60% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.dataset.targetId === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        headings.forEach(heading => observer.observe(heading));
     },
 
     setupScrollProgress() {

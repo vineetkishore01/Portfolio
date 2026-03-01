@@ -65,7 +65,9 @@
                 '  ' + c('clear', '#a78bfa') + '          Clear terminal',
                 '  ' + c('eastereggs', '#a78bfa') + '     Find hidden secrets',
                 '',
+                '',
                 c('  TIP: Use \u2191/\u2193 for history, Tab for autocomplete', '#64748b'),
+                c('  HINT: Press Cmd + K anywhere for the global command palette.', '#4ade80'),
                 ''
             ];
         },
@@ -416,11 +418,11 @@
                 ''
             ];
         },
-        copy: function(args) {
+        copy: function (args) {
             if (!args || args.trim() === '') {
                 return ['  Usage: ' + c('copy [email|text]', '#f59e0b'), '  Example: copy email'];
             }
-            
+
             if (args.trim() === 'email') {
                 const email = 'vineetkishore01@gmail.com';
                 if (navigator.clipboard) {
@@ -438,10 +440,10 @@
                     '  Use Ctrl+V to paste it anywhere.'
                 ];
             }
-            
+
             return ['  Unknown copy target. Try: ' + c('copy email', '#f59e0b')];
         },
-        github: function() {
+        github: function () {
             window.open('https://github.com/vineetkishore', '_blank');
             return [
                 '',
@@ -456,12 +458,12 @@
                 ''
             ];
         },
-        stats: function() {
+        stats: function () {
             const commandsRun = history.length;
             const sessionTime = Math.floor((Date.now() - startTime) / 1000);
             const minutes = Math.floor(sessionTime / 60);
             const seconds = sessionTime % 60;
-            
+
             return [
                 '',
                 c('  Portfolio Statistics', '#60a5fa'),
@@ -545,7 +547,7 @@
         var cmdParts = cmd.split(' ');
         var baseCmd = cmdParts[0];
         var args = cmdParts.slice(1).join(' ');
-        
+
         if (commands[baseCmd]) {
             var out;
             // Check if command accepts arguments
