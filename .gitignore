@@ -1,1 +1,39 @@
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+**/._*
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Project specific
 extras/old/
+tmp/
+.temp/
+
+# Agent/AI specific
+.agents/
+.agent/
+_agents/
+_agent/
+.gemini/
+*.resolved
+*.blueprint
+audit_results.md
+mobile_design_audit.md
+mobile_10_10_blueprint.md
+*audit_v*.webp
+*audit_v*.png
+
+# Misc
+.env
+.env.local
+.env.*.local
+node_modules/
+dist/
+build/
+.cache/

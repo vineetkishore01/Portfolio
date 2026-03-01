@@ -226,8 +226,8 @@ STATUS_LOG_INTERVAL=300   # Log "healthy" status every 5 minutes (300 seconds)
 CHECK_COUNT=0
 
 # Telegram Configuration (from your WATCHTOWER_NOTIFICATION_URL)
-TELEGRAM_BOT_TOKEN="8352048837:AAFpWeG7PWOTBOEoiN1SsnY0XdlfWlo5b4U"
-TELEGRAM_CHAT_ID="712957784"
+TELEGRAM_BOT_TOKEN="YOUR_BOT_TOKEN"
+TELEGRAM_CHAT_ID="YOUR_CHAT_ID"
 
 # Docker containers that depend on /mnt/nas mount (add your container names here)
 # Example: DEPENDENT_CONTAINERS=("plex" "jellyfin" "sonarr" "radarr")
@@ -454,8 +454,8 @@ sudo systemctl status nas-mount-monitor.service
 
 ```bash
 # Replace with your actual token and chat ID
-BOT_TOKEN="8352048837:AAFpWeG7PWOTBOEoiN1SsnY0XdlfWlo5b4U"
-CHAT_ID="712957784"
+BOT_TOKEN="YOUR_BOT_TOKEN"
+CHAT_ID="YOUR_CHAT_ID"
 
 # Test bot token
 curl -s "<https://api.telegram.org/bot${BOT_TOKEN}/getMe>" | jq .
@@ -550,11 +550,11 @@ ls -la /mnt/nas/ 2>/dev/null || echo "Mount not accessible"
 
 echo ""
 echo "4. Testing Docker containers..."
-docker ps --format "table {{.Names}}\\t{{.Status}}" | grep -E "(sonarr|radarr|jellyfin)" || true
+docker ps --format "table {{.Names}}\t{{.Status}}" | grep -E "(sonarr|radarr|jellyfin)" || true
 
 echo ""
 echo "5. Testing Telegram..."
-curl -s "<https://api.telegram.org/bot8352048837:AAFpWeG7PWOTBOEoiN1SsnY0XdlfWlo5b4U/getMe>" | grep -q '"ok":true' && echo "✓ Telegram bot active" || echo "✗ Telegram bot issue"
+curl -s "https://api.telegram.org/botYOUR_BOT_TOKEN/getMe" | grep -q '"ok":true' && echo "✓ Telegram bot active" || echo "✗ Telegram bot issue"
 
 echo ""
 echo "=== Test Complete ==="
