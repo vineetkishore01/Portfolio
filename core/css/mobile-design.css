@@ -10,10 +10,14 @@
 
     /* Root & Overrides */
     :root {
-        --accent-m: #007aff;
-        --accent-m-light: #5ac8fa;
+        --accent-m: #00d2ff;
+        /* Azure Neon */
+        --accent-m-deep: #007aff;
+        --accent-m-glow: rgba(0, 210, 255, 0.4);
         --bg-m: #000000;
-        --card-m: #111111;
+        --card-m: rgba(15, 15, 15, 0.82);
+        --glass-m: rgba(255, 255, 255, 0.1);
+        --safe-bottom: env(safe-area-inset-bottom);
     }
 
     body,
@@ -296,7 +300,7 @@
        ========================================== */
 
     .hero {
-        padding: 0 20px 120px 20px !important;
+        padding: 0 20px 140px 20px !important;
         /* Space for dock */
         text-align: center !important;
         min-height: 100vh !important;
@@ -305,12 +309,10 @@
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-end !important;
-        /* Push text to bottom */
-        position: sticky !important;
-        /* Stick to viewport globally */
-        top: 0 !important;
+        position: relative !important;
         overflow: hidden;
         z-index: 1 !important;
+        background: #000 !important;
     }
 
     /* Gradient overlay for text readability */
@@ -390,8 +392,9 @@
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        object-position: center 20% !important;
-        /* Frame the face better */
+        object-position: center 15% !important;
+        /* Focus higher for portrait immersive feel */
+        filter: grayscale(15%) contrast(110%) brightness(0.85) !important;
     }
 
     .hero-profile-glow,
@@ -401,14 +404,15 @@
 
     /* Step 2: Fix name container */
     .hero-title {
-        font-size: clamp(1.5rem, 6vw, 2rem) !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.03em !important;
-        margin-bottom: 8px !important;
-        line-height: 1.2 !important;
+        font-size: clamp(2.4rem, 12vw, 3.2rem) !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.04em !important;
+        margin-bottom: 4px !important;
+        line-height: 1 !important;
         color: #ffffff !important;
         background: none !important;
         -webkit-text-fill-color: initial !important;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
     }
 
     .hero-title-single {
@@ -1503,21 +1507,40 @@
     }
 
     /* ==========================================
-       MOBILE DOCK
+       MOBILE DOCK - THE REBIRTH
        ========================================== */
-
     .mobile-dock-wrapper {
+        position: fixed !important;
+        bottom: 24px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
         display: flex !important;
+        justify-content: center !important;
+        align-items: flex-end !important;
+        pointer-events: none !important;
+        padding: 0 20px !important;
+        z-index: 2147483647 !important;
     }
 
     .mobile-dock {
+        pointer-events: auto !important;
         display: flex !important;
-        justify-content: space-around !important;
-        width: 100% !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-        backdrop-filter: blur(20px) !important;
-        border-top: 0.5px solid rgba(255, 255, 255, 0.1) !important;
-        padding: 6px 8px calc(6px + env(safe-area-inset-bottom)) !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: auto !important;
+        min-width: 280px !important;
+        max-width: calc(100% - 40px) !important;
+        background: rgba(15, 15, 15, 0.8) !important;
+        backdrop-filter: blur(25px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 32px !important;
+        padding: 8px 12px !important;
+        box-shadow:
+            0 12px 40px -8px rgba(0, 0, 0, 0.6),
+            0 0 0 1px rgba(255, 255, 255, 0.03) !important;
     }
 
     .mobile-dock-item {
@@ -1525,23 +1548,42 @@
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 2px !important;
-        min-width: 0 !important;
-        color: rgba(255, 255, 255, 0.6) !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        padding: 8px 4px !important;
+        color: rgba(255, 255, 255, 0.45) !important;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        text-decoration: none !important;
     }
 
     .mobile-dock-item.active {
-        color: var(--accent-blue) !important;
+        color: #fff !important;
+        transform: scale(1.1) !important;
     }
 
     .mobile-dock-item svg {
         width: 20px !important;
         height: 20px !important;
+        stroke-width: 2.5px !important;
+        transition: transform 0.3s ease !important;
+    }
+
+    .mobile-dock-item.active svg {
+        transform: translateY(-2px) !important;
+        stroke: var(--accent-blue) !important;
+        filter: drop-shadow(0 0 6px rgba(0, 122, 255, 0.5)) !important;
     }
 
     .dock-label {
-        font-size: 0.55rem !important;
-        white-space: nowrap !important;
+        font-size: 0.65rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+        opacity: 0.7 !important;
+    }
+
+    .mobile-dock-item.active .dock-label {
+        opacity: 1 !important;
+        color: var(--accent-blue) !important;
     }
 
     /* ==========================================
@@ -1586,17 +1628,17 @@
     .insight-card,
     .blog-card,
     .glass-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
-        backdrop-filter: blur(24px) !important;
-        -webkit-backdrop-filter: blur(24px) !important;
+        background: linear-gradient(165deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+        backdrop-filter: blur(30px) saturate(150%) !important;
+        -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
-        border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
         box-shadow:
-            0 8px 32px -8px rgba(0, 0, 0, 0.5),
-            inset 0 1px 2px rgba(255, 255, 255, 0.12),
-            inset 0 0 20px rgba(255, 255, 255, 0.03) !important;
-        border-radius: 20px !important;
+            0 20px 40px -12px rgba(0, 0, 0, 0.7),
+            inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+        border-radius: 24px !important;
+        margin-bottom: 20px !important;
     }
 }
 
@@ -1824,88 +1866,70 @@
         color: rgba(255, 255, 255, 0.25) !important;
         font-size: 0.7rem !important;
     }
-}/* 
-  GOD-TIER MOBILE OVERDRIVE - FINAL 10/10 POLISH
-  This file contains the most aggressive mobile overrides to ensure a perfect score.
-*/
+}
 
 @media (max-width: 800px) {
+    /* ==========================================
+       MOBILE REBIRTH - FINAL OVERRIDES
+       ========================================== */
 
-    /* HERO NAME FIX - ENSURE VISIBILITY */
-    .hero-title {
+    /* Force Horizontal Dock with Grid (Indestructible) */
+    .mobile-dock-wrapper {
+        position: fixed !important;
+        bottom: 24px !important;
+        left: 0 !important;
+        right: 0 !important;
         width: 100% !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: block !important;
-    }
-
-    .hero-title-single {
-        display: block !important;
-        width: 100% !important;
-        min-height: 60px !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        margin: 0 auto !important;
-    }
-
-    .glitch-name {
-        position: absolute !important;
-        inset: 0 !important;
         display: flex !important;
+        justify-content: center !important;
+        z-index: 2147483647 !important;
+        pointer-events: none !important;
+    }
+
+    .mobile-dock {
+        pointer-events: auto !important;
+        display: grid !important;
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 0 !important;
+        width: 360px !important;
+        max-width: 95vw !important;
+        background: rgba(15, 15, 15, 0.85) !important;
+        backdrop-filter: blur(25px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 40px !important;
+        padding: 4px 8px !important;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .mobile-dock-item {
+        display: flex !important;
+        flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        width: 100% !important;
-        transform: none !important;
-        filter: none !important;
+        color: rgba(255, 255, 255, 0.5) !important;
+        padding: 8px 0 !important;
+        text-decoration: none !important;
     }
 
+    /* Force Immersive Hero Typography */
     .glitch-name[data-index="0"],
     .glitch-name:first-child {
-        position: relative !important;
-        display: flex !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        color: #ffffff !important;
-        -webkit-text-fill-color: #ffffff !important;
-        font-size: clamp(2.2rem, 10vw, 2.8rem) !important;
-        text-align: center !important;
-        justify-content: center !important;
-    }
-
-    /* CONTACT SECTION FIX - ENSURE LABELS AND VALUES RADIATE */
-    .contact-card .contact-title {
+        font-size: clamp(2.4rem, 12vw, 3.2rem) !important;
+        line-height: 1 !important;
         display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        color: rgba(255, 255, 255, 0.6) !important;
-        font-size: 0.75rem !important;
-        margin-bottom: 2px !important;
-        height: auto !important;
-        width: auto !important;
+        width: 100% !important;
+        text-align: center !important;
     }
 
+    /* Contact & Layout Refinements */
+    .contact-card .contact-title,
     .contact-card .contact-value {
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
-        color: #ffffff !important;
-        font-size: 0.95rem !important;
-        font-weight: 600 !important;
-        height: auto !important;
-        width: auto !important;
     }
 
-    /* PROJECT CINEMA CARD - KILL DEAD SPACE */
-    .project-cinema-card {
-        height: auto !important;
-        max-height: none !important;
-        min-height: auto !important;
-    }
-
-    /* RE-HIDING TERMINAL (DOUBLE CHECK) */
     .terminal-section {
         display: none !important;
     }
